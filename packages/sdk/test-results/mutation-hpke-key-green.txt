@@ -1,0 +1,9 @@
+real tree, same args: test/unit.test.ts
+exit=0
+
+bun test v1.3.1 (89fa0f34)
+
+ 39 pass
+ 0 fail
+ 541 expect() calls
+Ran 39 tests across 1 file. [2.88s]

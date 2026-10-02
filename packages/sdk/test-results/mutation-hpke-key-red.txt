@@ -1,0 +1,42 @@
+mutation: src/grant.ts: recipientKey: pair,  =>  recipientKey: pair.privateKey,
+args: test/unit.test.ts
+exit=1
+
+bun test v1.3.1 (89fa0f34)
+
+test/unit.test.ts:
+94 |             );
+95 |             const key = await aesKey(raw, ["decrypt"]);
+96 |             raw.fill(0);
+97 |             return key;
+98 |           } catch (cause) {
+99 |             throw new SatchelError("GRANT_NOT_FOR_KEY", "This grant could not be opened with this app key.", { cause });
+                       ^
+SatchelError: This grant could not be opened with this app key.
+  fix: "ask the owner to grant to this app's public key from createGrantee().",
+ docs: "/reference/errors#grant-not-for-key",
+ code: "GRANT_NOT_FOR_KEY"
+
+      at <anonymous> (/private/tmp/satchel-sdk-mutant-hpke-key/src/grant.ts:99:19)
+      at async <anonymous> (/private/tmp/satchel-sdk-mutant-hpke-key/src/grant.ts:117:44)
+      at async <anonymous> (/private/tmp/satchel-sdk-mutant-hpke-key/test/unit.test.ts:198:47)
+
+24 |         let pt;
+25 |         try {
+26 |             pt = await this._ctx.key.open(this.computeNonce(this._ctx), toArrayBuffer(data), toArrayBuffer(aad));
+27 |         }
+28 |         catch (e) {
+29 |             throw new OpenError(e);
+                       ^
+OpenError: The operation failed for an operation-specific reason
+      at open (./packages/sdk/node_modules/@hpke/core/esm/src/recipientContext.js:29:19)
+      at async open (./packages/sdk/node_modules/@hpke/core/esm/src/cipherSuiteNative.js:244:26)
+      at async <anonymous> (/private/tmp/satchel-sdk-mutant-hpke-key/src/grant.ts:89:27)
+      at async <anonymous> (/private/tmp/satchel-sdk-mutant-hpke-key/src/grant.ts:117:44)
+      at async <anonymous> (/private/tmp/satchel-sdk-mutant-hpke-key/test/unit.test.ts:198:47)
+(fail) HPKE wrap (RFC 9180, DHKEM P-256, HKDF-SHA256, AES-128-GCM) > 200 fresh grantee keys each unwrap their own wrap: the reader must hand HPKE the whole key pair (a bare private key failed about half the time) [26.54ms]
+
+ 38 pass
+ 1 fail
+ 143 expect() calls
+Ran 39 tests across 1 file. [1.77s]

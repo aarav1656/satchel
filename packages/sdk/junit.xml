@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="bun test" tests="39" assertions="541" failures="0" skipped="0" time="2.875683">
+  <testsuite name="test/unit.test.ts" file="test/unit.test.ts" tests="39" assertions="541" failures="0" skipped="0" time="0" hostname="Kamals-MacBook-Air.local">
+    <testsuite name="ns" file="test/unit.test.ts" line="14" tests="11" assertions="12" failures="0" skipped="0" time="0" hostname="Kamals-MacBook-Air.local">
+      <testcase name="accepts valid paths" classname="ns" time="0" file="test/unit.test.ts" line="15" assertions="2" />
+      <testcase name="rejects &quot;&quot; with INVALID_NAMESPACE" classname="ns" time="0.00052" file="test/unit.test.ts" line="19" assertions="1" />
+      <testcase name="rejects &quot;ab&quot; with INVALID_NAMESPACE" classname="ns" time="0.000024" file="test/unit.test.ts" line="19" assertions="1" />
+      <testcase name="rejects &quot;Memory/x&quot; with INVALID_NAMESPACE" classname="ns" time="0" file="test/unit.test.ts" line="19" assertions="1" />
+      <testcase name="rejects &quot;a//b&quot; with INVALID_NAMESPACE" classname="ns" time="0" file="test/unit.test.ts" line="19" assertions="1" />
+      <testcase name="rejects &quot;/ab&quot; with INVALID_NAMESPACE" classname="ns" time="0" file="test/unit.test.ts" line="19" assertions="1" />
+      <testcase name="rejects &quot;ab/&quot; with INVALID_NAMESPACE" classname="ns" time="0" file="test/unit.test.ts" line="19" assertions="1" />
+      <testcase name="rejects &quot;a b&quot; with INVALID_NAMESPACE" classname="ns" time="0" file="test/unit.test.ts" line="19" assertions="1" />
+      <testcase name="rejects &quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot; with INVALID_NAMESPACE" classname="ns" time="0" file="test/unit.test.ts" line="19" assertions="1" />
+      <testcase name="rejects &quot;a_b&quot; with INVALID_NAMESPACE" classname="ns" time="0" file="test/unit.test.ts" line="19" assertions="1" />
+      <testcase name="accepts exactly 64 characters" classname="ns" time="0" file="test/unit.test.ts" line="22" assertions="1" />
+    </testsuite>
+    <testsuite name="derivation matches the interface spec, computed independently with node:crypto" file="test/unit.test.ts" line="27" tests="5" assertions="12" failures="0" skipped="0" time="0.136" hostname="Kamals-MacBook-Air.local">
+      <testcase name="registry owner is HKDF(prf, salt satchel/v1, info satchel/owner/secp256k1) mod n" classname="derivation matches the interface spec, computed independently with node:crypto" time="0.07431" file="test/unit.test.ts" line="29" assertions="1" />
+      <testcase name="a blob sealed by the SDK opens with a key derived by hand: dek(e) = HKDF(HKDF(prf, ns/path), dek/e)" classname="derivation matches the interface spec, computed independently with node:crypto" time="0.007027" file="test/unit.test.ts" line="34" assertions="1" />
+      <testcase name="nsHash in the header is keccak256(utf8(&apos;satchel/ns/&apos; + path))" classname="derivation matches the interface spec, computed independently with node:crypto" time="0.014966" file="test/unit.test.ts" line="44" assertions="1" />
+      <testcase name="sealed layout: SAT1, version 1, nsHash, epoch u64 BE, 12 byte iv, ciphertext plus 16 byte tag" classname="derivation matches the interface spec, computed independently with node:crypto" time="0.012413" file="test/unit.test.ts" line="49" assertions="5" />
+      <testcase name="fingerprint is 8 hex chars, stable, and differs per namespace and per passkey" classname="derivation matches the interface spec, computed independently with node:crypto" time="0.029648" file="test/unit.test.ts" line="58" assertions="4" />
+    </testsuite>
+    <testsuite name="Satchel session" file="test/unit.test.ts" line="71" tests="5" assertions="15" failures="0" skipped="0" time="0.022" hostname="Kamals-MacBook-Air.local">
+      <testcase name="seal accepts bytes, string and object; unseal returns bytes, unsealJson parses" classname="Satchel session" time="0.010569" file="test/unit.test.ts" line="72" assertions="3" />
+      <testcase name="unseal accepts the Sealed object or its bytes, and Sealed carries nsHash and epoch" classname="Satchel session" time="0.003408" file="test/unit.test.ts" line="79" assertions="3" />
+      <testcase name="close zeroes the PRF output the session owns and every later call throws SESSION_CLOSED" classname="Satchel session" time="0.007944" file="test/unit.test.ts" line="87" assertions="6" />
+      <testcase name="fromPrfOutput rejects a PRF output that is not 32 bytes (PRF_UNAVAILABLE)" classname="Satchel session" time="0.000161" file="test/unit.test.ts" line="99" assertions="1" />
+      <testcase name="grant and revoke without a registry throw REGISTRY_UNREACHABLE" classname="Satchel session" time="0.002843" file="test/unit.test.ts" line="102" assertions="2" />
+    </testsuite>
+    <testsuite name="every SatchelError code is raised by a real condition" file="test/unit.test.ts" line="110" tests="11" assertions="84" failures="0" skipped="0" time="1.163" hostname="Kamals-MacBook-Air.local">
+      <testcase name="PRF_UNAVAILABLE: authenticator without PRF" classname="every SatchelError code is raised by a real condition" time="0.001138" file="test/unit.test.ts" line="112" assertions="1" />
+      <testcase name="PASSKEY_CANCELLED: prompt closed" classname="every SatchelError code is raised by a real condition" time="0.000467" file="test/unit.test.ts" line="116" assertions="1" />
+      <testcase name="RPID_MISMATCH: browser refuses the rpId" classname="every SatchelError code is raised by a real condition" time="0.000213" file="test/unit.test.ts" line="120" assertions="1" />
+      <testcase name="WRONG_PASSKEY: a different passkey opens the blob" classname="every SatchelError code is raised by a real condition" time="0.010872" file="test/unit.test.ts" line="124" assertions="1" />
+      <testcase name="NAMESPACE_MISMATCH: blob header names another namespace" classname="every SatchelError code is raised by a real condition" time="0.001914" file="test/unit.test.ts" line="130" assertions="1" />
+      <testcase name="SEAL_CORRUPT: header intact, ciphertext shorter than one GCM tag" classname="every SatchelError code is raised by a real condition" time="0.003565" file="test/unit.test.ts" line="134" assertions="2" />
+      <testcase name="NOT_SEALED: foreign bytes, wrong version, impossible epoch" classname="every SatchelError code is raised by a real condition" time="0.011058" file="test/unit.test.ts" line="140" assertions="4" />
+      <testcase name="GRANT_NOT_FOR_KEY: a reader built from a grant issued to another key" classname="every SatchelError code is raised by a real condition" time="0.000649" file="test/unit.test.ts" line="152" assertions="1" />
+      <testcase name="INVALID_GRANTEE_KEY: grant() rejects a malformed key before touching the chain (RPC is unreachable here)" classname="every SatchelError code is raised by a real condition" time="1.133302" file="test/unit.test.ts" line="158" assertions="5" />
+      <testcase name="STORE_UNAVAILABLE: addPasskey with no store in a runtime without IndexedDB" classname="every SatchelError code is raised by a real condition" time="0.004168" file="test/unit.test.ts" line="166" assertions="2" />
+      <testcase name="every code has a fix string and a docs anchor" classname="every SatchelError code is raised by a real condition" time="0.000069" file="test/unit.test.ts" line="172" assertions="65" />
+    </testsuite>
+    <testsuite name="HPKE wrap (RFC 9180, DHKEM P-256, HKDF-SHA256, AES-128-GCM)" file="test/unit.test.ts" line="184" tests="2" assertions="402" failures="0" skipped="0" time="1.084" hostname="Kamals-MacBook-Air.local">
+      <testcase name="200 fresh grantee keys each unwrap their own wrap: the reader must hand HPKE the whole key pair (a bare private key failed about half the time)" classname="HPKE wrap (RFC 9180, DHKEM P-256, HKDF-SHA256, AES-128-GCM)" time="1.068241" file="test/unit.test.ts" line="185" assertions="401" />
+      <testcase name="a wrap is addressed: another grantee&apos;s key cannot open it" classname="HPKE wrap (RFC 9180, DHKEM P-256, HKDF-SHA256, AES-128-GCM)" time="0.016244" file="test/unit.test.ts" line="203" assertions="1" />
+    </testsuite>
+    <testsuite name="enrol, open and addPasskey through a software authenticator" file="test/unit.test.ts" line="227" tests="5" assertions="16" failures="0" skipped="0" time="0.028" hostname="Kamals-MacBook-Air.local">
+      <testcase name="enrol then open on the same authenticator derive the same keys with one prompt each" classname="enrol, open and addPasskey through a software authenticator" time="0.011391" file="test/unit.test.ts" line="228" assertions="6" />
+      <testcase name="a different authenticator cannot open the first authenticator&apos;s blob (WRONG_PASSKEY)" classname="enrol, open and addPasskey through a software authenticator" time="0.005847" file="test/unit.test.ts" line="243" assertions="1" />
+      <testcase name="addPasskey wraps the root so the second passkey opens the first passkey&apos;s data; recover demands that" classname="enrol, open and addPasskey through a software authenticator" time="0.005756" file="test/unit.test.ts" line="251" assertions="7" />
+      <testcase name="a wrap that fails authentication is WRONG_PASSKEY" classname="enrol, open and addPasskey through a software authenticator" time="0.006674" file="test/unit.test.ts" line="270" assertions="1" />
+      <testcase name="store read failure is STORE_UNAVAILABLE" classname="enrol, open and addPasskey through a software authenticator" time="0.001658" file="test/unit.test.ts" line="282" assertions="1" />
+    </testsuite>
+  </testsuite>
+</testsuites>

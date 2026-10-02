@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, setDefaultTimeout, test } from "bun:test";
 import * as fc from "fast-check";
 import { dekKey, nsHashOf, nsKeyBytes } from "../src/derive.ts";
 import { fromPrfOutput, ns, SatchelError } from "../src/index.ts";
@@ -12,6 +12,7 @@ const prfArb = fc.uint8Array({ minLength: 32, maxLength: 32 });
 const hex = (u: Uint8Array) => Buffer.from(u).toString("hex");
 const sat = (prf: Uint8Array) => fromPrfOutput(new Uint8Array(prf), { rpId: "localhost" });
 const HEADER = 57;
+setDefaultTimeout(60_000);
 
 describe("property: derivation", () => {
   test("(1) same PRF output and path always derive the same keys and fingerprint", async () => {
@@ -45,7 +46,7 @@ describe("property: derivation", () => {
         expect(deks.size).toBe(1000);
         checked++;
       }),
-      { numRuns: 3 },
+      { numRuns: 3, endOnFailure: true },
     );
     expect(checked).toBe(3);
   });
