@@ -1,0 +1,147 @@
+From 972ca06059a6e1320a0789285118e01b187ff58b Mon Sep 17 00:00:00 2001
+From: aarav1656 <anshuk3917@gmail.com>
+Date: Fri, 2 Oct 2026 21:04:45 +0530
+Subject: [PATCH] passkey keys: create and sign in read both role keys in one
+ passkey prompt
+
+createAccount and signIn asked the passkey twice, once per role salt. The WebAuthn PRF
+extension evaluates two salts in one ceremony (eval.first and eval.second), so both
+role outputs now come from one prompt. The salts, the Mera key recipe and every
+address are unchanged: an account made before this commit signs in to the same
+two addresses. An authenticator that returns only the first output falls back to the
+old second prompt. withOwnerKey and openTradingSession are untouched: one prompt each,
+and the trading session still never derives the owner key.
+
+Only web/src/lib/passkey/keys.ts changes; every export keeps its name and signature.
+---
+ web/src/lib/passkey/keys.ts | 80 ++++++++++++++++++++++++++++++++++---
+ 1 file changed, 74 insertions(+), 6 deletions(-)
+
+diff --git a/web/src/lib/passkey/keys.ts b/web/src/lib/passkey/keys.ts
+index 3d4dd49..f11f207 100644
+--- a/web/src/lib/passkey/keys.ts
++++ b/web/src/lib/passkey/keys.ts
+@@ -4,6 +4,7 @@ import {
+   getEvmAddress,
+   getPasskeyPrfOutput,
+   type PasskeyCredentialMetadata,
++  type WebAuthnClient,
+ } from "@category-labs/mera";
+ import { toViemAccount } from "@category-labs/mera/viem";
+ import { sha256 } from "@noble/hashes/sha2.js";
+@@ -18,6 +19,8 @@ export type KeyRole = "owner" | "trading";
+ /**
+  * One PRF salt per role (D-012). A different salt yields an unrelated PRF output (Mera, passkey.d.ts),
+  * so unlocking the trading key never puts owner-key material in memory. Changing these changes every address.
++ * Both salts ride in one WebAuthn ceremony when an account is created or recovered (`pairClient`): the PRF
++ * extension evaluates `first` and `second` per prompt, and each output is the same bytes it would be alone.
+  */
+ const SALTS: Record<KeyRole, Uint8Array> = {
+   owner: sha256(utf8ToBytes("curb.owner.v1")),
+@@ -48,32 +51,97 @@ async function derive(rpId: string, credential: PasskeyCredentialMetadata | unde
+   return { ...sessionFromPrf(prfOutput), credentialId };
+ }
+ 
+-/** New passkey → owner and trading addresses. Two biometric prompts; no key is kept afterwards. */
++/** What the second PRF salt returned during a ceremony Mera ran for the first one. */
++type Second = { prf?: Uint8Array };
++
++const bytes32 = (value: BufferSource | undefined) => {
++  if (!value) return undefined;
++  const out = new Uint8Array(ArrayBuffer.isView(value) ? value.buffer.slice(value.byteOffset, value.byteOffset + value.byteLength) : value);
++  return out.length === 32 ? out : undefined;
++};
++
++/**
++ * Mera's browser client with one change: the PRF request carries a second salt and its output lands in `sink`.
++ * Mera still reads the first output and keeps every check it makes. `createCredential` and `getCredential` are
++ * Mera's own `browserWebAuthnClient` ceremonies (node_modules/@category-labs/mera/dist/webauthn.js) plus `second`.
++ */
++function pairClient(second: Uint8Array, sink: Second): WebAuthnClient {
++  return {
++    async createCredential(request) {
++      const credential = (await navigator.credentials.create({
++        publicKey: {
++          rp: request.rp,
++          user: request.user,
++          challenge: request.challenge,
++          pubKeyCredParams: request.algorithms.map((alg) => ({ type: "public-key", alg })),
++          ...(request.timeout !== undefined ? { timeout: request.timeout } : {}),
++          attestation: request.attestation,
++          authenticatorSelection: { residentKey: request.residentKey, requireResidentKey: true, userVerification: request.userVerification },
++          extensions: { prf: { eval: { first: request.prfSalt, second: second as BufferSource } } },
++        },
++      })) as PublicKeyCredential | null;
++      if (!credential) throw new Error("WebAuthn returned no credential");
++      const prf = credential.getClientExtensionResults().prf;
++      const first = bytes32(prf?.results?.first);
++      sink.prf = bytes32(prf?.results?.second);
++      const response = credential.response as AuthenticatorAttestationResponse;
++      const transports = typeof response.getTransports === "function" ? (response.getTransports() as PasskeyCredentialMetadata["transports"]) : undefined;
++      return { credentialId: new Uint8Array(credential.rawId), ...(transports ? { transports } : {}), prfEnabled: prf?.enabled === true, ...(first ? { prfOutput: first } : {}) };
++    },
++    async getCredential(request) {
++      const { allowCredential } = request;
++      const credential = (await navigator.credentials.get({
++        publicKey: {
++          rpId: request.rpId,
++          challenge: request.challenge,
++          ...(request.timeout !== undefined ? { timeout: request.timeout } : {}),
++          userVerification: request.userVerification,
++          extensions: { prf: { eval: { first: request.prfSalt, second: second as BufferSource } } },
++          ...(allowCredential
++            ? { allowCredentials: [{ id: allowCredential.credentialId, type: "public-key", ...(allowCredential.transports ? { transports: allowCredential.transports as AuthenticatorTransport[] } : {}) }] }
++            : {}),
++        },
++      })) as PublicKeyCredential | null;
++      if (!credential) throw new Error("WebAuthn returned no credential");
++      const prf = credential.getClientExtensionResults().prf;
++      const first = bytes32(prf?.results?.first);
++      sink.prf = bytes32(prf?.results?.second);
++      return { credentialId: new Uint8Array(credential.rawId), ...(first ? { prfOutput: first } : {}) };
++    },
++  };
++}
++
++/** New passkey → owner and trading addresses. One biometric prompt (two on an authenticator that skips PRF at creation); no key is kept afterwards. */
+ export async function createAccount(rpId: string, onStage?: (role: KeyRole) => void): Promise<CurbAccountRecord> {
+   onStage?.("owner");
+   const handle = Array.from(crypto.getRandomValues(new Uint8Array(3)), (b) => b.toString(16).padStart(2, "0")).join("");
++  const sink: Second = {};
+   const created = await createPasskeyWithPrfOutput({
+     rp: { id: rpId, name: "Curb" },
+     user: { name: `curb-${handle}`, displayName: `Curb account ${handle}` },
+     prfSalt: SALTS.owner,
++    webAuthnClient: pairClient(SALTS.trading, sink),
+   });
+   const credential: PasskeyCredentialMetadata = { credentialId: created.credentialId, transports: created.transports };
+   const owner = sessionFromPrf(created.prfOutput);
+   onStage?.("trading");
+-  const trading = await derive(rpId, credential, "trading");
++  // An authenticator that returned no second output gets the old second prompt, so no account is ever made without both keys.
++  const trading = sink.prf ? sessionFromPrf(sink.prf) : await derive(rpId, credential, "trading");
+   const record = { credential, owner: owner.address, trading: trading.address };
+   owner.session.end();
+   trading.session.end();
+   return record;
+ }
+ 
+-/** Existing passkey on this or another device → the same two addresses. Two prompts. */
++/** Existing passkey on this or another device → the same two addresses. One prompt (two if the authenticator returns one PRF output per prompt). */
+ export async function signIn(rpId: string, onStage?: (role: KeyRole) => void): Promise<CurbAccountRecord> {
+   onStage?.("trading");
+-  const trading = await derive(rpId, undefined, "trading");
+-  const credential: PasskeyCredentialMetadata = { credentialId: trading.credentialId };
++  const sink: Second = {};
++  const { prfOutput, credentialId } = await getPasskeyPrfOutput({ rpId, prfSalt: SALTS.trading, webAuthnClient: pairClient(SALTS.owner, sink) });
++  const trading = sessionFromPrf(prfOutput);
++  const credential: PasskeyCredentialMetadata = { credentialId };
+   onStage?.("owner");
+-  const owner = await derive(rpId, credential, "owner");
++  const owner = sink.prf ? sessionFromPrf(sink.prf) : await derive(rpId, credential, "owner");
+   const record = { credential, owner: owner.address, trading: trading.address };
+   owner.session.end();
+   trading.session.end();
+-- 
+2.52.0
+

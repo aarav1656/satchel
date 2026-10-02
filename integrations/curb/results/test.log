@@ -1,0 +1,21 @@
+npm warn Unknown user config "allow-git". This will stop working in the next major version of npm.
+npm warn Unknown user config "min-release-age". This will stop working in the next major version of npm.
+
+> web@0.1.0 test
+> vitest run
+
+
+ RUN  v3.2.7 /private/tmp/curb/web
+
+ ✓ src/lib/kuru/book.test.ts (3 tests) 15ms
+ ✓ src/lib/lane.test.ts (8 tests) 6ms
+ ✓ src/lib/format.test.ts (4 tests) 15ms
+ ✓ src/lib/passkey/environment.test.ts (3 tests) 6ms
+ ✓ src/lib/curb/account.test.ts (8 tests) 20ms
+
+ Test Files  5 passed (5)
+      Tests  26 passed (26)
+   Start at  21:11:04
+   Duration  2.83s (transform 371ms, setup 0ms, collect 2.63s, tests 62ms, environment 1ms, prepare 1.15s)
+
+exit=0

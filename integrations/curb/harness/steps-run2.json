@@ -1,0 +1,29 @@
+[
+ {
+  "eval": "localStorage.clear(); document.getElementById('out').innerText"
+ },
+ {
+  "front": true,
+  "tclick": "create"
+ },
+ {
+  "wait": 3500,
+  "eval": "document.getElementById('out').innerText"
+ },
+ {
+  "front": true,
+  "tclick": "signin"
+ },
+ {
+  "wait": 3500,
+  "eval": "document.getElementById('out').innerText"
+ },
+ {
+  "front": true,
+  "tclick": "owner"
+ },
+ {
+  "wait": 3500,
+  "eval": "document.getElementById('out').innerText"
+ }
+]
