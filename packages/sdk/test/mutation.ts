@@ -60,6 +60,10 @@ const results = [
   mutant("epoch", "src/session.ts", "this.o.registry ? await epochOf(this.o.registry, this.registryOwner, nsHashOf(n)) : 1", "1", ["test/registry.test.ts", "-t", "property \\(5\\)"], [/holds for random payloads/]),
   // the reader hands HPKE only the private key (the bug the 200-key test found)
   mutant("hpke-key", "src/grant.ts", "recipientKey: pair,", "recipientKey: pair.privateKey,", ["test/unit.test.ts"], [/200 fresh grantee keys/]),
+  // a stale marker is left in the store after PASSKEY_NOT_FOUND
+  mutant("stale-marker", "src/session.ts", "if (store) await writeMarker(store, o.rpId, undefined);", "", ["test/open-or-enrol.test.ts"], [/deletes the marker/, /store without delete/]),
+  // a first visit that finds nothing chains into a second ceremony, the get-then-create the browser gesture rule can refuse
+  mutant("chained-ceremonies", "src/session.ts", "throw notFound(o.rpId, e, false);", "s = await enrol(o);", ["test/open-or-enrol.test.ts"], [/nothing to open/, /at most one ceremony/]),
 ];
 console.log(results.every(Boolean) ? "MUTATION CHECK: every mutant went red and every restore went green" : "MUTATION CHECK FAILED");
 process.exit(results.every(Boolean) ? 0 : 1);

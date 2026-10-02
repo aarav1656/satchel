@@ -1,6 +1,8 @@
 export type ErrorCode =
   | "PRF_UNAVAILABLE"
   | "PASSKEY_CANCELLED"
+  | "PASSKEY_NOT_FOUND"
+  | "CHOOSE_PASSKEY_MODE"
   | "RPID_MISMATCH"
   | "WRONG_PASSKEY"
   | "NAMESPACE_MISMATCH"
@@ -21,8 +23,11 @@ export type ErrorCode =
 export const FIXES: Record<ErrorCode, string> = {
   PRF_UNAVAILABLE:
     "use iCloud Keychain, Google Password Manager, Windows Hello, 1Password, Proton Pass or a YubiKey 5.",
-  PASSKEY_CANCELLED:
-    "call enrol() or openOrEnrol() from a click handler if this device has no passkey for the rpId yet (open() cannot tell a closed prompt from no passkey), otherwise call open() again and confirm the prompt.",
+  PASSKEY_CANCELLED: "call the same function again from a click handler and confirm the passkey prompt.",
+  PASSKEY_NOT_FOUND:
+    "offer both choices again: open() or openOrEnrol({ mode: \"open\" }) to pick another passkey, enrol() or openOrEnrol({ mode: \"enrol\" }) to create one. The passkey this device remembered is forgotten, so nothing blocks either choice.",
+  CHOOSE_PASSKEY_MODE:
+    "pass mode: \"enrol\" to create a passkey or mode: \"open\" to use one the person already has, each from its own click handler. openOrEnrol() runs one passkey prompt per call and never chains both.",
   RPID_MISMATCH: "pin rpId to the hostname the passkey was created under, usually your production hostname.",
   WRONG_PASSKEY: "open with the passkey that sealed this data, or use a second passkey added with addPasskey().",
   NAMESPACE_MISMATCH: "unseal with the namespace the blob was sealed under.",

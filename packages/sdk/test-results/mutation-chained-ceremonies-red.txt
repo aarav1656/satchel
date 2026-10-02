@@ -1,0 +1,40 @@
+mutation: src/session.ts: throw notFound(o.rpId, e, false);  =>  s = await enrol(o);
+args: test/open-or-enrol.test.ts
+exit=1
+
+bun test v1.3.1 (89fa0f34)
+
+test/open-or-enrol.test.ts:
+35 |   test("every path with no marker makes at most one ceremony call, whatever the authenticator answers", async () => {
+36 |     for (const mode of ["open", "enrol"] as const) {
+37 |       for (const failWith of [undefined, "NotAllowedError", "SecurityError"]) {
+38 |         const a = fakeAuthenticator(failWith ? { failWith } : {});
+39 |         await codeOf(() => openOrEnrol({ ...base, mode, webAuthnClient: a.client, store: memoryStore() }));
+40 |         expect(total(a.calls)).toBeLessThanOrEqual(1);
+                                    ^
+error: expect(received).toBeLessThanOrEqual(expected)
+
+Expected: <= 1
+Received: 2
+
+      at <anonymous> (/private/tmp/satchel-sdk-mutant-chained-ceremonies/test/open-or-enrol.test.ts:40:32)
+(fail) openOrEnrol: one WebAuthn ceremony per call > every path with no marker makes at most one ceremony call, whatever the authenticator answers [0.81ms]
+55 |   });
+56 | 
+57 |   test("no marker, mode open, and nothing to open: PASSKEY_NOT_FOUND after one get, no create, no marker", async () => {
+58 |     const a = fakeAuthenticator();
+59 |     const store = memoryStore();
+60 |     expect(await codeOf(() => openOrEnrol({ ...base, mode: "open", webAuthnClient: a.client, store }))).toBe("PASSKEY_NOT_FOUND");
+                                                                                                             ^
+error: expect(received).toBe(expected)
+
+Expected: "PASSKEY_NOT_FOUND"
+Received: "PASSKEY_CANCELLED"
+
+      at <anonymous> (/private/tmp/satchel-sdk-mutant-chained-ceremonies/test/open-or-enrol.test.ts:60:105)
+(fail) openOrEnrol: one WebAuthn ceremony per call > no marker, mode open, and nothing to open: PASSKEY_NOT_FOUND after one get, no create, no marker [0.41ms]
+
+ 17 pass
+ 2 fail
+ 65 expect() calls
+Ran 19 tests across 1 file. [123.00ms]

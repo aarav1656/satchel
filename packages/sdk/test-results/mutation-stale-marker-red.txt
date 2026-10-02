@@ -1,0 +1,82 @@
+mutation: src/session.ts: if (store) await writeMarker(store, o.rpId, undefined);  =>  
+args: test/open-or-enrol.test.ts
+exit=1
+
+bun test v1.3.1 (89fa0f34)
+
+test/open-or-enrol.test.ts:
+83 |   test("a marker whose passkey is gone throws PASSKEY_NOT_FOUND with one get, deletes the marker, creates nothing", async () => {
+84 |     const a = fakeAuthenticator();
+85 |     const store = stale(a);
+86 |     expect(await codeOf(() => openOrEnrol({ ...base, mode: "enrol", webAuthnClient: a.client, store }))).toBe("PASSKEY_NOT_FOUND");
+87 |     expect(a.calls).toEqual({ create: 0, get: 1 });
+88 |     expect(store.map.has(KEY)).toBe(false);
+                                    ^
+error: expect(received).toBe(expected)
+
+Expected: false
+Received: true
+
+      at <anonymous> (/private/tmp/satchel-sdk-mutant-stale-marker/test/open-or-enrol.test.ts:88:32)
+(fail) openOrEnrol: a stale marker never traps anyone > a marker whose passkey is gone throws PASSKEY_NOT_FOUND with one get, deletes the marker, creates nothing [0.24ms]
+91 | 
+92 |   test("the call after PASSKEY_NOT_FOUND is a first visit again: it asks for a mode, then enrol works", async () => {
+93 |     const a = fakeAuthenticator();
+94 |     const store = stale(a);
+95 |     await codeOf(() => openOrEnrol({ ...base, webAuthnClient: a.client, store }));
+96 |     expect(await codeOf(() => openOrEnrol({ ...base, webAuthnClient: a.client, store }))).toBe("CHOOSE_PASSKEY_MODE");
+                                                                                               ^
+error: expect(received).toBe(expected)
+
+Expected: "CHOOSE_PASSKEY_MODE"
+Received: "PASSKEY_NOT_FOUND"
+
+      at <anonymous> (/private/tmp/satchel-sdk-mutant-stale-marker/test/open-or-enrol.test.ts:96:91)
+(fail) openOrEnrol: a stale marker never traps anyone > the call after PASSKEY_NOT_FOUND is a first visit again: it asks for a mode, then enrol works [0.81ms]
+116 |     const a = fakeAuthenticator();
+117 |     const map = new Map<string, Uint8Array>();
+118 |     map.set(KEY, new TextEncoder().encode(JSON.stringify({ credentialId: "Z29uZQ" })));
+119 |     const store: Store = { get: async (k) => map.get(k), put: async (k, v) => void map.set(k, v) };
+120 |     expect(await codeOf(() => openOrEnrol({ ...base, mode: "open", webAuthnClient: a.client, store }))).toBe("PASSKEY_NOT_FOUND");
+121 |     expect(map.get(KEY)?.length).toBe(0);
+                                       ^
+error: expect(received).toBe(expected)
+
+Expected: 0
+Received: 25
+
+      at <anonymous> (/private/tmp/satchel-sdk-mutant-stale-marker/test/open-or-enrol.test.ts:121:34)
+(fail) openOrEnrol: a stale marker never traps anyone > a store without delete has the marker overwritten with an empty value, which reads as absent [0.08ms]
+127 |     const store: Store = {
+128 |       get: async () => new TextEncoder().encode(JSON.stringify({ credentialId: "Z29uZQ" })),
+129 |       put: async () => { throw new Error("quota"); },
+130 |       delete: async () => { throw new Error("locked"); },
+131 |     };
+132 |     expect(await codeOf(() => openOrEnrol({ ...base, mode: "open", webAuthnClient: a.client, store }))).toBe("STORE_UNAVAILABLE");
+                                                                                                              ^
+error: expect(received).toBe(expected)
+
+Expected: "STORE_UNAVAILABLE"
+Received: "PASSKEY_NOT_FOUND"
+
+      at <anonymous> (/private/tmp/satchel-sdk-mutant-stale-marker/test/open-or-enrol.test.ts:132:105)
+(fail) openOrEnrol: a stale marker never traps anyone > a store that cannot clear the marker is STORE_UNAVAILABLE, not a silent trap [0.17ms]
+139 |     await openOrEnrol({ ...base, mode: "enrol", webAuthnClient: a.client, store });
+140 |     opts.failWith = "NotAllowedError";
+141 |     expect(await codeOf(() => openOrEnrol({ ...base, webAuthnClient: a.client, store }))).toBe("PASSKEY_NOT_FOUND");
+142 |     expect(a.calls.create).toBe(1);
+143 |     expect(a.creds.size).toBe(1);
+144 |     expect(store.map.has(KEY)).toBe(false);
+                                     ^
+error: expect(received).toBe(expected)
+
+Expected: false
+Received: true
+
+      at <anonymous> (/private/tmp/satchel-sdk-mutant-stale-marker/test/open-or-enrol.test.ts:144:32)
+(fail) openOrEnrol: a stale marker never traps anyone > a closed prompt with a live marker also forgets the marker and creates nothing; the passkey itself is untouched [0.56ms]
+
+ 14 pass
+ 5 fail
+ 64 expect() calls
+Ran 19 tests across 1 file. [144.00ms]

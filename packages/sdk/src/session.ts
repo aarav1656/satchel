@@ -299,44 +299,90 @@ function parseKnown(raw: Uint8Array): PasskeyCredentialMetadata | undefined {
   }
 }
 
+/** Which single ceremony a first visit runs. */
+export type PasskeyMode = "open" | "enrol";
+
+const defaultStore = (o: { store?: Store }): Store | undefined => o.store ?? (typeof indexedDB === "undefined" ? undefined : indexedDbStore);
+
 /**
- * One call for both first and later visits. It decides in this order:
- * 1. `credential` given: open() with it.
- * 2. The store holds a marker from an earlier openOrEnrol for this rpId: open() with that credential. A closed prompt
- *    throws PASSKEY_CANCELLED and never falls through to enrol(), because creating a second passkey would fork the vault.
- * 3. No marker: open() lets the browser offer any passkey for this rpId (a synced passkey from another device opens
- *    here). If that ceremony succeeds the marker is written and the vault opens.
- * 4. That open() throws PASSKEY_CANCELLED (WebAuthn cannot tell a closed prompt from "no passkey"): enrol() creates one,
- *    and the marker is written.
- * Any other error from open() (PRF_UNAVAILABLE, RPID_MISMATCH, STORE_UNAVAILABLE) is thrown as it is. A first visit
- * therefore shows one prompt to find a passkey and a second to create one; every later visit shows one.
- * The marker lives in `store` (default IndexedDB); in a runtime with neither, steps 2 and the marker write are skipped.
+ * The credential openOrEnrol remembers for this rpId, or undefined on a first visit. A page uses it to pick between one
+ * button ("Run") and two ("Create a passkey", "I already have one") before any prompt is shown.
  */
-export async function openOrEnrol(o: OpenOptions & { appName: string }): Promise<Satchel> {
-  if (o.credential) return open(o);
-  // No store and no IndexedDB: nothing to remember, the ceremony decides every time.
-  const store = o.store ?? (typeof indexedDB === "undefined" ? undefined : indexedDbStore);
-  let marker: Uint8Array | undefined;
+export async function rememberedPasskey(o: { rpId: string; store?: Store }): Promise<PasskeyCredentialMetadata | undefined> {
+  const store = defaultStore(o);
   try {
-    marker = store ? await store.get(knownKey(o.rpId)) : undefined;
+    const marker = store ? await store.get(knownKey(o.rpId)) : undefined;
+    return marker ? parseKnown(marker) : undefined;
   } catch (cause) {
     throw new SatchelError("STORE_UNAVAILABLE", "The store could not be read for this rpId's passkey marker.", { cause });
   }
-  const known = marker ? parseKnown(marker) : undefined;
-  if (known) return open({ ...o, credential: known });
-  let s: Satchel;
+}
+
+async function writeMarker(store: Store, rpId: string, value: Uint8Array | undefined): Promise<void> {
+  const key = knownKey(rpId);
   try {
-    s = await open(o);
-  } catch (e) {
-    if (!isSatchelError(e) || e.code !== "PASSKEY_CANCELLED") throw e;
-    s = await enrol(o);
+    if (value) await store.put(key, value);
+    else if (store.delete) await store.delete(key);
+    else await store.put(key, new Uint8Array(0));
+  } catch (cause) {
+    throw new SatchelError("STORE_UNAVAILABLE", value ? "The store refused the passkey marker for this rpId." : "The store could not clear the stale passkey marker for this rpId.", { cause });
+  }
+}
+
+const notFound = (rpId: string, cause: unknown, forgot: boolean) =>
+  new SatchelError(
+    "PASSKEY_NOT_FOUND",
+    `No passkey was chosen for "${rpId}": the prompt was closed or this device has none to offer.${forgot ? " The passkey this device remembered no longer opens, so it was forgotten." : ""}`,
+    { cause },
+  );
+
+/**
+ * One call for first and later visits, and exactly one WebAuthn ceremony per call (a browser grants a user gesture one
+ * prompt, so two in a row can fail). It decides in this order:
+ * 1. `credential` given: open() with it.
+ * 2. The store holds a marker from an earlier openOrEnrol for this rpId: open() with that credential, and `mode` is ignored.
+ *    If that prompt is closed or its passkey is gone (deleted, or made on another device or authenticator), the marker is
+ *    deleted and PASSKEY_NOT_FOUND is thrown, so a stale marker never traps anyone. Nothing is created.
+ * 3. No marker and `mode: "open"`: open() lets the browser offer any passkey for this rpId (a synced passkey from another
+ *    device opens here). A closed prompt or no passkey throws PASSKEY_NOT_FOUND.
+ * 4. No marker and `mode: "enrol"`: enrol() creates a passkey.
+ * 5. No marker and no valid `mode`: CHOOSE_PASSKEY_MODE, before any prompt. Ask the person ("Create a passkey" or "I already
+ *    have one") and call again from that click.
+ * A successful step 3 or 4 writes the marker. Any other error (PRF_UNAVAILABLE, RPID_MISMATCH, STORE_UNAVAILABLE) is thrown
+ * as it is. The marker lives in `store` (default IndexedDB); in a runtime with neither, steps 2 and the marker write are skipped.
+ */
+export async function openOrEnrol(o: OpenOptions & { appName: string; mode?: PasskeyMode }): Promise<Satchel> {
+  if (o.credential) return open(o);
+  const store = defaultStore(o);
+  const known = await rememberedPasskey(o);
+  if (known) {
+    try {
+      return await open({ ...o, credential: known });
+    } catch (e) {
+      if (!isSatchelError(e) || e.code !== "PASSKEY_CANCELLED") throw e;
+      if (store) await writeMarker(store, o.rpId, undefined);
+      throw notFound(o.rpId, e, true);
+    }
+  }
+  if (o.mode !== "open" && o.mode !== "enrol") {
+    throw new SatchelError("CHOOSE_PASSKEY_MODE", `No passkey is remembered for "${o.rpId}", so openOrEnrol needs mode: "open" or mode: "enrol".`);
+  }
+  let s: Satchel;
+  if (o.mode === "enrol") s = await enrol(o);
+  else {
+    try {
+      s = await open(o);
+    } catch (e) {
+      if (isSatchelError(e) && e.code === "PASSKEY_CANCELLED") throw notFound(o.rpId, e, false);
+      throw e;
+    }
   }
   if (store && s.credential) {
     try {
-      await store.put(knownKey(o.rpId), new TextEncoder().encode(JSON.stringify(s.credential)));
-    } catch (cause) {
+      await writeMarker(store, o.rpId, new TextEncoder().encode(JSON.stringify(s.credential)));
+    } catch (e) {
       s.close();
-      throw new SatchelError("STORE_UNAVAILABLE", "The store refused the passkey marker for this rpId.", { cause });
+      throw e;
     }
   }
   return s;

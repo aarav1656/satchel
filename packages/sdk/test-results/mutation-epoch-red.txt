@@ -13,8 +13,8 @@ test/registry.test.ts:
 2469 | 	const error = new SError(errorMessage, { cause: out.errorInstance });
                       ^
 error: Property failed after 1 tests
-{ seed: -548608341, path: "0:0:0:0:0:0:0:0:0:0", endOnFailure: true }
-Counterexample: [0,"0a0",Uint8Array.from([0]),Uint8Array.from([0])]
+{ seed: -1229733160, path: "0:0:0:0:0:0:0:0:0:0", endOnFailure: true }
+Counterexample: [0,"00a",Uint8Array.from([0]),Uint8Array.from([0])]
 Shrunk 9 time(s)
 
 Hint: Enable verbose mode in order to have the list of all failing values encountered during the run
@@ -36,10 +36,10 @@ Received: 2
       at <anonymous> (/private/tmp/satchel-sdk-mutant-epoch/test/registry.test.ts:160:31)
       at async run (./packages/sdk/node_modules/fast-check/lib/fast-check.js:1217:30)
       at async asyncPropertyExecution (./packages/sdk/node_modules/fast-check/lib/fast-check.js:2564:29)
-(fail) property (5): a grant reader opens epoch e and throws on epoch e+1 after revoke-rotation > holds for random payloads, namespaces and starting epochs, checked against the chain [737.62ms]
+(fail) property (5): a grant reader opens epoch e and throws on epoch e+1 after revoke-rotation > holds for random payloads, namespaces and starting epochs, checked against the chain [68.62ms]
 
  0 pass
  8 filtered out
  1 fail
  27 expect() calls
-Ran 1 test across 1 file. [2.06s]
+Ran 1 test across 1 file. [441.00ms]

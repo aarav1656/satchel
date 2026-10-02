@@ -5,7 +5,8 @@ One passkey, many namespaced keys. Seal data per app, hand a second app a revoca
 ```ts
 import { openOrEnrol, ns } from "satchel-sdk";
 
-const s = await openOrEnrol({ rpId: location.hostname, appName: "My app" }); // opens your passkey, or creates one the first time
+// mode is read on a first visit only: "enrol" creates a passkey, "open" uses one the person already has
+const s = await openOrEnrol({ rpId: location.hostname, appName: "My app", mode });
 const memory = ns("memory/assistant");
 const blob = await s.seal(memory, { likes: "metric units" });                 // Sealed, safe to store anywhere
 const back = await s.unsealJson(memory, blob);                                // { likes: "metric units" }
@@ -20,7 +21,8 @@ npm i satchel-sdk @category-labs/mera@0.2.0
 | Export | Does |
 |---|---|
 | `ns(path)` | A branded namespace. HKDF info is `satchel/ns/` plus the path. |
-| `openOrEnrol(o)` | Opens the passkey for this rpId, or creates one. Remembers the credential id in the store, so later visits are one prompt. |
+| `openOrEnrol(o)` | One passkey prompt per call. With a remembered credential it opens it (a gone passkey clears the memory and throws `PASSKEY_NOT_FOUND`); on a first visit it runs `mode: "open"` or `mode: "enrol"`, and throws `CHOOSE_PASSKEY_MODE` without a mode. Call it from the click of a "Create a passkey" or "I already have one" button. |
+| `rememberedPasskey(o)` | The credential `openOrEnrol` remembers for this rpId, or `undefined` on a first visit: one button or two. |
 | `enrol(o)` / `open(o)` | New passkey or existing passkey, one prompt, through Mera 0.2.0. |
 | `fromPrfOutput(prf, o)` | The same session from a 32 byte PRF output you hold (tests, server-side readers). Takes ownership of the array and zeroes it on `close()`. |
 | `Satchel.seal` / `unseal` / `unsealJson` | AES-256-GCM, per-epoch data key, header bound as AAD. |

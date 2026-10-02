@@ -4,6 +4,8 @@ import { SatchelError } from "./errors.js";
 export interface Store {
   get(key: string): Promise<Uint8Array | undefined>;
   put(key: string, value: Uint8Array): Promise<void>;
+  /** Removes a key. Optional: a store without it has the passkey marker overwritten with an empty value, which reads as absent. */
+  delete?(key: string): Promise<void>;
 }
 
 const done = <T>(req: IDBRequest<T>) =>
@@ -25,6 +27,9 @@ export const indexedDbStore: Store = {
   },
   async put(key, value) {
     await done((await db()).transaction("kv", "readwrite").objectStore("kv").put(value.slice().buffer, key));
+  },
+  async delete(key) {
+    await done((await db()).transaction("kv", "readwrite").objectStore("kv").delete(key));
   },
 };
 

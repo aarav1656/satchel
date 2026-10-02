@@ -40,7 +40,7 @@ export function fakeAuthenticator(opts: { noPrf?: boolean; failWith?: string } =
 
 export const memoryStore = (): Store & { map: Map<string, Uint8Array> } => {
   const map = new Map<string, Uint8Array>();
-  return { map, get: async (k) => map.get(k), put: async (k, v) => void map.set(k, v) };
+  return { map, get: async (k) => map.get(k), put: async (k, v) => void map.set(k, v), delete: async (k) => void map.delete(k) };
 };
 
 export async function codeOf(fn: () => unknown): Promise<string> {

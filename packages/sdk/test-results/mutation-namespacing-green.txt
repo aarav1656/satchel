@@ -6,4 +6,4 @@ bun test v1.3.1 (89fa0f34)
  6 pass
  0 fail
  2613 expect() calls
-Ran 6 tests across 1 file. [4.57s]
+Ran 6 tests across 1 file. [720.00ms]

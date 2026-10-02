@@ -1,0 +1,9 @@
+real tree, same args: test/open-or-enrol.test.ts
+exit=0
+
+bun test v1.3.1 (89fa0f34)
+
+ 19 pass
+ 0 fail
+ 72 expect() calls
+Ran 19 tests across 1 file. [139.00ms]

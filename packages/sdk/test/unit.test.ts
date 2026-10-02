@@ -177,7 +177,7 @@ describe("every SatchelError code is raised by a real condition", () => {
       expect(e.docs).toStartWith("/reference/errors#");
       expect(e).toBeInstanceOf(Error);
     }
-    expect(Object.keys(FIXES)).toHaveLength(17);
+    expect(Object.keys(FIXES)).toHaveLength(19);
   });
 });
 
