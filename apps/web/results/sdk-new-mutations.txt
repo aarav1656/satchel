@@ -1,0 +1,29 @@
+# mutation checks on the new SDK code, 2026-10-02T11:27:21Z. Each mutation is applied to the real tree, the named test file is run, the file is restored.
+
+## OWNER_UNFUNDED check removed (balance >= need always true)
+(fail) OWNER_UNFUNDED > grant and revoke on an unfunded owner throw it with the owner, the shortfall and the fix, and send nothing [115.58ms]
+(fail) OWNER_UNFUNDED > revoke on an owner that spent its balance after granting throws it too, and the grant stays active [67.16ms]
+(fail) OWNER_UNFUNDED > the shortfall shrinks as the owner is funded, and the same call succeeds once it holds enough [39.15ms]
+(fail) OWNER_UNFUNDED > on Monad testnet the fix names MON and the faucet [26.38ms]
+(fail) revoking one grant moves every reader to the next epoch; regrant restores the ones that should stay > regrant is a registry write like grant: an unfunded owner gets OWNER_UNFUNDED [6.80ms]
+ 8 pass
+ 5 fail
+
+## openOrEnrol enrols on any open() error, not only a closed prompt
+(fail) openOrEnrol > errors other than a closed prompt are thrown as they are and never enrol [1.09ms]
+ 9 pass
+ 1 fail
+
+## openOrEnrol ignores the marker
+(fail) openOrEnrol > with a marker, a closed prompt is PASSKEY_CANCELLED and does not create a second passkey [0.91ms]
+ 9 pass
+ 1 fail
+
+## fetchGrant scans logs before reading the receipt
+(fail) fetchGrant: a Grant is portable through its transaction hash > it reads one receipt and never scans logs (Monad caps eth_getLogs at 100 blocks); the recorder does see a getLogs when one is made [7.98ms]
+ 12 pass
+ 1 fail
+
+## restored tree
+ 26 pass
+ 0 fail

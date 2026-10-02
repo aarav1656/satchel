@@ -1,0 +1,34 @@
+# check-built.mjs: it must be able to fail. Each case edits the built export in out/, runs the check, restores the file. 2026-10-02T12:21:07Z
+
+## RED: the page shows different quickstart text than the source
+check-built FAIL (1):
+- the quickstart shown on / differs from lib/snippets.ts QUICKSTART:
+--- page
+import { openOrEnrol, ns } from "@satchel/sdk";
+
+const s = await openOrEnrol({ rpId: location.hostname, appName: "My app" }); // opens your passkey, or creates one the first time
+exit 1
+
+## RED: the Run button bundle executes different text than the page shows
+check-built FAIL (1):
+- the QUICKSTART string in the client bundle differs from lib/snippets.ts
+exit 1
+
+## RED: the docs name a function the SDK does not export
+check-built FAIL (1):
+- /concepts/namespaces: code names rotateAll(), which @satchel/sdk does not export
+exit 1
+
+## RED: a docs code block calls a Satchel method that does not exist
+check-built FAIL (1):
+- /guides/two-apps: s.rotate() is not a member of Satchel
+exit 1
+
+## RED: the error table and the entry disagree on Thrown by
+check-built FAIL (1):
+- REGISTRY_UNREACHABLE: table says "Satchel.sealX, Satchel.grant, Satchel.regrant, Satchel.revoke, fetchGrant, epochOf", entry says "Satchel.seal, Satchel.grant, Satchel.regrant, Satchel.revoke, fetchGrant, epochOf"
+exit 1
+
+## GREEN: restored export
+check-built ok: quickstart on / === QUICKSTART === the shipped Run source (6 lines); 36 function names in docs code checked against 41 real names; 17 error table rows agree with 17 entries and 17 ErrorCodes
+exit 0

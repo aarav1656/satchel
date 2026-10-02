@@ -1,0 +1,38 @@
+# names test red/green, 2026-10-02T11:25:56Z
+## green (real tree)
+bun test v1.3.1 (89fa0f34)
+
+ 3 pass
+ 0 fail
+ 22 expect() calls
+Ran 3 tests across 1 file. [974.00ms]
+## red (fix text now names rotateEverything(), which is not exported)
+bun test v1.3.1 (89fa0f34)
+test/names.test.ts:
+41 |   test("FIXES and every `fix:` literal in src name only real functions", () => {
+42 |     expect(literalFixes.length).toBeGreaterThanOrEqual(8);
+43 |     const texts = [...Object.values(FIXES), ...literalFixes];
+44 |     const named = new Set(texts.flatMap(calledNames));
+45 |     expect(named.size).toBeGreaterThanOrEqual(8);
+46 |     expect(unknownNames(texts)).toEqual([]);
+                                     ^
+error: expect(received).toEqual(expected)
+- []
++ [
++   "rotateEverything",
++ ]
+- Expected  - 1
++ Received  + 3
+      at <anonymous> (./packages/sdk/test/names.test.ts:46:33)
+(fail) every function an error fix names is a real export > FIXES and every `fix:` literal in src name only real functions [9.50ms]
+ 2 pass
+ 1 fail
+ 22 expect() calls
+Ran 3 tests across 1 file. [287.00ms]
+## green again (restored)
+bun test v1.3.1 (89fa0f34)
+
+ 3 pass
+ 0 fail
+ 22 expect() calls
+Ran 3 tests across 1 file. [348.00ms]

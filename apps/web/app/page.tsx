@@ -2,42 +2,19 @@ import Link from "next/link";
 import { CodeBlock } from "@/components/CodeBlock";
 import { Callout, Doc } from "@/components/Doc";
 import { QuickstartRun } from "@/components/QuickstartRun";
-import { REGISTRY_ADDRESS } from "@/lib/config";
-
-const FIRST = `import { open, ns } from "@satchel/sdk";
-
-const s = await open({ rpId: location.hostname });          // one passkey prompt
-const memory = ns("memory/assistant");
-const blob = await s.seal(memory, { likes: "metric units" }); // Sealed, safe to store anywhere
-const back = await s.unsealJson<{ likes: string }>(memory, blob);`;
-
-const SECOND = `const notes = ns("memory/notes");
-const note = await s.seal(notes, "call the dentist");   // a new folder, no second prompt
-await s.fingerprint(notes);                              // b4e6cf3b, equal on every device with this passkey`;
-
-const GRANT = `import { createGrantee } from "@satchel/sdk";
-
-// In the other app. It holds its own key and never touches the passkey.
-const fern = await createGrantee();
-// fern.publicKey goes to the owner over any channel.
-
-// In the app that holds the passkey, opened with a registry:
-const s = await open({ rpId: location.hostname, registry: { address: "${REGISTRY_ADDRESS}" } });
-const grant = await s.grant(memory, fern.publicKey, { label: "Fern" });   // one Monad transaction
-await fern.reader(grant).unsealJson(blob);                                 // Fern reads
-await s.revoke(memory, grant.id);                                          // epoch 1 to 2, one Monad transaction`;
+import { GRANT_AND_REVOKE, QUICKSTART, SECOND_NAMESPACE } from "@/lib/snippets";
 
 export default function Page() {
   return (
     <Doc>
       <h1>Quickstart</h1>
-      <p>Five lines to a sealed, reopened record. One passkey prompt, then any number of namespaces without another.</p>
+      <p>Five lines to a sealed, reopened record. One passkey prompt per visit, then any number of namespaces without another.</p>
 
       <h2 id="seal">Seal and reopen</h2>
-      <CodeBlock code={FIRST} file="quickstart.ts" />
+      <CodeBlock code={QUICKSTART} file="quickstart.js" snippet="quickstart" />
       <QuickstartRun />
       <p>
-        The passkey needs the WebAuthn PRF extension: iCloud Keychain, Google Password Manager, Windows Hello, 1Password, Proton Pass and YubiKey 5 have it. Run the same five lines in this page, against this site&apos;s own passkey. The first run creates the passkey, later runs reuse it.
+        The passkey needs the WebAuthn PRF extension: iCloud Keychain, Google Password Manager, Windows Hello, 1Password, Proton Pass and YubiKey 5 have it. The button runs the exact text above, import line included, against this site&apos;s own passkey. <code>openOrEnrol</code> decides what to do: it opens a passkey it already knows for this site, or asks the browser for one, and creates one when there is none. That makes the first run two prompts (one that finds nothing, one that creates) and every later run one. <Link href="/reference/api/#openorenrol">openOrEnrol</Link> lists the order it tries.
       </p>
 
       <h2 id="install">Install</h2>
@@ -55,16 +32,16 @@ unsealed  {"likes":"metric units"}`}
       </p>
 
       <h2 id="second-namespace">A second namespace is one more string</h2>
-      <CodeBlock code={SECOND} file="quickstart.ts" />
+      <CodeBlock code={SECOND_NAMESPACE} file="quickstart.js, same session" />
       <p>
         Both namespaces come from the same passkey output through HKDF with different info strings, so the second one asks for nothing. <Link href="/concepts/namespaces/">Namespaces</Link> says how.
       </p>
 
       <h2 id="grant">Give another app a key, then take it back</h2>
-      <CodeBlock code={GRANT} file="grant.ts" />
+      <CodeBlock code={GRANT_AND_REVOKE} file="grant.js" />
       <Callout>
         <p>
-          <code>grant</code> and <code>revoke</code> are transactions on the registry, sent from <code>s.registryOwner</code>, an address derived from your passkey. Sealing and reading need no MON. The live version of exactly this is the demo: <Link href="/pip/">Pip</Link> holds the passkey and <Link href="/fern/">Fern</Link> reads through the grant.
+          <code>grant</code> and <code>revoke</code> are transactions on the registry, sent from <code>s.registryOwner</code>, an address derived from your passkey. Sealing and reading need no MON, and a send from an unfunded owner stops before it is sent with <Link href="/reference/errors/#owner-unfunded">OWNER_UNFUNDED</Link>, naming the address and the shortfall. Revoking moves the namespace to the next epoch for every reader, so another app that should keep reading new records needs <code>regrant</code>: <Link href="/concepts/grants-and-epochs/#revoke-all">Grants and epochs</Link> has the rule. The live version of exactly this is the demo: <Link href="/pip/">Pip</Link> holds the passkey and <Link href="/fern/">Fern</Link> reads through the grant, which it rebuilds from a transaction hash.
         </p>
       </Callout>
 
@@ -72,8 +49,9 @@ unsealed  {"likes":"metric units"}`}
       <ul>
         <li><Link href="/concepts/passkey-and-prf/">Passkey and PRF</Link>, why the raw output is never a cipher key.</li>
         <li><Link href="/reference/api/">API reference</Link>, every export with its Throws line.</li>
-        <li><Link href="/guides/migrate-from-hkdf/">Migrate from per-note vaults</Link>, one file in trustset, six prompts to one.</li>
-        <li><Link href="/proof/">Proof</Link>, the four things a judge can click.</li>
+        <li><Link href="/guides/two-apps/">Two apps</Link>, how a second origin gets the grant and the sealed blobs.</li>
+        <li><Link href="/guides/migrate-from-per-note-vaults/">Migrate from per-note vaults</Link>, one file in trustset, six prompts to one.</li>
+        <li><Link href="/proof/">Proof</Link>, the live checks and the recorded runs behind them.</li>
       </ul>
     </Doc>
   );
