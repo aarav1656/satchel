@@ -1,6 +1,6 @@
 import { execFileSync, spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
-import { createPublicClient, createWalletClient, http, type Address, type Hex } from "viem";
+import { type Chain, createPublicClient, createWalletClient, http, type Address, type Hex } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { foundry } from "viem/chains";
 
@@ -31,9 +31,9 @@ export async function startAnvil(port: number, extra: string[] = []): Promise<{ 
   throw new Error(`anvil did not come up on ${rpcUrl}`);
 }
 
-export async function deployRegistry(rpcUrl: string, bytecode: Hex): Promise<Address> {
-  const wallet = createWalletClient({ account: privateKeyToAccount(ANVIL_DEV_KEY), chain: foundry, transport: http(rpcUrl) });
-  const pub = createPublicClient({ chain: foundry, transport: http(rpcUrl) });
+export async function deployRegistry(rpcUrl: string, bytecode: Hex, chain: Chain = foundry): Promise<Address> {
+  const wallet = createWalletClient({ account: privateKeyToAccount(ANVIL_DEV_KEY), chain, transport: http(rpcUrl) });
+  const pub = createPublicClient({ chain, transport: http(rpcUrl) });
   const hash = await wallet.sendTransaction({ data: bytecode });
   const r = await pub.waitForTransactionReceipt({ hash });
   if (r.status !== "success" || !r.contractAddress) throw new Error("registry deploy failed");
@@ -42,4 +42,8 @@ export async function deployRegistry(rpcUrl: string, bytecode: Hex): Promise<Add
 
 export async function fund(rpcUrl: string, who: Address) {
   await fetch(rpcUrl, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "anvil_setBalance", params: [who, "0x3635C9ADC5DEA00000"] }) });
+}
+
+export async function setBalance(rpcUrl: string, who: Address, wei: bigint) {
+  await fetch(rpcUrl, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "anvil_setBalance", params: [who, `0x${wei.toString(16)}`] }) });
 }

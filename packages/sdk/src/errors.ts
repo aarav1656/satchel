@@ -14,20 +14,24 @@ export type ErrorCode =
   | "SESSION_CLOSED"
   | "GRANT_EPOCH_OLDER"
   | "INVALID_GRANTEE_KEY"
-  | "STORE_UNAVAILABLE";
+  | "STORE_UNAVAILABLE"
+  | "OWNER_UNFUNDED";
 
 /** Every code with the fix a developer should apply. The reference page is generated from this table. */
 export const FIXES: Record<ErrorCode, string> = {
   PRF_UNAVAILABLE:
     "use iCloud Keychain, Google Password Manager, Windows Hello, 1Password, Proton Pass or a YubiKey 5.",
-  PASSKEY_CANCELLED: "call open() again from a click handler and confirm the prompt.",
+  PASSKEY_CANCELLED:
+    "call enrol() or openOrEnrol() from a click handler if this device has no passkey for the rpId yet (open() cannot tell a closed prompt from no passkey), otherwise call open() again and confirm the prompt.",
   RPID_MISMATCH: "pin rpId to the hostname the passkey was created under, usually your production hostname.",
   WRONG_PASSKEY: "open with the passkey that sealed this data, or use a second passkey added with addPasskey().",
   NAMESPACE_MISMATCH: "unseal with the namespace the blob was sealed under.",
   SEAL_CORRUPT: "re-fetch the blob from where it was stored; this copy is truncated or altered.",
-  GRANT_REVOKED: "ask the owner to grant again; a grant covers one epoch only.",
+  GRANT_REVOKED:
+    "ask the owner to call regrant() for your public key: a grant covers one epoch only, and revoking any reader of a namespace moves every reader to the next epoch.",
   GRANT_NOT_FOR_KEY: "ask the owner to grant to this app's public key from createGrantee().",
-  REGISTRY_UNREACHABLE: "check the registry address and RPC, then retry. Read epochOf() first to see whether the earlier call landed.",
+  REGISTRY_UNREACHABLE:
+    "check the registry address and RPC, then retry. Call epochOf(registry, session.registryOwner, nsHashOf(ns)) first to see whether the earlier call landed.",
   NO_SECOND_PASSKEY: "call addPasskey() while the original passkey is available.",
   INVALID_NAMESPACE: "use lowercase letters and digits joined by / or -, 3 to 64 characters, e.g. memory/assistant.",
   NOT_SEALED: "pass bytes produced by seal().toBytes().",
@@ -35,6 +39,7 @@ export const FIXES: Record<ErrorCode, string> = {
   GRANT_EPOCH_OLDER: "use the grant issued for the epoch this blob was sealed at.",
   INVALID_GRANTEE_KEY: "pass the publicKey returned by createGrantee().",
   STORE_UNAVAILABLE: "pass a store in OpenOptions; this runtime has no IndexedDB.",
+  OWNER_UNFUNDED: "send the native token (testnet MON from https://faucet.monad.xyz on Monad testnet) to session.registryOwner, then call grant() or revoke() again.",
 };
 
 export class SatchelError extends Error {

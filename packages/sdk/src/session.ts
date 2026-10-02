@@ -8,11 +8,11 @@ import {
 import { type Address, type Hex } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { aesKey, dekBytes, dekKey, fingerprintOf, hkdfBits, type Namespace, nsHashOf, ownerKeyHex } from "./derive.js";
-import { SatchelError } from "./errors.js";
+import { isSatchelError, SatchelError } from "./errors.js";
 import { type Grant, type GranteePublicKey, granteeKeyHash, importPublic, wrapDek } from "./grant.js";
 import { epochOf, grantOnChain, type Registry, revokeOnChain } from "./registry.js";
 import { asBytes, encodePlain, openWith, parseSealed, sealWith, type Sealed } from "./sealed.js";
-import { resolveStore, type Store } from "./store.js";
+import { indexedDbStore, resolveStore, type Store } from "./store.js";
 
 const { subtle } = globalThis.crypto;
 const enc = new TextEncoder();
@@ -42,6 +42,12 @@ export interface Satchel {
   fingerprint(n: Namespace): Promise<string>;
   addPasskey(o: { appName: string }): Promise<void>;
   grant(n: Namespace, to: GranteePublicKey, o: { label: string }): Promise<Grant>;
+  /**
+   * Issues a grant at the namespace's current epoch. Use it after revoke(): revoking any one grant moves the namespace to
+   * the next epoch for every reader, so each reader that should keep reading new records needs a fresh grant. It is
+   * grant() under the name that says why you are calling it; the registry records it as one more grant.
+   */
+  regrant(n: Namespace, to: GranteePublicKey, o: { label: string }): Promise<Grant>;
   revoke(n: Namespace, grantId: string): Promise<{ epoch: number; txHash: Hex }>;
   close(): void;
 }
@@ -177,6 +183,10 @@ class SatchelImpl implements Satchel {
     return { id: out.grantId.toString(), ns: n, nsHash, epoch, granteeKeyHash: keyHash, wrappedKey, label: o.label, txHash: out.txHash };
   }
 
+  regrant(n: Namespace, to: GranteePublicKey, o: { label: string }): Promise<Grant> {
+    return this.grant(n, to, o);
+  }
+
   async revoke(n: Namespace, grantId: string): Promise<{ epoch: number; txHash: Hex }> {
     const root = this.live();
     const registry = this.requireRegistry();
@@ -274,4 +284,60 @@ export async function enrol(o: OpenOptions & { appName: string }): Promise<Satch
   );
   const credential: PasskeyCredentialMetadata = { credentialId: made.credentialId, ...(made.transports ? { transports: made.transports } : {}) };
   return build(made.prfOutput, credential, o);
+}
+
+const knownKey = (rpId: string) => `satchel/known/${rpId}`;
+
+/** The marker is a hint about a public credential id; the passkey ceremony stays the authority, so an unreadable marker counts as absent. */
+function parseKnown(raw: Uint8Array): PasskeyCredentialMetadata | undefined {
+  try {
+    const v = JSON.parse(new TextDecoder().decode(raw)) as { credentialId?: unknown; transports?: unknown };
+    if (typeof v.credentialId !== "string" || v.credentialId === "") return undefined;
+    return { credentialId: v.credentialId, ...(Array.isArray(v.transports) ? { transports: v.transports as never } : {}) };
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * One call for both first and later visits. It decides in this order:
+ * 1. `credential` given: open() with it.
+ * 2. The store holds a marker from an earlier openOrEnrol for this rpId: open() with that credential. A closed prompt
+ *    throws PASSKEY_CANCELLED and never falls through to enrol(), because creating a second passkey would fork the vault.
+ * 3. No marker: open() lets the browser offer any passkey for this rpId (a synced passkey from another device opens
+ *    here). If that ceremony succeeds the marker is written and the vault opens.
+ * 4. That open() throws PASSKEY_CANCELLED (WebAuthn cannot tell a closed prompt from "no passkey"): enrol() creates one,
+ *    and the marker is written.
+ * Any other error from open() (PRF_UNAVAILABLE, RPID_MISMATCH, STORE_UNAVAILABLE) is thrown as it is. A first visit
+ * therefore shows one prompt to find a passkey and a second to create one; every later visit shows one.
+ * The marker lives in `store` (default IndexedDB); in a runtime with neither, steps 2 and the marker write are skipped.
+ */
+export async function openOrEnrol(o: OpenOptions & { appName: string }): Promise<Satchel> {
+  if (o.credential) return open(o);
+  // No store and no IndexedDB: nothing to remember, the ceremony decides every time.
+  const store = o.store ?? (typeof indexedDB === "undefined" ? undefined : indexedDbStore);
+  let marker: Uint8Array | undefined;
+  try {
+    marker = store ? await store.get(knownKey(o.rpId)) : undefined;
+  } catch (cause) {
+    throw new SatchelError("STORE_UNAVAILABLE", "The store could not be read for this rpId's passkey marker.", { cause });
+  }
+  const known = marker ? parseKnown(marker) : undefined;
+  if (known) return open({ ...o, credential: known });
+  let s: Satchel;
+  try {
+    s = await open(o);
+  } catch (e) {
+    if (!isSatchelError(e) || e.code !== "PASSKEY_CANCELLED") throw e;
+    s = await enrol(o);
+  }
+  if (store && s.credential) {
+    try {
+      await store.put(knownKey(o.rpId), new TextEncoder().encode(JSON.stringify(s.credential)));
+    } catch (cause) {
+      s.close();
+      throw new SatchelError("STORE_UNAVAILABLE", "The store refused the passkey marker for this rpId.", { cause });
+    }
+  }
+  return s;
 }

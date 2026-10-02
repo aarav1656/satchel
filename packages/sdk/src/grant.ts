@@ -23,6 +23,9 @@ export interface Grant {
   txHash: Hex;
 }
 
+/** A Grant read back from chain by fetchGrant. The namespace path is never on chain, only nsHash, so `ns` is present only when the caller named it. */
+export type FetchedGrant = Omit<Grant, "ns"> & { ns?: Namespace };
+
 export interface Reader {
   unseal(blob: Sealed | Uint8Array): Promise<Uint8Array>;
   unsealJson<T = unknown>(blob: Sealed | Uint8Array): Promise<T>;
@@ -68,7 +71,7 @@ export async function wrapDek(pub: GranteePublicKey, dek: Uint8Array, nsHash: He
 export async function createGrantee(keyPair?: CryptoKeyPair): Promise<{
   publicKey: GranteePublicKey;
   keyPair: CryptoKeyPair;
-  reader(g: Grant): Reader;
+  reader(g: Grant | FetchedGrant): Reader;
 }> {
   const pair = keyPair ?? (await subtle.generateKey({ name: "ECDH", namedCurve: "P-256" }, false, ["deriveBits"]));
   const publicKey = toHex(new Uint8Array(await subtle.exportKey("raw", pair.publicKey)));
@@ -103,7 +106,7 @@ export async function createGrantee(keyPair?: CryptoKeyPair): Promise<{
         const bytes = asBytes(blob);
         const head = parseSealed(bytes);
         if (head.nsHash !== g.nsHash) {
-          throw new SatchelError("NAMESPACE_MISMATCH", `Blob is sealed under namespace hash ${head.nsHash}, this grant covers ${g.ns} (${g.nsHash}).`);
+          throw new SatchelError("NAMESPACE_MISMATCH", `Blob is sealed under namespace hash ${head.nsHash}, this grant covers ${g.ns ? `${g.ns} (${g.nsHash})` : g.nsHash}.`);
         }
         if (head.epoch > g.epoch) {
           throw new SatchelError(
