@@ -47,7 +47,7 @@ describe("grant and revoke against the real SatchelRegistry on anvil", () => {
     expect(grant.wrappedKey.length).toBe(2 + 2 * 113);
     const [o, nsHash, epoch, keyHash, active] = await grantOf(grant.id);
     expect([o, nsHash, Number(epoch), keyHash, active]).toEqual([s.registryOwner, grant.nsHash, 1, grant.granteeKeyHash, true]);
-    expect(await g.reader(grant).unsealJson(blob)).toEqual({ likes: "metric units" });
+    expect(await g.reader(grant).unsealJson<{ likes: string }>(blob)).toEqual({ likes: "metric units" });
   });
 
   test("revoke: epoch bumps to 2, grant inactive, new blobs are epoch 2, reader keeps epoch 1 and loses epoch 2", async () => {

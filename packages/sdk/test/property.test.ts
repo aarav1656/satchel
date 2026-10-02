@@ -130,5 +130,5 @@ describe("property: sealing", () => {
 
 async function extractableDek(prf: Uint8Array, path: ReturnType<typeof ns>, epoch: number) {
   const { dekBytes } = await import("../src/derive.ts");
-  return crypto.subtle.importKey("raw", await dekBytes(prf, path, epoch), "AES-GCM", true, ["decrypt"]);
+  return crypto.subtle.importKey("raw", (await dekBytes(prf, path, epoch)) as Uint8Array<ArrayBuffer>, "AES-GCM", true, ["decrypt"]);
 }

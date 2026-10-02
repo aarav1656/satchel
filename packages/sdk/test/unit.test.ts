@@ -13,8 +13,8 @@ const sat = (seed = "a") => fromPrfOutput(prfOf(seed), { rpId: "localhost" });
 
 describe("ns", () => {
   test("accepts valid paths", () => {
-    expect(ns("memory/assistant")).toBe("memory/assistant");
-    expect(ns("a-b/c1")).toBe("a-b/c1");
+    expect(ns("memory/assistant") as string).toBe("memory/assistant");
+    expect(ns("a-b/c1") as string).toBe("a-b/c1");
   });
   test.each(["", "ab", "Memory/x", "a//b", "/ab", "ab/", "a b", "a".repeat(65), "a_b"])("rejects %j with INVALID_NAMESPACE", async (p) => {
     expect(await codeOf(() => ns(p))).toBe("INVALID_NAMESPACE");
@@ -74,7 +74,7 @@ describe("Satchel session", () => {
     const n = ns("memory/assistant");
     expect(await s.unseal(n, await s.seal(n, new Uint8Array([1, 2, 3])))).toEqual(new Uint8Array([1, 2, 3]));
     expect(new TextDecoder().decode(await s.unseal(n, await s.seal(n, "héllo")))).toBe("héllo");
-    expect(await s.unsealJson(n, await s.seal(n, { likes: "metric units" }))).toEqual({ likes: "metric units" });
+    expect(await s.unsealJson<{ likes: string }>(n, await s.seal(n, { likes: "metric units" }))).toEqual({ likes: "metric units" });
   });
   test("unseal accepts the Sealed object or its bytes, and Sealed carries nsHash and epoch", async () => {
     const s = await sat();
@@ -265,7 +265,7 @@ describe("enrol, open and addPasskey through a software authenticator", () => {
     // the original passkey was never added, so recover refuses it
     expect(await codeOf(() => open({ rpId: "localhost", webAuthnClient: a.client, store, recover: true, credential: { credentialId: firstId! } }))).toBe("NO_SECOND_PASSKEY");
     // no store at all
-    expect(await codeOf(() => open({ rpId: "localhost", webAuthnClient: a.client, store: undefined, recover: true, credential: { credentialId: firstId! } }))).toBe("NO_SECOND_PASSKEY");
+    expect(await codeOf(() => open({ rpId: "localhost", webAuthnClient: a.client, recover: true, credential: { credentialId: firstId! } }))).toBe("NO_SECOND_PASSKEY");
   });
   test("a wrap that fails authentication is WRONG_PASSKEY", async () => {
     const a = fakeAuthenticator();

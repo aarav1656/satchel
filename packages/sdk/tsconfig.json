@@ -10,6 +10,8 @@
     "exactOptionalPropertyTypes": true,
     "skipLibCheck": true,
     "declaration": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
     "outDir": "dist",
     "rootDir": "."
   },
