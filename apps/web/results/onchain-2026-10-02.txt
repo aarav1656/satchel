@@ -1,0 +1,15 @@
+independent on-chain read, viem against the Monad testnet RPC, not the SDK, owner 0x4C64202188418d3F315f16e791c86d3804674F30
+registry=0xd6c895f5c9254dc6eaafc335fff0930fd7012e6d chain=10143 read_at_block=67526701 grant_block=67526566 revoke_block=67526591
+grant tx 0x06ac563e2b20c258ec1844b913703e45ee9c0ece3034534ffc146e45bf1fb66d status=success
+revoke tx 0x726e69da774fc145014e82591e8c1f74b9d952289d07f2ec912933f1c43e5123 status=success
+PASS grant tx receipt status success, sent to the registry
+PASS revoke tx receipt status success, sent to the registry
+PASS both txs sent by the passkey-derived owner
+PASS grantOf.owner is the passkey-derived owner
+PASS grantOf.nsHash is keccak256(satchel/ns/memory/assistant)
+PASS grantOf.epoch is 1
+PASS grantOf.granteeKeyHash is keccak256 of Fern's public key
+PASS grantOf.active is false after revoke
+PASS epochOf(owner, memory/assistant) is 2
+PASS an untouched namespace of the same owner (memory/notes) is still epoch 1
+PASS revoke mined after grant

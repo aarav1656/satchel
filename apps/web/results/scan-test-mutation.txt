@@ -1,0 +1,8 @@
+mutation: keyLike forced to always false in lib/scan.ts (the key-material detector)
+== RED
+(fail) key-like data in the clear is flagged under any key, hex or base64 [1.66ms]
+ 5 pass
+ 1 fail
+== restored, GREEN
+ 6 pass
+ 0 fail

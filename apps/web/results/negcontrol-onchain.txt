@@ -1,0 +1,16 @@
+negative control: same owner, txs and Fern key, but grant id 1 (the smoke test grant, a different owner and namespace). The checks go red.
+registry=0xd6c895f5c9254dc6eaafc335fff0930fd7012e6d chain=10143 read_at_block=67525357 grant_block=67525107 revoke_block=67525131
+grant tx 0x9cab0d78f5fecd89d84be8197a7932ce51521203496e8a34528a6994a4dad17e status=success
+revoke tx 0x53fb903e0424ee08c0ce4b8e19b10b36c3890cdaf56f704ff6835a9c78db5845 status=success
+PASS grant tx receipt status success, sent to the registry
+PASS revoke tx receipt status success, sent to the registry
+PASS both txs sent by the passkey-derived owner
+FAIL grantOf.owner is the passkey-derived owner
+FAIL grantOf.nsHash is keccak256(satchel/ns/memory/assistant)
+PASS grantOf.epoch is 1
+FAIL grantOf.granteeKeyHash is keccak256 of Fern's public key
+PASS grantOf.active is false after revoke
+PASS epochOf(owner, memory/assistant) is 2
+PASS an untouched namespace of the same owner (memory/notes) is still epoch 1
+PASS revoke mined after grant
+exit status 1

@@ -1,0 +1,85 @@
+satchel web click-through, 2026-10-02T11:04:53Z, origin http://satchel.localhost:5190, static export (out/), virtual authenticator ctap2/internal with PRF, pinned deepsurge tab
+registry: "address": "0xd6c895f5c9254dc6eaafc335fff0930fd7012e6d" chain 10143; driver exit status: 0
+(between enrol and the first grant, outside the page) FUNDED owner=0x4C64202188418d3F315f16e791c86d3804674F30 amount=0.1 MON tx=0xd1923b5af4edef604a3fc72f94b0d224c116496948c4bdff59dbf6c11238d888 block=67526525 owner_balance=0.1 deployer_balance=4.329660392
+
+cleared http://satchel.localhost:5190
+--- navigate http://satchel.localhost:5190/pip/
+wait ok: Pip first run offers Create
+EMPTY pip ghost=Nothing sealed yet. Save this one and it is encrypted before it leaves the page. |  | Prefers metric units, writes in short sentences
+> click "Create my vault" ok=true
+wait ok: vault created, owner address shown
+OWNER address=0x4C64202188418d3F315f16e791c86d3804674F30 balance=0 MON
+RAIL passkey iRHPhb7s | memory/assistante1b54e0f00
+PROMPTS Passkey prompts since this page loaded: 1
+(outside the page) waited for /tmp/satchel-web-funded
+> click "Check balance" ok=true
+wait ok: owner funded => 0.1 MON
+> click "Save to memory" ok=true
+wait ok: sealed => sealed | ns=memory/assistant epoch=1 150 B
+SEALED sealed ns=memory/assistant epoch=1 150 B rows=1 first="Prefers metric units, writes in short sentences"
+wait ok: rail chip shows epoch and fingerprint => b54e0f00
+RAIL memory/assistante1b54e0f00 | Passkey prompts since this page loaded: 1
+STORAGE memories ciphertext only: true
+> click .demo a[href="/fern/"] ok=true
+wait ok: Fern before a grant
+FERN before grant: Fern cannot see your memory yet. |  | Fern will be allowed to read memory/assistant, read only. You approve it in Pip with one passkey prompt. |  | Connect to your memory
+> click "Connect to your memory" ok=true
+wait ok: Pip sharing shows the Allow card
+CONNECT app=Fern pub=0x04e531e6be5014bf28d96892fd197ad0753c1c1eed471cf3db0fba041a758fd722008d8e6114ea4381ddf04a3e56abcf8c26577ba4b28e87ff9d711c705f8459d7
+ALLOW Allow Fern to read memory/assistant? |  | Fern gets a key to this folder only. It cannot read your other folders and cannot write to this one. |  | app key | 0x04e531e6...8459d7 | Allow | Back to Fern
+> click "Allow" ok=true
+wait ok: grant confirmed => 0x06ac563e2b20c258ec1844b913703e45ee9c0ece3034534ffc146e45bf1fb66d
+GRANT id=7 tx=0x06ac563e2b20c258ec1844b913703e45ee9c0ece3034534ffc146e45bf1fb66d status=confirmed Fern can read memory/assistant, epoch 1. Grant 7. 0x06ac563e...1fb66d  Return to Fern
+> click "Return to Fern" ok=true
+wait ok: Fern reads the memory
+FERN reads rows=1 state=open epoch=1 text="Prefers metric units, writes in short sentences" status_active=true | grant active grant 7 covers memory/assistant at epoch 1. The registry is at epoch 1.  Read memory again
+FERN rail Fern revoked=false | memory/assistante1grant 7Fern
+> click .top-nav a[href="/pip/"] ok=true
+> click .app-bar nav a[href="/pip/share/"] ok=true
+wait ok: Pip sharing lists Fern as active
+> click "Revoke Fern" ok=true
+wait ok: revoke confirmed => 0x726e69da774fc145014e82591e8c1f74b9d952289d07f2ec912933f1c43e5123
+REVOKE id=7 tx=0x726e69da774fc145014e82591e8c1f74b9d952289d07f2ec912933f1c43e5123 active=false | Fern | memory/assistant | epoch 1 | revoked |  | Fern is revoked. New memories are sealed at epoch 2 and Fern cannot open them. |  | grant tx | 0x06ac563e...1fb66d | revoke tx | 0x726e69da...3e5123
+> click .app-bar nav a[href="/pip/"] ok=true
+wait ok: Pip vault page, session still open
+> type "Writes in short sentences, drinks tea"
+> click "Save to memory" ok=true
+wait ok: second memory sealed => e1,e2
+SEALED2 rows=epoch=1 "Prefers metric units, writes in short sentences" ; epoch=2 "Writes in short sentences, drinks tea" | memory/assistante2b54e0f00Fern (revoked) | rail apps Fern revoked=true
+> click .top-nav a[href="/fern/"] ok=true
+wait ok: Fern shows both rows and the revoked grant
+FERN after revoke epoch=1 state=open "Prefers metric units, writes in short sentences" ; epoch=2 state=locked "locked: GRANT_REVOKED" | reason: Grant covers epoch 1 only; this record is epoch 2. The owner rotated the namespace after this grant. | grant revoked | grant 7 covers memory/assistant at epoch 1. The registry is at epoch 2. |  | Fern was revoked. It can still read what it saw before, and nothing sealed since. |  | Read memory again | Ask Pip for a new grant
+FERN rail Fern revoked=true | memory/assistante2grant 7Fern (revoked)
+> click .top-nav a[href="/proof/"] ok=true
+wait ok: proof page, vault already open
+> click "Show derivation" ok=true
+wait ok: derivation => ns     memory/assistant | info   satchel/ns/memory/assistant | epoch  2 | fp     b54e0f00 | ns     memory/notes | info   satchel/ns/memory/notes | epoch  1 | fp     58f036ec | Derivation separates namespaces. Encryption seals the data. The only transactions are registry grants and revokes, sent by an address derived from the passkey; no wallet is involved.
+DERIVATION ns     memory/assistant | info   satchel/ns/memory/assistant | epoch  2 | fp     b54e0f00 | ns     memory/notes | info   satchel/ns/memory/notes | epoch  1 | fp     58f036ec | Derivation separates namespaces. Encryption seals the data. The only transactions are registry grants and revokes, sent by an address derived from the passkey; no wallet is involved.
+> click "Try the wrong namespace" ok=true
+wait ok: wrong namespace => seal    memory/assistant  epoch=2 | unseal  memory/assistant  ok: "wrong namespace probe" | unseal  memory/notes  NAMESPACE_MISMATCH | Blob is sealed under namespace hash 0xa01d55316b9b6f903e3f1214c1800bc026cd340e376d907b85cecb41ec9e15d8, asked for "memory/notes" (0xe61b65efc75e4238926d5967ef3eac4db97e57384a1943669defc22aebabd81d).
+WRONGNS seal    memory/assistant  epoch=2 | unseal  memory/assistant  ok: "wrong namespace probe" | unseal  memory/notes  NAMESPACE_MISMATCH | Blob is sealed under namespace hash 0xa01d55316b9b6f903e3f1214c1800bc026cd340e376d907b85cecb41ec9e15d8, asked for "memory/notes" (0xe61b65efc75e4238926d5967ef3eac4db97e57384a1943669defc22aebabd81d). | stub=true
+> click "Scan this browser" ok=true
+wait ok: scan => clean | 5 values: 1 ciphertext, 4 public, 0 not satchel's, 0 flagged
+SCAN clean 5 values: 1 ciphertext, 4 public, 0 not satchel's, 0 flagged | localStorage:satchel.pip.credential:public ; localStorage:satchel.demo.grants:public ; localStorage:satchel.pip.owner:public ; localStorage:satchel.pip.memories:ciphertext ; indexedDB:fern/kv/grantee:public
+ASSERT scan is not empty (ciphertext and public rows present) and nothing is flagged ok
+> click "Plant a test value" ok=true
+wait ok: scan goes red on a planted value => 1 flagged | 6 values: 1 ciphertext, 4 public, 0 not satchel's, 1 flagged
+SCAN planted 1 flagged 6 values: 1 ciphertext, 4 public, 0 not satchel's, 1 flagged | flagged=proof.plain-test-value
+> click "Remove it" ok=true
+wait ok: scan green again => clean | 5 values: 1 ciphertext, 4 public, 0 not satchel's, 0 flagged
+SCAN restored clean 5 values: 1 ciphertext, 4 public, 0 not satchel's, 0 flagged
+wait ok: device link
+http://satchel.localhost:5190/proof/#fp=memory/assistant:b54e0f00
+CROSSDEVICE first device fp=b54e0f00 link=http://satchel.localhost:5190/proof/#fp=memory/assistant:b54e0f00
+--- navigate http://satchel.localhost:5190/proof/#fp=memory/assistant:b54e0f00
+wait ok: link opens with the vault closed
+> click "Open my vault" ok=true
+wait ok: compare rendered
+CROSSDEVICE equal=true | first device | first device | memory/assistant | b54e0f00 | this device | this device passkey iRHPhb7s | memory/assistant | b54e0f00 | equal | Same passkey, same keys: the fingerprints match. | fps=b54e0f00,b54e0f00
+ASSERT fingerprints equal across the fresh load ok
+--- navigate http://satchel.localhost:5190/proof/#fp=memory/assistant:00000000
+wait ok: negative link opens with the vault closed
+> click "Open my vault" ok=true
+wait ok: negative compare rendered => false
+CROSSDEVICE negative equal=false | first device | first device | memory/assistant | 00000000 | this device | this device passkey iRHPhb7s | memory/assistant | b54e0f00 | different | These fingerprints differ: this device opened a different passkey.
+ASSERT a wrong fingerprint is reported different ok

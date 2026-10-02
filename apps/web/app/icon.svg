@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024" role="img" aria-label="satchel mark">
+  <rect width="1024" height="1024" fill="#ffffff"/>
+  <!-- same key rail as logo.svg, scaled to fill about 80% of the square for favicon and avatar use -->
+  <g transform="translate(512 512) scale(1.1) translate(-512 -400)">
+    <g transform="translate(-64 0)">
+      <g fill="none" stroke="#0a0a0a" stroke-width="14" stroke-linecap="round">
+        <path d="M 314 400 C 450 400, 480 226, 640 226"/>
+        <path d="M 314 400 L 640 400"/>
+        <path d="M 314 400 C 450 400, 480 574, 640 574"/>
+      </g>
+      <circle cx="250" cy="400" r="64" fill="#0a0a0a"/>
+      <g fill="#0a0a0a">
+        <rect x="640" y="198" width="150" height="56" rx="14"/>
+        <rect x="640" y="372" width="150" height="56" rx="14"/>
+        <rect x="640" y="546" width="150" height="56" rx="14"/>
+      </g>
+      <g fill="#ffffff">
+        <rect x="658" y="222" width="64" height="8" rx="4"/>
+        <rect x="658" y="396" width="92" height="8" rx="4"/>
+        <rect x="658" y="570" width="48" height="8" rx="4"/>
+      </g>
+      <path d="M 790 400 L 898 400" stroke="#00d4a4" stroke-width="14" stroke-linecap="round" fill="none"/>
+      <circle cx="936" cy="400" r="30" fill="#ffffff" stroke="#0a0a0a" stroke-width="12"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,44 @@
+/* satchel theme layer: the mintlify tokens bound in /DESIGN.md. Components read these variables and hold no literals. */
+:root {
+  --canvas: #ffffff;
+  --surface: #f7f7f7;
+  --surface-soft: #fafafa;
+  --code: #1c1c1e;
+  --hairline: #e5e5e5;
+  --hairline-soft: #ededed;
+  --hairline-dark: #1f1f1f;
+  --ink: #0a0a0a;
+  --charcoal: #1c1c1e;
+  --steel: #5a5a5c;
+  --stone: #888888;
+  --on-dark: #ffffff;
+  --on-dark-muted: #b3b3b3;
+  --accent: #00d4a4;
+  --accent-deep: #00b48a;
+  --accent-soft: #7cebcb;
+  --error: #d45656;
+  --warn: #c37d0d;
+
+  --r-xs: 4px;
+  --r-sm: 6px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-full: 9999px;
+
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-7: 32px;
+  --s-8: 40px;
+  --s-9: 64px;
+
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --t-state: 120ms ease-out;
+  --t-fill: 160ms linear;
+  --t-cut: 280ms ease-in-out;
+}

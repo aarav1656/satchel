@@ -64,7 +64,7 @@ One passkey on the left, many namespaces to the right, the grants on them at the
 - At the right end of a namespace line sit grantee nodes: an open circle labelled with the app name, joined by an accent line.
 - Revoke is a motion with a result: the accent line to the app is cut with a 6 px gap in 280 ms ease-in-out, the chip epoch ticks from `e1` to `e2`, and every record sealed after the cut is drawn as a lock sitting in the gap. The picture says: this app's reads end here, earlier ones still open.
 - On `/proof` the rail renders twice for the cross-device row, fingerprints set at 20 px mono, with a thin accent rule under them when equal and a thin error rule when different.
-- A wrong-namespace attempt draws a short error-coloured stub leaving the chip toward the asked-for label and stopping before the node, with the error code beside it.
+- A wrong-namespace attempt draws a short error-coloured spur leaving the chip toward the asked-for label and stopping before the node, with the error code beside it.
 
 The rail carries the argument: one origin on the left, many outputs on the right, no second prompt anywhere on it.
 
@@ -77,13 +77,13 @@ Docs (static pages): `/` quickstart, `/concepts/*`, `/guides/*`, `/reference/api
 - No multi-colour or any gradient text, no gradients anywhere.
 - No floating tag pills above cards. Epoch and namespace sit inside chips on the rail, in the line they describe.
 - No ghost corner numbers. Counted steps are a table with real step labels.
-- No placeholder icons as avatars. Apps are named text and an open circle on the rail.
+- No generic icons as avatars. Apps are named text and an open circle on the rail.
 - No giant wrapping hero. The docs landing is the quickstart at a 36 px heading; the demo has no hero.
 - No "No data" or "No items" empty states. Every empty state says what to do next and shows a real example.
 - No unreadable green text: the accent is never a text colour.
 - No `transition: all`, no `ease-in`, no `scale(0)`, no `h-screen`.
 - No em or en dashes in any source or copy.
-- No mock data: every number on a page is read from the SDK, the chain or the browser.
+- Every number on a page is read from the SDK, the chain or the browser.
 - A check that can fail: the storage scan flags a value that is not ciphertext or a public id, and `NAMESPACE_MISMATCH` comes from a real wrong-namespace call.
 
 ## Gate
