@@ -1,0 +1,14 @@
+negative control for the /proof prompt counter, 2026-10-02T16:56:51Z, origin https://satchel-keys.vercel.app
+--- navigate https://satchel-keys.vercel.app/icon.svg
+cleared https://satchel-keys.vercel.app
+--- navigate https://satchel-keys.vercel.app/proof/
+prompt counter installed
+before any click: 0
+ASSERT no prompt before the click ok
+> REAL INPUT click "Create my vault" ok=true at=[363,378]
+wait ok: vault open
+after Create my vault: get=0 create=1
+ASSERT one vault click (Create my vault, the empty-origin label) is exactly one prompt ok
+extra get issued: get=1 create=1
+ASSERT the counter moves to 2, so an extra prompt on the page would fail the == 1 assert ok
+driver exit 0

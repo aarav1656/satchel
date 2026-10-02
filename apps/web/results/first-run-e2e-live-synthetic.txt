@@ -1,0 +1,12 @@
+satchel first-run scenario synthetic, 2026-10-02T16:51:45Z, origin https://satchel-keys.vercel.app, driver exit status 0 (0 = every assert and poll held)
+
+--- navigate https://satchel-keys.vercel.app/icon.svg
+cleared https://satchel-keys.vercel.app ; localStorage keys=0 ; IndexedDB databases=[]
+ASSERT satchel IndexedDB and localStorage are empty on this origin ok
+--- navigate https://satchel-keys.vercel.app/
+RUNNING Chrome/154.0.0.0 ; origin https://satchel-keys.vercel.app ; marker ABSENT
+wait ok: first visit shows exactly Create a passkey and I already have one => Create a passkey | I already have one
+> click "Create a passkey" ok=true
+wait ok: synthetic click produced output => sealed  ns=memory/assistant  epoch=1  97 B  fp=25ff6107  (1 prompt) | unsealed  {"likes":"metric units"} | ran the code above verbatim, sha256 8137845481f6
+SYNTHETIC click output: sealed  ns=memory/assistant  epoch=1  97 B  fp=25ff6107  (1 prompt) | unsealed  {"likes":"metric units"} | ran the code above verbatim, sha256 8137845481f6 ; prompts so far=1
+MARKER {"credentialId":"WJh1hKxkB5jEwhIPy6PqgdmlS_riOM9f9daIxeuYNC8","transports":["internal"]}

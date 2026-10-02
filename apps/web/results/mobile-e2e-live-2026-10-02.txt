@@ -1,0 +1,34 @@
+satchel live mobile 390x844 (Emulation.setDeviceMetricsOverride mobile=true), 2026-10-02T16:55:52Z, origin https://satchel-keys.vercel.app, pinned deepsurge tab
+
+--- navigate https://satchel-keys.vercel.app/
+path=/ viewport=390x844 h1.y=169 h1="Quickstart" firstCode.y=412 firstCodeInViewport=true h1InViewport=true toggle=shown scrollWidth=390 clientWidth=390 overflowX=false
+ASSERT no horizontal overflow on / ok
+--- navigate https://satchel-keys.vercel.app/reference/api/
+path=/reference/api/ viewport=390x844 h1.y=169 h1="API reference" firstCode.y=1034 firstCodeInViewport=false h1InViewport=true toggle=shown scrollWidth=390 clientWidth=390 overflowX=false
+ASSERT no horizontal overflow on /reference/api/ ok
+--- navigate https://satchel-keys.vercel.app/proof/
+path=/proof/ viewport=390x844 h1.y=97 h1="What satchel proves" firstCode.y=null firstCodeInViewport=n/a h1InViewport=true toggle=none scrollWidth=390 clientWidth=390 overflowX=false
+ASSERT no horizontal overflow on /proof/ ok
+--- navigate https://satchel-keys.vercel.app/concepts/grants-and-epochs/
+path=/concepts/grants-and-epochs/ viewport=390x844 h1.y=169 h1="Grants and epochs" firstCode.y=1023 firstCodeInViewport=false h1InViewport=true toggle=shown scrollWidth=390 clientWidth=390 overflowX=false
+ASSERT no horizontal overflow on /concepts/grants-and-epochs/ ok
+--- navigate https://satchel-keys.vercel.app/guides/two-apps/
+path=/guides/two-apps/ viewport=390x844 h1.y=169 h1="Two apps" firstCode.y=650 firstCodeInViewport=true h1InViewport=true toggle=shown scrollWidth=390 clientWidth=390 overflowX=false
+ASSERT no horizontal overflow on /guides/two-apps/ ok
+--- navigate https://satchel-keys.vercel.app/reference/errors/
+path=/reference/errors/ viewport=390x844 h1.y=169 h1="Error codes" firstCode.y=null firstCodeInViewport=n/a h1InViewport=true toggle=shown scrollWidth=390 clientWidth=390 overflowX=false
+ASSERT no horizontal overflow on /reference/errors/ ok
+--- navigate https://satchel-keys.vercel.app/pip/
+path=/pip/ viewport=390x844 h1.y=146 h1="Your assistant's memory" firstCode.y=null firstCodeInViewport=n/a h1InViewport=true toggle=none scrollWidth=390 clientWidth=390 overflowX=false
+ASSERT no horizontal overflow on /pip/ ok
+--- navigate https://satchel-keys.vercel.app/fern/
+path=/fern/ viewport=390x844 h1.y=146 h1="What Fern can see" firstCode.y=null firstCodeInViewport=n/a h1InViewport=true toggle=none scrollWidth=390 clientWidth=390 overflowX=false
+ASSERT no horizontal overflow on /fern/ ok
+--- navigate https://satchel-keys.vercel.app/
+ASSERT docs menu is collapsed until opened ok
+> click .sidebar-toggle ok=true
+ASSERT toggle opens the menu ok
+MENU open lists Quickstart | Passkey and PRF | Namespaces | Envelopes | Grants and epochs | Two apps | Migrate from per-note vaults | API | Error codes
+> click .sidebar-groups a[href="/reference/api/"] ok=true
+wait ok: choosing a page closes the menu
+driver exit 0

@@ -1,0 +1,29 @@
+satchel first-run scenario b, 2026-10-02T16:51:14Z, origin https://satchel-keys.vercel.app, driver exit status 0 (0 = every assert and poll held)
+
+--- navigate https://satchel-keys.vercel.app/icon.svg
+cleared https://satchel-keys.vercel.app ; localStorage keys=0 ; IndexedDB databases=[]
+ASSERT satchel IndexedDB and localStorage are empty on this origin ok
+--- navigate https://satchel-keys.vercel.app/
+RUNNING Chrome/154.0.0.0 ; origin https://satchel-keys.vercel.app ; marker ABSENT
+wait ok: first visit shows exactly Create a passkey and I already have one => Create a passkey | I already have one
+> REAL INPUT click "Create a passkey" ok=true at=[455,450]
+wait ok: create run finished => sealed  ns=memory/assistant  epoch=1  97 B  fp=d2633b61  (1 prompt) | unsealed  {"likes":"metric units"} | ran the code above verbatim, sha256 8137845481f6
+CREATE run output: sealed  ns=memory/assistant  epoch=1  97 B  fp=d2633b61  (1 prompt) | unsealed  {"likes":"metric units"} | ran the code above verbatim, sha256 8137845481f6 ; prompts so far=1
+d2633b61
+MARKER before the authenticator is replaced: {"credentialId":"qgW4n9TIC0MJgMOHpuCrzWbKyX6E6-moAGYJBMdlYdA","transports":["internal"]}
+> fresh virtual authenticator f02744ac-4fca-4d3e-a7cc-fb887413ff91 (every credential of the previous one is gone)
+--- navigate https://satchel-keys.vercel.app/
+wait ok: marker present: the page shows exactly Run the code above => Run the code above
+> REAL INPUT click "Run the code above" ok=true at=[463,450]
+wait ok: the stale marker ends in PASSKEY_NOT_FOUND => PASSKEY_NOT_FOUND  No passkey was chosen for "satchel-keys.vercel.app": the prompt was closed or this device has none to offer. The passkey this device remembered no longer opens, so it was forgotten. | fix: offer both choices again: open() or openOrEnrol({ mode: "open" }) to pick another passkey, enrol() or openOrEnrol({ mode: "enrol" }) to create one. The passkey this device remembered is forgotten, so nothing blocks either choice.
+STALE run output: PASSKEY_NOT_FOUND  No passkey was chosen for "satchel-keys.vercel.app": the prompt was closed or this device has none to offer. The passkey this device remembered no longer opens, so it was forgotten. | fix: offer both choices again: open() or openOrEnrol({ mode: "open" }) to pick another passkey, enrol() or openOrEnrol({ mode: "enrol" }) to create one. The passkey this device remembered is forgotten, so nothing blocks either choice. ; prompts so far=1
+wait ok: both choices are back => Create a passkey | I already have one
+ASSERT the stale run used one passkey prompt (one get, no create) ok
+MARKER after PASSKEY_NOT_FOUND: ABSENT
+ASSERT the stale marker is gone from IndexedDB ok
+> REAL INPUT click "Create a passkey" ok=true at=[455,450]
+wait ok: recovery create run finished => sealed  ns=memory/assistant  epoch=1  97 B  fp=ae4d7d44  (1 prompt) | unsealed  {"likes":"metric units"} | ran the code above verbatim, sha256 8137845481f6
+RECOVERY output: sealed  ns=memory/assistant  epoch=1  97 B  fp=ae4d7d44  (1 prompt) | unsealed  {"likes":"metric units"} | ran the code above verbatim, sha256 8137845481f6 ; prompts so far=2
+ASSERT Create recovered with a new passkey (a different fingerprint) ok
+wait ok: after recovery the page shows one Run button
+FINGERPRINTS old=d2633b61 new=ae4d7d44

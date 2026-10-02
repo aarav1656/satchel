@@ -7,14 +7,19 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 PORT=${PORT:-5190}
 DAY=$(date +%F)
-LOG=/tmp/satchel-web-drive.log
-OUT=results/click-through-$DAY.txt
-CHAIN=results/onchain-$DAY.txt
+LOG=${DRIVE_LOG:-/tmp/satchel-web-drive.log}
+LABEL=${LABEL:+-$LABEL}
+OUT=results/click-through$LABEL-$DAY.txt
+CHAIN=results/onchain$LABEL-$DAY.txt
 export VAUTH=1 PIN_FILE="${PIN_FILE:-$HOME/.cache/qa-tab-satchel}" ORIGIN="${ORIGIN:-http://satchel.localhost:$PORT}"
 
-[ -f out/index.html ] || { echo "no export in out/: run bun run build" >&2; exit 1; }
-if ! curl -sf "http://localhost:$PORT/" >/dev/null; then (bun scripts/serve.mjs "$PORT" >/tmp/satchel-serve.log 2>&1 &); sleep 2; fi
-curl -sf "http://localhost:$PORT/pip/" >/dev/null || { echo "static server not answering on $PORT" >&2; exit 1; }
+if [[ "$ORIGIN" == http://*localhost* ]]; then
+  [ -f out/index.html ] || { echo "no export in out/: run bun run build" >&2; exit 1; }
+  if ! curl -sf "http://localhost:$PORT/" >/dev/null; then (bun scripts/serve.mjs "$PORT" >/tmp/satchel-serve.log 2>&1 &); sleep 2; fi
+  curl -sf "http://localhost:$PORT/pip/" >/dev/null || { echo "static server not answering on $PORT" >&2; exit 1; }
+else
+  curl -sf "$ORIGIN/pip/" >/dev/null || { echo "$ORIGIN is not answering" >&2; exit 1; }
+fi
 rm -f /tmp/satchel-web-funded
 
 bun scripts/drive.mjs "$ORIGIN/" scripts/steps-click-through.mjs /tmp 2>"$LOG" >/dev/null &
@@ -39,7 +44,7 @@ REGRANT_TX=$(grep -o 'REGRANT tx=0x[0-9a-f]\{64\}' "$LOG" | head -1 | sed 's/.*t
 REGRANT_ID=$(grep -o 'REGRANT tx=0x[0-9a-f]\{64\}.*' "$LOG" | head -1 | grep -o 'id=[0-9]* active=true' | head -1 | sed 's/id=\([0-9]*\) .*/\1/' || true)
 PUB=$(grep -o 'CONNECT app=Fern pub=0x[0-9a-f]\{130\}' "$LOG" | head -1 | sed 's/.*pub=//' || true)
 {
-  echo "satchel web click-through, $(date -u +%FT%TZ), origin $ORIGIN, static export (out/), virtual authenticator ctap2/internal with PRF, pinned deepsurge tab"
+  echo "satchel web click-through, $(date -u +%FT%TZ), origin $ORIGIN, virtual authenticator ctap2/internal with PRF, pinned deepsurge tab"
   echo "registry: $(grep -o '"address": "[^"]*"' ../../deployments/testnet.json) chain 10143; driver exit status: $STATUS"
   echo "(after the page showed OWNER_UNFUNDED, outside the page) $FUNDED"
   echo

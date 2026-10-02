@@ -106,12 +106,28 @@ try {
       // Trusted click: real Input.dispatchMouseEvent at the button's centre, so the page gets genuine user activation.
       await send("Page.bringToFront");
       await sleep(300);
-      const c = await ev(`(()=>{const b=[...document.querySelectorAll('button')].find(b=>b.innerText.trim().startsWith(${JSON.stringify(s.tclick)}));if(!b)return null;b.scrollIntoView({block:'center'});const r=b.getBoundingClientRect();return [r.x+r.width/2,r.y+r.height/2]})()`);
+      const c = await ev(`(()=>{const b=[...document.querySelectorAll('button,a')].find(b=>b.innerText.trim().startsWith(${JSON.stringify(s.tclick)}));if(!b)return null;b.scrollIntoView({block:'center'});const r=b.getBoundingClientRect();return [r.x+r.width/2,r.y+r.height/2]})()`);
       if (!c || typeof c === "string") { fail({ tclick: s.tclick, ok: false }); break; }
       await mouse("mouseMoved", c[0], c[1]);
       await mouse("mousePressed", c[0], c[1]);
       await mouse("mouseReleased", c[0], c[1]);
       log({ tclick: s.tclick, ok: true, at: c.map(Math.round) });
+    }
+    if (s.tclick_sel || s.type_into) {
+      // Real input at a CSS selector (links, inputs). type_into focuses the field by a real click, selects its text, then inserts text as typing does.
+      const sel = s.tclick_sel ?? s.type_into.sel;
+      await send("Page.bringToFront");
+      await sleep(300);
+      const c = await ev(`(()=>{const b=document.querySelector(${JSON.stringify(sel)});if(!b)return null;b.scrollIntoView({block:'center'});const r=b.getBoundingClientRect();return [r.x+r.width/2,r.y+r.height/2]})()`);
+      if (!c || typeof c === "string") { fail({ [s.tclick_sel ? "tclick_sel" : "type_into"]: sel, ok: false }); break; }
+      await mouse("mouseMoved", c[0], c[1]);
+      await mouse("mousePressed", c[0], c[1]);
+      await mouse("mouseReleased", c[0], c[1]);
+      if (s.type_into) {
+        await ev(`document.querySelector(${JSON.stringify(sel)}).select()`);
+        await send("Input.insertText", { text: s.type_into.text });
+        log({ type_into: s.type_into.text, ok: true });
+      } else log({ tclick_sel: sel, ok: true, at: c.map(Math.round) });
     }
     if (s.click || s.click_sel || s.set_text) {
       if (process.env.VAUTH === "1") { await send("Page.bringToFront"); await sleep(300); }
