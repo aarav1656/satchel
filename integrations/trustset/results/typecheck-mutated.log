@@ -1,7 +1,17 @@
+== mutated: appended 'const __mut: number = "x";' to web/src/lib/sealed.ts ==
 npm warn Unknown user config "allow-git". This will stop working in the next major version of npm.
 npm warn Unknown user config "min-release-age". This will stop working in the next major version of npm.
 
 > trustset-web@0.1.0 typecheck
 > tsc --noEmit
 
-src/lib/sealed.ts(125,14): error TS2322: Type '(vault: Vault) => Promise<string>' is not assignable to type 'number'.
+src/lib/sealed.ts(125,7): error TS2322: Type 'string' is not assignable to type 'number'.
+== exit mutated=2 ==
+== restored ==
+npm warn Unknown user config "allow-git". This will stop working in the next major version of npm.
+npm warn Unknown user config "min-release-age". This will stop working in the next major version of npm.
+
+> trustset-web@0.1.0 typecheck
+> tsc --noEmit
+
+== exit restored=0 ==

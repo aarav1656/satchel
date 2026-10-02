@@ -5,19 +5,19 @@ npm warn Unknown user config "min-release-age". This will stop working in the ne
 > next build
 
 ▲ Next.js 16.3.5 (Turbopack)
-✓ Running next.config.ts took 29ms
+✓ Running next.config.ts took 160ms
 
   Creating an optimized production build ...
-✓ Compiled successfully in 34.9s
+✓ Compiled successfully in 6.3s
   Running TypeScript ...
-  Finished TypeScript in 25.2s ...
+  Finished TypeScript in 9.8s ...
   Collecting page data using 7 workers ...
 AGENT_STATE is not set, so the live agent panel has nothing to read
   Generating static pages using 7 workers (0/10) ...
   Generating static pages using 7 workers (2/10) 
   Generating static pages using 7 workers (4/10) 
   Generating static pages using 7 workers (7/10) 
-✓ Generating static pages using 7 workers (10/10) in 890ms
+✓ Generating static pages using 7 workers (10/10) in 953ms
 Turbopack build encountered 2 warnings:
 ./src/app/api/chain/route.ts:46:34
 Warning: Dynamic filesystem access causes tracing of the whole project

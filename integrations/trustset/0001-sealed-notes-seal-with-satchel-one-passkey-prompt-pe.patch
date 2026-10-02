@@ -1,10 +1,10 @@
-From 2a0b533211fb8e075a26700ab2505dc93e1faedc Mon Sep 17 00:00:00 2001
+From d82f72cdbfd5f9b082213d0eb743673c4ef1a1c4 Mon Sep 17 00:00:00 2001
 From: aarav1656 <anshuk3917@gmail.com>
 Date: Fri, 2 Oct 2026 16:09:03 +0530
-Subject: [PATCH 1/2] sealed notes: seal with satchel, one passkey prompt per
+Subject: [PATCH] sealed notes: seal with satchel, one passkey prompt per
  session
 
-Notes are sealed under ns trustset/notes/<agentId> through @satchel/sdk,
+Notes are sealed under ns trustset/notes/<agentId> through satchel-sdk,
 stored through the same SealedNotes.seal(agentId, kind, bytes) call.
 Notes already on chain as Mera vault JSON still open; readNotes tells
 them from satchel bytes by the SAT1 header. Exported names and
@@ -14,7 +14,7 @@ signatures are unchanged.
  1 file changed, 76 insertions(+), 29 deletions(-)
 
 diff --git a/web/src/lib/sealed.ts b/web/src/lib/sealed.ts
-index d836599..cedae7f 100644
+index d836599..efccd38 100644
 --- a/web/src/lib/sealed.ts
 +++ b/web/src/lib/sealed.ts
 @@ -1,24 +1,33 @@
@@ -25,7 +25,7 @@ index d836599..cedae7f 100644
 +  decryptSecretVaultWithPasskey, isMeraError, parseSecretVault,
    type PasskeySecretVault,
  } from "@category-labs/mera";
-+import { open, ns, parseSealed, SatchelError, type Sealed as SatchelBlob, type Satchel } from "@satchel/sdk";
++import { open, ns, parseSealed, SatchelError, type Sealed as SatchelBlob, type Satchel } from "satchel-sdk";
  import type { Conn } from "@/lib/chain";
  
  /* notes only the owner's passkey can read.

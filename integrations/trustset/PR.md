@@ -24,7 +24,7 @@ A browser tab still running the previous bundle shows a new note as "Stored in a
 
 ## How to test it
 
-1. Add `@satchel/sdk` to `web/package.json` and install.
+1. `cd web && npm i satchel-sdk`.
 2. `cd web && npm run typecheck && npm run build`.
 3. In the console, seal two runbooks for one agent and open both: one passkey prompt in total. Reload, open both again: one prompt. Open a note sealed before this change: it opens, with its own prompt.
 4. The harness used for the numbers below is in the satchel repo under `integrations/trustset/harness`. `run.sh` starts an anvil, deploys this repo's `KillSwitch` and `SealedNotes`, and drives the patched module in a browser against a virtual passkey authenticator that supports PRF.

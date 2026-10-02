@@ -1,26 +1,28 @@
-From 02f7d148df29df93b0d4bffdd6151b02c33884e9 Mon Sep 17 00:00:00 2001
+From ecdaa5a0621c94440bebe44cc95b6281d79bf8fd Mon Sep 17 00:00:00 2001
 From: aarav1656 <anshuk3917@gmail.com>
-Date: Fri, 2 Oct 2026 16:09:03 +0530
-Subject: [PATCH 2/2] local only: resolve @satchel/sdk from a tarball for the
- proof run
+Date: Fri, 2 Oct 2026 18:33:59 +0530
+Subject: [PATCH] local only: resolve satchel-sdk from a tarball for the proof
+ run
 
 ---
- web/package-lock.json | 73 +++++++++++++++++++++++++------------------
- web/package.json      |  1 +
- 2 files changed, 44 insertions(+), 30 deletions(-)
+ web/package-lock.json | 75 +++++++++++++++++++++++++------------------
+ web/package.json      |  3 +-
+ 2 files changed, 46 insertions(+), 32 deletions(-)
 
 diff --git a/web/package-lock.json b/web/package-lock.json
-index 2d35412..1655b01 100644
+index 2d35412..9ef8b5a 100644
 --- a/web/package-lock.json
 +++ b/web/package-lock.json
-@@ -11,6 +11,7 @@
-         "@category-labs/mera": "0.2.0",
-         "@dynamic-labs-sdk/client": "^1.34.0",
-         "@dynamic-labs-sdk/evm": "^1.34.0",
-+        "@satchel/sdk": "file:../../../../tmp/satchel-pack/satchel-sdk-0.1.0.tgz",
-         "ethers": "^6.13.4",
-         "lucide-react": "^1.33.0",
-         "motion": "^13.1.1",
+@@ -17,7 +17,8 @@
+         "next": "^16.3.0",
+         "pg": "^8.23.0",
+         "react": "19.2.4",
+-        "react-dom": "19.2.4"
++        "react-dom": "19.2.4",
++        "satchel-sdk": "file:/tmp/satchel-pack/satchel-sdk-0.1.0.tgz"
+       },
+       "devDependencies": {
+         "@tailwindcss/postcss": "^4",
 @@ -193,7 +194,6 @@
        "resolved": "https://registry.npmjs.org/zod/-/zod-3.25.76.tgz",
        "integrity": "sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==",
@@ -79,27 +81,7 @@ index 2d35412..1655b01 100644
      "node_modules/@img/colour": {
        "version": "1.1.0",
        "resolved": "https://registry.npmjs.org/@img/colour/-/colour-1.1.0.tgz",
-@@ -1597,6 +1610,19 @@
-       "integrity": "sha512-b1UQwcEZ4yCnMCD8DAL1VlbvBJE9/IX4FTIp7BG1xYpf29SLazLSrqUkj4w7Y5y7cCVP6E5tcqqcI0xemPkHug==",
-       "license": "BSD-3-Clause"
-     },
-+    "node_modules/@satchel/sdk": {
-+      "version": "0.1.0",
-+      "resolved": "file:../../../../tmp/satchel-pack/satchel-sdk-0.1.0.tgz",
-+      "integrity": "sha512-YvTZAzFzBpr2WWxP4JekBgExTt2EiX9qLtnu8IHKJdILwvwXZeoEgqj7H9tQoWjeOx9b4KmXj8Fevi7C3BXm7A==",
-+      "license": "MIT",
-+      "dependencies": {
-+        "@hpke/core": "^1.9.0",
-+        "viem": "^2.57.0"
-+      },
-+      "peerDependencies": {
-+        "@category-labs/mera": "0.2.0"
-+      }
-+    },
-     "node_modules/@scure/base": {
-       "version": "2.2.0",
-       "resolved": "https://registry.npmjs.org/@scure/base/-/base-2.2.0.tgz",
-@@ -2038,7 +2064,6 @@
+@@ -2038,7 +2051,6 @@
        "resolved": "https://registry.npmjs.org/@solana/kit/-/kit-5.5.1.tgz",
        "integrity": "sha512-irKUGiV2yRoyf+4eGQ/ZeCRxa43yjFEL1DUI5B0DkcfZw3cr0VJtVJnrG8OtVF01vT0OUfYOcUn6zJW5TROHvQ==",
        "license": "MIT",
@@ -107,7 +89,7 @@ index 2d35412..1655b01 100644
        "dependencies": {
          "@solana/accounts": "5.5.1",
          "@solana/addresses": "5.5.1",
-@@ -3022,9 +3047,8 @@
+@@ -3022,9 +3034,8 @@
        "version": "19.3.0",
        "resolved": "https://registry.npmjs.org/@types/react/-/react-19.3.0.tgz",
        "integrity": "sha512-N0rFCuH9YoxG9/m61l9MfpJKfmLOVU0em7ipIz6TRgSSkvReLB9vL85GB+yr8Bs5leqpvg96JSwF4ZS1s4viQg==",
@@ -118,7 +100,7 @@ index 2d35412..1655b01 100644
        "dependencies": {
          "csstype": "^3.2.2"
        }
-@@ -3629,7 +3653,6 @@
+@@ -3629,7 +3640,6 @@
        "resolved": "https://registry.npmjs.org/axios/-/axios-1.20.0.tgz",
        "integrity": "sha512-r8aOh8j9cGKpgQAqpzrUHnSIc6a59Y3Xf/cv8sy1DrHCkZHzQGEuoq1tARk6qSyDdtQGSDgpb9kFlruzPvrgwg==",
        "license": "MIT",
@@ -126,7 +108,7 @@ index 2d35412..1655b01 100644
        "dependencies": {
          "follow-redirects": "^1.16.0",
          "form-data": "^4.0.6",
-@@ -3963,7 +3986,7 @@
+@@ -3963,7 +3973,7 @@
        "version": "3.2.3",
        "resolved": "https://registry.npmjs.org/csstype/-/csstype-3.2.3.tgz",
        "integrity": "sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==",
@@ -135,7 +117,7 @@ index 2d35412..1655b01 100644
        "license": "MIT"
      },
      "node_modules/debug": {
-@@ -4115,7 +4138,6 @@
+@@ -4115,7 +4125,6 @@
        "resolved": "https://registry.npmjs.org/@noble/ciphers/-/ciphers-1.3.0.tgz",
        "integrity": "sha512-2I0gnIVPtfnMw9ee9h1dJG7tp81+8Ob3OJb3Mv37rx5L40/b0i7djjCVvGOVqc9AEIQyvyu1i6ypKdFw8R8gQw==",
        "license": "MIT",
@@ -143,7 +125,7 @@ index 2d35412..1655b01 100644
        "engines": {
          "node": "^14.21.3 || >=16"
        },
-@@ -4332,8 +4354,7 @@
+@@ -4332,8 +4341,7 @@
        "version": "1.0.22",
        "resolved": "https://registry.npmjs.org/fastestsmallesttextencoderdecoder/-/fastestsmallesttextencoderdecoder-1.0.22.tgz",
        "integrity": "sha512-Pb8d48e+oIuY4MaM64Cd7OW1gt4nxCHs7/ddPPZ/Ic3sg8yVGM7O9wDvZ7us6ScaUupzM+pfBolwtYhN1IxBIw==",
@@ -153,7 +135,7 @@ index 2d35412..1655b01 100644
      },
      "node_modules/follow-redirects": {
        "version": "1.16.0",
-@@ -4375,8 +4396,7 @@
+@@ -4375,8 +4383,7 @@
        "version": "2.16.11",
        "resolved": "https://registry.npmjs.org/fp-ts/-/fp-ts-2.16.11.tgz",
        "integrity": "sha512-LaI+KaX2NFkfn1ZGHoKCmcfv7yrZsC3b8NtWsTVQeHkq4F27vI5igUuO53sxqDEa2gNQMHFPmpojDw/1zmUK7w==",
@@ -163,7 +145,7 @@ index 2d35412..1655b01 100644
      },
      "node_modules/framer-motion": {
        "version": "13.3.0",
-@@ -5416,7 +5436,6 @@
+@@ -5416,7 +5423,6 @@
        "resolved": "https://registry.npmjs.org/pg/-/pg-8.23.0.tgz",
        "integrity": "sha512-Ip2EQCngowJLGOfCwkFhPXU7/ljlhn6Rxlmy4XYfL2Y+vyRM59+8uR2xqRWKdYmbXmxCFOAmKxBuSUCdF34qLg==",
        "license": "MIT",
@@ -171,7 +153,7 @@ index 2d35412..1655b01 100644
        "dependencies": {
          "pg-connection-string": "^2.14.0",
          "pg-pool": "^3.14.0",
-@@ -5747,7 +5766,6 @@
+@@ -5747,7 +5753,6 @@
        "resolved": "https://registry.npmjs.org/react/-/react-19.2.4.tgz",
        "integrity": "sha512-9nfp2hYpCwOjAN+8TZFGhtWEwgvWHXqESH8qT89AT/lWklpLON22Lc8pEtnpsZz7VmawabSU0gCjnj8aC0euHQ==",
        "license": "MIT",
@@ -179,7 +161,7 @@ index 2d35412..1655b01 100644
        "engines": {
          "node": ">=0.10.0"
        }
-@@ -5757,7 +5775,6 @@
+@@ -5757,7 +5762,6 @@
        "resolved": "https://registry.npmjs.org/react-dom/-/react-dom-19.2.4.tgz",
        "integrity": "sha512-AXJdLo8kgMbimY95O2aKQqsz2iWi9jMgKJhRBAxECE4IFxfcazB2LmzloIoibJI3C12IlY20+KFaLv+71bUJeQ==",
        "license": "MIT",
@@ -187,6 +169,26 @@ index 2d35412..1655b01 100644
        "dependencies": {
          "scheduler": "^0.27.0"
        },
+@@ -5814,6 +5818,19 @@
+         "node": ">=10"
+       }
+     },
++    "node_modules/satchel-sdk": {
++      "version": "0.1.0",
++      "resolved": "file:../../../../tmp/satchel-pack/satchel-sdk-0.1.0.tgz",
++      "integrity": "sha512-Hx/lxI5B+5xjym1hIQZ1lshncizoJ2VMmMkhfdo6X2y8zLAxDnzW9DyvOL2ce6BQmsuMgXAYjgeT7uCa0Wj1cw==",
++      "license": "MIT",
++      "dependencies": {
++        "@hpke/core": "^1.9.0",
++        "viem": "^2.57.0"
++      },
++      "peerDependencies": {
++        "@category-labs/mera": "0.2.0"
++      }
++    },
+     "node_modules/scheduler": {
+       "version": "0.27.0",
+       "resolved": "https://registry.npmjs.org/scheduler/-/scheduler-0.27.0.tgz",
 @@ -6008,9 +6025,8 @@
        "version": "5.9.3",
        "resolved": "https://registry.npmjs.org/typescript/-/typescript-5.9.3.tgz",
@@ -236,17 +238,19 @@ index 2d35412..1655b01 100644
          "url": "https://github.com/sponsors/colinhacks"
        }
 diff --git a/web/package.json b/web/package.json
-index aa094f4..c9dd89b 100644
+index aa094f4..e7e2e0b 100644
 --- a/web/package.json
 +++ b/web/package.json
-@@ -13,6 +13,7 @@
-     "@category-labs/mera": "0.2.0",
-     "@dynamic-labs-sdk/client": "^1.34.0",
-     "@dynamic-labs-sdk/evm": "^1.34.0",
-+    "@satchel/sdk": "file:../../../../tmp/satchel-pack/satchel-sdk-0.1.0.tgz",
-     "ethers": "^6.13.4",
-     "lucide-react": "^1.33.0",
-     "motion": "^13.1.1",
+@@ -19,7 +19,8 @@
+     "next": "^16.3.0",
+     "pg": "^8.23.0",
+     "react": "19.2.4",
+-    "react-dom": "19.2.4"
++    "react-dom": "19.2.4",
++    "satchel-sdk": "file:/tmp/satchel-pack/satchel-sdk-0.1.0.tgz"
+   },
+   "devDependencies": {
+     "@tailwindcss/postcss": "^4",
 -- 
 2.52.0
 
