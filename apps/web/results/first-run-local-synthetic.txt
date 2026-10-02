@@ -1,0 +1,12 @@
+satchel first-run scenario synthetic, 2026-10-02T13:29:19Z, origin http://satchel.localhost:5190, driver exit status 0 (0 = every assert and poll held)
+
+--- navigate http://satchel.localhost:5190/icon.svg
+cleared http://satchel.localhost:5190 ; localStorage keys=0 ; IndexedDB databases=["fern"]
+ASSERT satchel IndexedDB and localStorage are empty on this origin ok
+--- navigate http://satchel.localhost:5190/
+RUNNING Chrome/154.0.0.0 ; origin http://satchel.localhost:5190 ; marker ABSENT
+wait ok: first visit shows exactly Create a passkey and I already have one => Create a passkey | I already have one
+> click "Create a passkey" ok=true
+wait ok: synthetic click produced output => sealed  ns=memory/assistant  epoch=1  97 B  fp=ea7e3746  (1 prompt) | unsealed  {"likes":"metric units"} | ran the code above verbatim, sha256 8137845481f6
+SYNTHETIC click output: sealed  ns=memory/assistant  epoch=1  97 B  fp=ea7e3746  (1 prompt) | unsealed  {"likes":"metric units"} | ran the code above verbatim, sha256 8137845481f6 ; prompts so far=1
+MARKER {"credentialId":"Vfng2PVLtqsRIHaaLyjbfiVt0KVTGh2hKFUYLOySwM0","transports":["internal"]}

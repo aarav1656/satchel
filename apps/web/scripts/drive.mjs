@@ -43,6 +43,8 @@ const mouse = (type, x, y) => send("Input.dispatchMouseEvent", { type, x, y, but
 const log = (o) => console.error("STEP " + JSON.stringify(o));
 let failed = false;
 const vars = {};
+// {eval, save: "x"} keeps a value in the driver; __VAR_x__ in a later eval, poll or assert expression becomes its JSON.
+const sub = (expr) => expr.replace(/__VAR_(\w+)__/g, (_, n) => JSON.stringify(vars[n] ?? null));
 const fail = (o) => { log({ ...o, FAIL: true }); failed = true; };
 try {
   await send("Emulation.setFocusEmulationEnabled", { enabled: true });
@@ -73,7 +75,7 @@ try {
       log({ wait_file: s.wait_file });
     }
     if (s.eval) {
-      const v = await ev(s.eval);
+      const v = await ev(sub(s.eval));
       if (s.save) vars[s.save] = v;
       log({ eval: s.label ?? s.eval.slice(0, 50), value: v });
     }
@@ -81,7 +83,7 @@ try {
       const until = Date.now() + (s.timeout ?? 20000);
       let v;
       while (Date.now() < until) {
-        v = await ev(s.poll);
+        v = await ev(sub(s.poll));
         if (v && !(typeof v === "string" && v.startsWith("EXCEPTION"))) break;
         await sleep(500);
       }
@@ -89,7 +91,7 @@ try {
       log({ poll: s.label ?? s.poll.slice(0, 50), value: v });
     }
     if (s.assert) {
-      const v = await ev(s.assert);
+      const v = await ev(sub(s.assert));
       if (!v || (typeof v === "string" && v.startsWith("EXCEPTION"))) { fail({ assert: s.label ?? s.assert.slice(0, 80), value: v }); break; }
       log({ assert: s.label ?? s.assert.slice(0, 50), ok: true, value: typeof v === "string" ? v : undefined });
     }

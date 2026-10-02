@@ -1,0 +1,19 @@
+satchel first-run scenario trap, 2026-10-02T13:29:55Z, origin https://satchel-keys.vercel.app, driver exit status 0 (0 = every assert and poll held)
+
+--- navigate https://satchel-keys.vercel.app/icon.svg
+cleared https://satchel-keys.vercel.app ; localStorage keys=0 ; IndexedDB databases=[]
+ASSERT satchel IndexedDB and localStorage are empty on this origin ok
+--- navigate https://satchel-keys.vercel.app/
+wait ok: old build: one Run button => Run the code above
+> REAL INPUT click "Run the code above" ok=true at=[463,450]
+wait ok: old build first run finished => sealed  ns=memory/assistant  epoch=1  97 B  fp=74f0a4cc  (2 prompts) | unsealed  {"likes":"metric units"} | ran the code above verbatim, sha256 a36e06b1307c
+OLD first run output: sealed  ns=memory/assistant  epoch=1  97 B  fp=74f0a4cc  (2 prompts) | unsealed  {"likes":"metric units"} | ran the code above verbatim, sha256 a36e06b1307c ; prompts so far=2
+> fresh virtual authenticator a2a79287-79e4-4aee-8c06-7e936bec3a45 (every credential of the previous one is gone)
+--- navigate https://satchel-keys.vercel.app/
+> REAL INPUT click "Run the code above" ok=true at=[463,450]
+wait ok: old build with a stale marker => PASSKEY_CANCELLED  Passkey prompt closed or no matching passkey was offered. | fix: call enrol() or openOrEnrol() from a click handler if this device has no passkey for the rpId yet (open() cannot tell a closed prompt from no passkey), otherwise call open() again and confirm the prompt.
+OLD stale run 1: PASSKEY_CANCELLED  Passkey prompt closed or no matching passkey was offered. | fix: call enrol() or openOrEnrol() from a click handler if this device has no passkey for the rpId yet (open() cannot tell a closed prompt from no passkey), otherwise call open() again and confirm the prompt. ; prompts so far=1
+> REAL INPUT click "Run the code above" ok=true at=[463,450]
+OLD stale run 2: PASSKEY_CANCELLED  Passkey prompt closed or no matching passkey was offered. | fix: call enrol() or openOrEnrol() from a click handler if this device has no passkey for the rpId yet (open() cannot tell a closed prompt from no passkey), otherwise call open() again and confirm the prompt. ; prompts so far=2
+MARKER {"credentialId":"AMfDh5omu_--ou-66dR3oxELEXHLaFyEVLTZnNPv1Ks","transports":["internal"]}
+BUTTONS Run the code above

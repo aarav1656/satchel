@@ -1,0 +1,23 @@
+satchel first-run scenario a, 2026-10-02T13:28:20Z, origin http://satchel.localhost:5190, driver exit status 0 (0 = every assert and poll held)
+
+--- navigate http://satchel.localhost:5190/icon.svg
+cleared http://satchel.localhost:5190 ; localStorage keys=0 ; IndexedDB databases=["fern"]
+ASSERT satchel IndexedDB and localStorage are empty on this origin ok
+--- navigate http://satchel.localhost:5190/
+RUNNING Chrome/154.0.0.0 ; origin http://satchel.localhost:5190 ; marker ABSENT
+wait ok: first visit shows exactly Create a passkey and I already have one => Create a passkey | I already have one
+> REAL INPUT click "Create a passkey" ok=true at=[455,450]
+wait ok: create run finished => sealed  ns=memory/assistant  epoch=1  97 B  fp=1ae465fd  (1 prompt) | unsealed  {"likes":"metric units"} | ran the code above verbatim, sha256 8137845481f6
+CREATE run output: sealed  ns=memory/assistant  epoch=1  97 B  fp=1ae465fd  (1 prompt) | unsealed  {"likes":"metric units"} | ran the code above verbatim, sha256 8137845481f6 ; prompts so far=1
+ASSERT Create used exactly one passkey prompt ok
+1ae465fd
+wait ok: after Create the page shows one Run button
+MARKER {"credentialId":"Gz07ILNZklM60PftN8InmIPJqvnsFqfDyH_1XTcZhSE","transports":["internal"]}
+--- navigate http://satchel.localhost:5190/
+wait ok: marker present: the page shows exactly Run the code above => Run the code above
+> REAL INPUT click "Run the code above" ok=true at=[463,450]
+wait ok: later run finished => sealed  ns=memory/assistant  epoch=1  97 B  fp=1ae465fd  (1 prompt) | unsealed  {"likes":"metric units"} | ran the code above verbatim, sha256 8137845481f6
+RUN run output: sealed  ns=memory/assistant  epoch=1  97 B  fp=1ae465fd  (1 prompt) | unsealed  {"likes":"metric units"} | ran the code above verbatim, sha256 8137845481f6 ; prompts so far=1
+ASSERT later run used exactly one passkey prompt ok
+ASSERT the fresh load's Run opened the same passkey: fingerprint equal to the first run ok
+SAME FINGERPRINT first=1ae465fd later=1ae465fd

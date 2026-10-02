@@ -5,6 +5,8 @@ for (const raw of fs.readFileSync(process.argv[2], "utf8").split("\n")) {
   const s = JSON.parse(raw.slice(5));
   const tag = s.FAIL ? "FAIL " : "";
   if (s.navigate) console.log(`--- navigate ${s.navigate}`);
+  else if (s.tclick) console.log(`${tag}> REAL INPUT click "${s.tclick}" ok=${s.ok} at=${JSON.stringify(s.at)}`);
+  else if (s.vauth) console.log(`> fresh virtual authenticator ${s.authenticatorId} (every credential of the previous one is gone)`);
   else if (s.click) console.log(`${tag}> click "${s.click}" ok=${s.ok}`);
   else if (s.click_sel) console.log(`${tag}> click ${s.click_sel} ok=${s.ok}`);
   else if (s.set_text) console.log(`> type "${s.set_text}"`);
