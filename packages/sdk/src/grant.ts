@@ -87,7 +87,7 @@ export async function createGrantee(keyPair?: CryptoKeyPair): Promise<{
           try {
             const raw = new Uint8Array(
               await suite.open(
-                { recipientKey: pair.privateKey, enc: wrapped.slice(0, 65), info: HPKE_INFO },
+                { recipientKey: pair, enc: wrapped.slice(0, 65), info: HPKE_INFO },
                 wrapped.slice(65),
                 aad(g.nsHash, g.epoch),
               ),

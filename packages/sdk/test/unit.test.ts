@@ -181,6 +181,36 @@ describe("every SatchelError code is raised by a real condition", () => {
   });
 });
 
+describe("HPKE wrap (RFC 9180, DHKEM P-256, HKDF-SHA256, AES-128-GCM)", () => {
+  test("200 fresh grantee keys each unwrap their own wrap: the reader must hand HPKE the whole key pair (a bare private key failed about half the time)", async () => {
+    const { wrapDek } = await import("../src/grant.ts");
+    const n = ns("memory/assistant");
+    const nsHash = keccak256(toBytes("satchel/ns/memory/assistant"));
+    const s = await sat("hpke");
+    const plain = await s.seal(n, "payload");
+    let opened = 0;
+    for (let i = 0; i < 200; i++) {
+      const g = await createGrantee();
+      const dek = new Uint8Array(await (await import("../src/derive.ts")).dekBytes(prfOf("hpke"), n, 1));
+      const wrapped = await wrapDek(g.publicKey, dek, nsHash, 1);
+      expect(wrapped.length).toBe(2 + 2 * 113);
+      const r = g.reader({ ...fakeGrant(g.publicKey), wrappedKey: wrapped });
+      expect(new TextDecoder().decode(await r.unseal(plain))).toBe("payload");
+      opened++;
+    }
+    expect(opened).toBe(200);
+  });
+  test("a wrap is addressed: another grantee's key cannot open it", async () => {
+    const { wrapDek } = await import("../src/grant.ts");
+    const nsHash = keccak256(toBytes("satchel/ns/memory/assistant"));
+    const [a, b] = [await createGrantee(), await createGrantee()];
+    const wrapped = await wrapDek(a.publicKey, new Uint8Array(32), nsHash, 1);
+    const s = await sat("hpke2");
+    const blob = await s.seal(ns("memory/assistant"), "x");
+    expect(await codeOf(() => b.reader({ ...fakeGrant(b.publicKey), wrappedKey: wrapped }).unseal(blob))).toBe("GRANT_NOT_FOR_KEY");
+  });
+});
+
 function fakeGrant(pub: `0x${string}`) {
   return {
     id: "1",
