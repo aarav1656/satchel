@@ -1,0 +1,113 @@
+npm warn Unknown user config "allow-git". This will stop working in the next major version of npm.
+npm warn Unknown user config "min-release-age". This will stop working in the next major version of npm.
+
+> trustset-web@0.1.0 build
+> next build
+
+▲ Next.js 16.3.5 (Turbopack)
+✓ Running next.config.ts took 2.1s
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 34.1s
+  Running TypeScript ...
+  Finished TypeScript in 11.1s ...
+  Collecting page data using 7 workers ...
+AGENT_STATE is not set, so the live agent panel has nothing to read
+  Generating static pages using 7 workers (0/10) ...
+  Generating static pages using 7 workers (2/10) 
+  Generating static pages using 7 workers (4/10) 
+  Generating static pages using 7 workers (7/10) 
+✓ Generating static pages using 7 workers (10/10) in 594ms
+Turbopack build encountered 2 warnings:
+./src/app/api/chain/route.ts:46:34
+Warning: Dynamic filesystem access causes tracing of the whole project
+  [90m44 |[0m ... console.error([32m"LOCAL_RPC is not set, so the local chain cannot be reached"[0m); warnedLoc...
+  [90m45 |[0m ...
+[33m[1m>[0m [90m46 |[0m ...readFile(process.env.[33mLOCAL_DEMO_CONFIG[0m || join(root(), [32m"demo"[0m, [32m"config.json"[0m), [32m"utf8"[0m));
+  [90m   |[0m    [33m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m47 |[0m ...method: [32m"POST"[0m, headers: { [32m"content-type"[0m: [32m"application/json"[0m },
+  [90m48 |[0m ...rpc: [32m"2.0"[0m, id: [35m1[0m, method: [32m"eth_blockNumber"[0m, params: [] }), signal: [33mAbortSignal[0m.timeou..[35m.[0m
+  [90m49 |[0m ...
+
+Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
+This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
+This can slow down deployments or lead to failures when size limits are exceeded.
+To resolve this, you can
+- make sure the path is statically scoped to some subfolder, for example path.join(process.cwd(), 'data', bar), or
+- only use them in development, or
+- opt out by adding an ignore comment to the highlighted call: fs.readFile(/*turbopackIgnore: true*/ ...), or
+- remove them.
+
+Import trace:
+  App Route:
+    ./src/app/api/chain/route.ts
+    ./src/app/api/chain/route.ts
+
+
+./src/lib/demo.server.ts:123:21
+Warning: Dynamic filesystem access causes tracing of the whole project
+  [90m121 |[0m [36masync[0m [36mfunction[0m rows(): [33mPromise[0m<[33mRecord[0m<string, [33mRow[0m>> {
+  [90m122 |[0m   [36mlet[0m raw: string;
+[33m[1m>[0m [90m123 |[0m   [36mtry[0m { raw = [36mawait[0m readFile([33mSTORE[0m(), [32m"utf8"[0m); }
+  [90m    |[0m                     [33m[1m^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m124 |[0m   [36mcatch[0m (e) { [36mif[0m ((e [36mas[0m { code?: string }).code === [32m"ENOENT"[0m) [36mreturn[0m {}; [36mthrow[0m e; }
+  [90m125 |[0m   /* a store that exists but does not parse is a fault to report, never an
+  [90m126 |[0m      empty store: treating it [36mas[0m empty registered a [36mnew[0m agent [36mfor[0m everybody
+
+Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
+This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
+This can slow down deployments or lead to failures when size limits are exceeded.
+To resolve this, you can
+- make sure the path is statically scoped to some subfolder, for example path.join(process.cwd(), 'data', bar), or
+- only use them in development, or
+- opt out by adding an ignore comment to the highlighted call: fs.readFile(/*turbopackIgnore: true*/ ...), or
+- remove them.
+
+Import traces:
+  #1 [App Route]:
+    ./src/lib/demo.server.ts
+    ./src/app/api/chain/route.ts
+
+  #2 [App Route]:
+    ./src/lib/demo.server.ts
+    ./src/app/api/stop-key/route.ts
+
+
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /agents/[[...id]]
+├ ○ /agents/refunds
+├ ƒ /api/chain
+├ ƒ /api/demo
+├ ƒ /api/explorer
+├ ƒ /api/explorer/agent
+├ ƒ /api/explorer/agents
+├ ƒ /api/fleet
+├ ƒ /api/gas
+├ ƒ /api/live
+├ ƒ /api/live-agent
+├ ƒ /api/panic
+├ ƒ /api/refunds
+├ ƒ /api/registry
+├ ƒ /api/stop-key
+├ ƒ /api/verify
+├ ○ /debug
+├ ○ /demo
+├ ƒ /dev/mark
+├ ƒ /dev/module
+├ ƒ /explorer
+├ ƒ /explorer/[id]
+├ ○ /faq
+├ ○ /how
+├ ƒ /panic
+├ ƒ /passkey
+├ ○ /robots.txt
+└ ○ /sitemap.xml
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

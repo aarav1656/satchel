@@ -1,0 +1,7 @@
+[
+  {"eval": "document.getElementById('out').innerText"},
+  {"click": "passkey"},
+  {"wait": 3000, "eval": "document.getElementById('out').innerText"},
+  {"click": "legacy3"},
+  {"wait": 12000, "eval": "document.getElementById('out').innerText"}
+]

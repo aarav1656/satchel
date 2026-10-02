@@ -1,0 +1,11 @@
+[
+  {"eval": "document.getElementById('out').innerText"},
+  {"click": "passkey"},
+  {"wait": 3000, "eval": "document.getElementById('out').innerText"},
+  {"click": "negsat"},
+  {"wait": 4000, "eval": "document.getElementById('out').innerText"},
+  {"click": "negsat"},
+  {"wait": 4000, "eval": "document.getElementById('out').innerText"},
+  {"click": "negold"},
+  {"wait": 4000, "eval": "document.getElementById('out').innerText"}
+]

@@ -1,0 +1,9 @@
+[
+  {"eval": "document.getElementById('out').innerText"},
+  {"click": "passkey"},
+  {"wait": 3000, "eval": "document.getElementById('out').innerText"},
+  {"click": "seal3"},
+  {"wait": 8000, "eval": "document.getElementById('out').innerText"},
+  {"click": "open3"},
+  {"wait": 8000, "eval": "document.getElementById('out').innerText"}
+]

@@ -1,0 +1,11 @@
+PRF_UNAVAILABLE        -> This passkey cannot derive keys. iCloud Keychain and Google Password Manager passkeys can; some security keys cannot.
+PASSKEY_CANCELLED      -> The passkey prompt was closed, or there is no trustset passkey on this device yet.
+RPID_MISMATCH          -> This address has no trustset passkey. A passkey only works on the address it was made for.
+WRONG_PASSKEY          -> That passkey is not the one this note was sealed with.
+NAMESPACE_MISMATCH     -> This note belongs to a different agent.
+SEAL_CORRUPT           -> This note is damaged on chain and cannot be opened.
+NOT_SEALED             -> This note is damaged on chain and cannot be opened.
+SESSION_CLOSED         -> The passkey session ended. Try again.
+REGISTRY_UNREACHABLE   -> sdk says REGISTRY_UNREACHABLE check the registry address and RPC, then retry. Read epochOf() first to see whether the earlier call landed.
+STORE_UNAVAILABLE      -> sdk says STORE_UNAVAILABLE pass a store in OpenOptions; this runtime has no IndexedDB.
+plain Error            -> boom
