@@ -1,14 +1,36 @@
-// The Pip to Fern click-through, as a user does it: enrol, seal, grant Fern, Fern reads, revoke, Fern is locked out of new data,
-// then the four proof rows. Run by scripts/click-through.sh, which funds the Pip owner between enrol and the first grant.
+// The Pip to Fern click-through, as a user does it: the quickstart Run button, enrol, seal, grant Fern while the owner is unfunded
+// (OWNER_UNFUNDED), fund it, grant Fern, Fern rebuilds the grant from the transaction hash and reads, a second origin's Fern with
+// another key is refused, revoke, Fern is locked out of new data, regrant, then the proof rows.
+// Run by scripts/click-through.sh, which funds the Pip owner when the page has shown OWNER_UNFUNDED.
 const ORIGIN = process.env.ORIGIN ?? "http://satchel.localhost:5190";
+const OTHER_ORIGIN = ORIGIN.replace("//satchel.localhost", "//fern.satchel.localhost");
 const T = (id) => `document.querySelector('[data-testid="${id}"]')`;
 const all = (id) => `[...document.querySelectorAll('[data-testid="${id}"]')]`;
 const FUNDED = "/tmp/satchel-web-funded";
+const SHOWN = `document.querySelector('[data-snippet="quickstart"] pre').textContent`;
+const SHA12 = `(async()=>{const d=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(${SHOWN}));return [...new Uint8Array(d)].map(b=>b.toString(16).padStart(2,'0')).join('').slice(0,12)})()`;
+const IDB = (db, key) =>
+  `(async()=>{const d=await new Promise((res,rej)=>{const r=indexedDB.open('${db}');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});const v=await new Promise((res,rej)=>{const r=d.transaction('kv').objectStore('kv').get('${key}');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});d.close();return JSON.stringify(v instanceof ArrayBuffer?new TextDecoder().decode(v):v)})()`;
 
 const CLEAR = `(async()=>{localStorage.clear();sessionStorage.clear();await Promise.all(['fern','satchel'].map(n=>new Promise(r=>{const q=indexedDB.deleteDatabase(n);q.onsuccess=q.onerror=q.onblocked=()=>r()})));return 'cleared '+location.origin})()`;
 
 export default [
   { eval: CLEAR, label: "clear origin storage" },
+  // the quickstart on /: the Run button executes exactly the text on the page
+  { navigate: `${ORIGIN}/` },
+  { poll: `!!${T("quickstart-run")}`, label: "quickstart page has a Run button" },
+  { eval: `'QUICKSTART shown (' + ${SHOWN}.split('\\n').length + ' lines): ' + ${SHOWN}.replace(/\\n+/g,' | ')`, label: "quickstart text on the page" },
+  { click: "Run the code above" },
+  { poll: `${T("quickstart-output")}?.innerText.includes('sha256') && ${T("quickstart-output")}.innerText`, timeout: 60000, label: "quickstart first run finished" },
+  { eval: `'QUICKSTART run 1: ' + ${T("quickstart-output")}.innerText.replace(/\\n/g,' | ')`, label: "first run output (first visit: a prompt that finds no passkey, then a create)" },
+  { assert: `${T("quickstart-output")}.innerText.includes('sealed  ns=memory/assistant  epoch=1') && ${T("quickstart-output")}.innerText.includes('unsealed  {"likes":"metric units"}')`, label: "first run sealed and reopened" },
+  { eval: `(async()=>{const sha=await ${SHA12};return 'QUICKSTART displayed text sha256 ' + sha + ' ; run printed ' + (${T("quickstart-output")}.innerText.match(/sha256 ([0-9a-f]{12})/)||[])[1]})()`, label: "displayed text hash against the hash the run printed" },
+  { assert: `(async()=>{const sha=await ${SHA12};return ${T("quickstart-output")}.innerText.includes('sha256 '+sha)})()`, label: "the Run button executed exactly the displayed text (sha256 equal)" },
+  { eval: `(async()=>'QUICKSTART marker in the store: ' + await ${IDB("satchel", "satchel/known/" + new URL(ORIGIN).hostname).replace(/^\(async\(\)=>/, "(async()=>")})()`, label: "openOrEnrol wrote the passkey marker" },
+  { click: "Run the code above" },
+  { poll: `${T("quickstart-output")}?.innerText.includes('(1 prompt)') && ${T("quickstart-output")}.innerText`, timeout: 60000, label: "second run opens with one prompt" },
+  { eval: `'QUICKSTART run 2: ' + ${T("quickstart-output")}.innerText.replace(/\\n/g,' | ')`, label: "second run output" },
+  // Pip
   { navigate: `${ORIGIN}/pip/` },
   { poll: `document.body.innerText.includes('Create your vault')`, label: "Pip first run offers Create" },
   { eval: `'EMPTY pip ghost=' + document.querySelector('.ghost-row').innerText.replace(/\\n/g,' | ')`, label: "empty state text" },
@@ -17,9 +39,6 @@ export default [
   { eval: `'OWNER address=' + ${T("owner-address")}.innerText + ' balance=' + ${T("owner-balance")}.innerText`, label: "owner" },
   { eval: `'RAIL ' + ${T("rail-passkey")}.textContent + ' | ' + ${all("rail-ns")}.map(n=>n.textContent).join(' / ')`, label: "rail after enrol" },
   { eval: `'PROMPTS ' + ${T("prompt-count")}.innerText`, label: "prompts after enrol" },
-  { wait_file: FUNDED },
-  { click: "Check balance" },
-  { poll: `${T("owner-balance")}.innerText.includes('0.1 MON') && ${T("owner-balance")}.innerText`, label: "owner funded" },
   { click: "Save to memory" },
   { poll: `!!${T("seal-status")} && ${T("seal-status")}.innerText`, timeout: 40000, label: "sealed" },
   { eval: `'SEALED ' + ${T("seal-status")}.innerText.replace(/\\n/g,' ') + ' rows=' + ${all("memory-row")}.length + ' first="' + ${all("memory-row")}[0].querySelector('.memory-text').innerText + '"'`, label: "memory row" },
@@ -29,17 +48,43 @@ export default [
   { click_sel: `.demo a[href="/fern/"]` },
   { poll: `!!${T("fern-empty")}`, label: "Fern before a grant" },
   { eval: `'FERN before grant: ' + ${T("fern-empty")}.innerText.replace(/\\n/g,' | ')`, label: "fern empty" },
+  { eval: `'FERN storage copy: ' + ${T("fern-storage")}.innerText.replace(/\\n+/g,' | ')`, label: "what /fern says it stores, from lib/demo-store.ts" },
+  { eval: `'FERN label count: "fern key" appears ' + (document.body.innerText.match(/fern key/g)||[]).length + ' time(s)'`, label: "the fern key label renders once" },
+  { assert: `(document.body.innerText.match(/fern key/g)||[]).length === 1`, label: "fern key label is rendered exactly once" },
   { click: "Connect to your memory" },
   { poll: `!!${T("allow-card")}`, label: "Pip sharing shows the Allow card" },
   { eval: `'CONNECT app=' + new URLSearchParams(location.search).get('app') + ' pub=' + new URLSearchParams(location.search).get('connect')`, label: "connect code" },
   { eval: `'ALLOW ' + ${T("allow-card")}.innerText.replace(/\\n/g,' | ')`, label: "allow copy" },
+  // the owner has no MON: the SDK stops before sending and says who and how much
+  { click: "Allow" },
+  { poll: `${T("error")}?.innerText.includes('OWNER_UNFUNDED') && ${T("error")}.innerText`, timeout: 60000, label: "Allow on an unfunded owner shows OWNER_UNFUNDED" },
+  { eval: `'UNFUNDED ' + ${T("error")}.innerText.replace(/\\n/g,' | ')`, label: "OWNER_UNFUNDED text shown to the user" },
+  { assert: `/0x[0-9a-fA-F]{40}/.test(${T("error")}.innerText) && /Short by [0-9.]+ MON/.test(${T("error")}.innerText) && ${T("error")}.innerText.includes('https://faucet.monad.xyz')`, label: "the error names the owner address, the shortfall in MON and the faucet" },
+  { assert: `!${T("granted")}`, label: "no grant was recorded" },
+  { wait_file: FUNDED },
+  { click: "Check balance" },
+  { poll: `${T("owner-balance")}.innerText.includes('0.1 MON') && ${T("owner-balance")}.innerText`, label: "owner funded" },
   { click: "Allow" },
   { poll: `!!${T("granted")} && ${T("grant-tx")}.dataset.hash`, timeout: 120000, label: "grant confirmed" },
   { eval: `'GRANT id=' + ${all("grant-row")}[0].dataset.grantId + ' tx=' + ${T("grant-tx")}.dataset.hash + ' status=' + ${T("granted")}.innerText.replace(/\\n/g,' ')`, label: "grant" },
+  { eval: `'HANDOFF ' + ${T("grant-handoff")}.innerText + ' link=' + [...document.querySelectorAll('a')].find(a=>a.innerText.startsWith('Return to Fern')).getAttribute('href')`, label: "Pip hands Fern the transaction hash" },
+  // Fern is another app: take away the one place Pip keeps its own grant list, so only the transaction hash can carry the grant
+  { eval: `(()=>{sessionStorage.setItem('stash.grants', localStorage.getItem('satchel.demo.grants'));localStorage.removeItem('satchel.demo.grants');return 'PIP GRANT LIST HIDDEN from Fern: localStorage satchel.demo.grants is ' + localStorage.getItem('satchel.demo.grants')})()`, label: "hide Pip's grant list" },
   { click: "Return to Fern" },
-  { poll: `${all("fern-row")}.length === 1 && ${all("fern-row")}[0].dataset.state === 'open'`, timeout: 30000, label: "Fern reads the memory" },
+  { poll: `${all("fern-row")}.length === 1 && ${all("fern-row")}[0].dataset.state === 'open'`, timeout: 60000, label: "Fern reads the memory from a grant it rebuilt from the transaction hash" },
   { eval: `'FERN reads rows=' + ${all("fern-row")}.length + ' state=' + ${all("fern-row")}[0].dataset.state + ' epoch=' + ${all("fern-row")}[0].dataset.epoch + ' text="' + ${all("fern-row")}[0].querySelector('.memory-text').innerText + '" status_active=' + ${T("fern-status")}.dataset.active + ' | ' + ${T("fern-status")}.innerText.replace(/\\n/g,' ')`, label: "fern read" },
+  { eval: `(async()=>'FERN stored grants (IndexedDB fern/grants): ' + await ${IDB("fern", "grants")} + ' ; url now ' + location.pathname + location.search)()`, label: "Fern keeps only the hash, and the url is clean" },
+  { assert: `location.search === '' && !localStorage.getItem('satchel.demo.grants')`, label: "the grant param was consumed and Pip's grant list was never needed" },
   { eval: `'FERN rail ' + ${all("rail-app")}.map(a=>a.dataset.app+' revoked='+a.dataset.revoked).join(',') + ' | ' + ${all("rail-ns")}.map(n=>n.textContent).join(' / ')`, label: "fern rail before revoke" },
+  { eval: `(()=>{localStorage.setItem('satchel.demo.grants', sessionStorage.getItem('stash.grants'));return 'PIP GRANT LIST RESTORED for Pip: ' + JSON.parse(localStorage.getItem('satchel.demo.grants')).length + ' grant'})()`, label: "restore Pip's own list" },
+  // a second origin's Fern has another key: the same transaction hash is refused
+  { eval: `'FERN (first origin) public key hash ' + (document.querySelector('[data-testid="rail-passkey"]')?.textContent ?? '')`, label: "first Fern's key label" },
+  { navigate: `${OTHER_ORIGIN}/fern/?grant=$GRANT_TX` , via: "grantTx" },
+  { poll: `${T("error")}?.innerText.includes('GRANT_NOT_FOR_KEY') && ${T("error")}.innerText`, timeout: 60000, label: "another origin's Fern is refused the same grant" },
+  { eval: `'FERN other origin ' + location.origin + ' error: ' + ${T("error")}.innerText.replace(/\\n/g,' | ') + ' | rows=' + ${all("fern-row")}.length + ' empty=' + !!${T("fern-empty")}`, label: "negative control" },
+  { assert: `${all("fern-row")}.length === 0 && !!${T("fern-empty")}`, label: "the other Fern holds no grant and reads nothing" },
+  { navigate: `${ORIGIN}/fern/`, fresh: true },
+  { poll: `${all("fern-row")}.length === 1 && ${all("fern-row")}[0].dataset.state === 'open'`, timeout: 60000, label: "first Fern, fresh page load, still reads from its stored hash" },
   { click_sel: `.top-nav a[href="/pip/"]` },
   { click_sel: `.app-bar nav a[href="/pip/share/"]` },
   { poll: `${all("grant-row")}.length === 1 && ${all("grant-row")}[0].dataset.active === 'true'`, timeout: 20000, label: "Pip sharing lists Fern as active" },
@@ -55,20 +100,28 @@ export default [
   { click_sel: `.top-nav a[href="/fern/"]` },
   { poll: `${all("fern-row")}.length === 2 && ${T("fern-status")}?.dataset.active === 'false'`, timeout: 40000, label: "Fern shows both rows and the revoked grant" },
   { eval: `'FERN after revoke ' + ${all("fern-row")}.map(r=>'epoch='+r.dataset.epoch+' state='+r.dataset.state+' "'+r.querySelector('.memory-text').innerText+'"').join(' ; ') + ' | reason: ' + (${T("fern-locked-reason")}?.innerText ?? 'none') + ' | ' + ${T("fern-status")}.innerText.replace(/\\n/g,' | ')`, label: "fern revoked state" },
+  { assert: `${all("fern-row")}.map(r=>r.dataset.state).join(',') === 'open,locked'`, label: "the old memory opens, the new one is locked" },
   { eval: `'FERN rail ' + ${all("rail-app")}.map(a=>a.dataset.app+' revoked='+a.dataset.revoked).join(',') + ' | ' + ${all("rail-ns")}.map(n=>n.textContent).join(' / ')`, label: "fern rail after revoke" },
-  // proof page
+  // regrant: Fern asks again and Pip issues a fresh grant at the new epoch
+  { click: "Ask Pip for a new grant" },
+  { poll: `!!${T("allow-card")}`, label: "Pip offers Allow again after the revoke" },
+  { click: "Allow" },
+  { poll: `!!${T("granted")} && ${T("grant-tx")}.dataset.hash`, timeout: 120000, label: "regrant confirmed" },
+  { eval: `'REGRANT tx=' + ${T("grant-tx")}.dataset.hash + ' status=' + ${T("granted")}.innerText.replace(/\\n/g,' ') + ' rows=' + ${all("grant-row")}.map(r=>'id='+r.dataset.grantId+' active='+r.dataset.active).join(' ; ')`, label: "regrant" },
+  { click: "Return to Fern" },
+  { poll: `${all("fern-row")}.length === 2 && ${all("fern-row")}.every(r=>r.dataset.state==='open') && ${T("fern-status")}?.dataset.active === 'true'`, timeout: 60000, label: "after regrant Fern opens both memories under its second grant" },
+  { eval: `'FERN after regrant ' + ${all("fern-row")}.map(r=>'epoch='+r.dataset.epoch+' state='+r.dataset.state+' "'+r.querySelector('.memory-text').innerText+'"').join(' ; ') + ' | ' + ${T("fern-status")}.innerText.replace(/\\n/g,' | ')`, label: "fern regranted state" },
+  { eval: `(async()=>'FERN stored grants after regrant: ' + await ${IDB("fern", "grants")})()`, label: "Fern now keeps two hashes" },
+  // proof page: one vault prompt, then the rows fill
   { click_sel: `.top-nav a[href="/proof/"]` },
-  { poll: `!!${T("show-derivation")}`, label: "proof page, vault already open" },
-  { click: "Show derivation" },
-  { poll: `${T("derivation")}?.innerText`, timeout: 30000, label: "derivation" },
+  { poll: `!!${T("proof-vault-open")} && !!${T("derivation")}?.innerText`, timeout: 40000, label: "proof page, vault already open, derivation filled without a click" },
   { eval: `'DERIVATION ' + ${T("derivation")}.innerText.replace(/\\n+/g,' | ')`, label: "derivation text" },
-  { click: "Try the wrong namespace" },
-  { poll: `${T("wrong-ns-result")}?.innerText`, timeout: 30000, label: "wrong namespace" },
+  { poll: `${T("wrong-ns-result")}?.innerText`, timeout: 30000, label: "wrong namespace filled" },
   { eval: `'WRONGNS ' + ${T("wrong-ns-result")}.innerText.replace(/\\n+/g,' | ') + ' | stub=' + !!${T("rail-stub")}`, label: "wrong namespace text" },
-  { click: "Scan this browser" },
-  { poll: `${T("scan-summary")}?.innerText`, label: "scan" },
+  { poll: `${T("scan-summary")}?.innerText`, label: "scan filled" },
   { eval: `'SCAN ' + ${T("scan-summary")}.innerText.replace(/\\n/g,' ') + ' | ' + ${all("scan-row")}.map(r=>r.children[0].innerText+':'+r.children[1].innerText+':'+r.dataset.verdict).join(' ; ')`, label: "scan rows" },
   { assert: `${all("scan-row")}.filter(r=>r.dataset.verdict==='ciphertext').length >= 1 && ${all("scan-row")}.filter(r=>r.dataset.verdict==='public').length >= 3 && ${all("scan-row")}.every(r=>r.dataset.verdict !== 'flagged')`, label: "scan is not empty (ciphertext and public rows present) and nothing is flagged" },
+  { assert: `${all("scan-row")}.some(r=>r.children[1].innerText.startsWith('satchel/kv/satchel/known/')) && ${all("scan-row")}.some(r=>r.children[1].innerText === 'fern/kv/grants')`, label: "the scan saw the passkey marker and Fern's grant hashes, and classified them" },
   { click: "Plant a test value" },
   { poll: `${all("scan-row")}.some(r=>r.dataset.verdict === 'flagged') && ${T("scan-summary")}.innerText`, label: "scan goes red on a planted value" },
   { eval: `'SCAN planted ' + ${T("scan-summary")}.innerText.replace(/\\n/g,' ') + ' | flagged=' + ${all("scan-row")}.filter(r=>r.dataset.verdict==='flagged').map(r=>r.children[1].innerText).join(',')`, label: "scan red" },
@@ -81,6 +134,7 @@ export default [
   // the link opened in a fresh page load (a new device would also be a fresh load); the virtual authenticator holds the same passkey
   { navigate: "$link", fresh: true },
   { poll: `!!${T("proof-vault")}`, label: "link opens with the vault closed" },
+  { assert: `[...document.querySelectorAll('button')].filter(b=>/vault/i.test(b.innerText)).length === 1`, label: "exactly one vault button on the page, no repeated prompts" },
   { click: "Open my vault" },
   { poll: `!!${T("compare")} && ${T("compare")}.dataset.equal`, timeout: 30000, label: "compare rendered" },
   { eval: `'CROSSDEVICE equal=' + ${T("compare")}.dataset.equal + ' | ' + ${T("compare")}.innerText.replace(/\\n+/g,' | ') + ' | fps=' + ${all("rail-fp")}.map(f=>f.textContent).join(',')`, label: "cross device equal" },

@@ -1,4 +1,4 @@
-import { SatchelError, type ErrorCode } from "@satchel/sdk";
+import { SatchelError, type ErrorCode } from "satchel-sdk";
 
 /** What the demo shows a person for each SDK error: the cause in plain words and the next step. The developer-facing text stays in SatchelError. */
 const PERSON: Partial<Record<ErrorCode, string>> = {

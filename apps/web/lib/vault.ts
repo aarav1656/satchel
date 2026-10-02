@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import "./prompts";
-import { enrol, open, ns, parseSealed, type Satchel } from "@satchel/sdk";
+import { enrol, open, ns, parseSealed, type Satchel } from "satchel-sdk";
 import { toBytes, toHex } from "viem";
 import { credential, memories, owner } from "./demo-store";
 import { MEMORY_NS, REGISTRY } from "./config";

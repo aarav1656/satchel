@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Doc } from "@/components/Doc";
 import { errorRows } from "@/lib/error-docs";
-import { ns, parseSealed, SatchelError, type ErrorCode } from "@satchel/sdk";
+import { ns, parseSealed, SatchelError, type ErrorCode } from "satchel-sdk";
 
 export const metadata: Metadata = { title: "Error codes" };
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
-import { ns, type Satchel } from "@satchel/sdk";
+import { ns, type Satchel } from "satchel-sdk";
 import { KeyRail } from "@/components/KeyRail";
 import { CopyButton } from "@/components/CopyButton";
 import { MEMORY_NS, NOTES_NS } from "@/lib/config";

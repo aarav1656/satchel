@@ -18,7 +18,7 @@ export default function Page() {
       </p>
 
       <h2 id="install">Install</h2>
-      <CodeBlock lang="sh" file="terminal" code={"npm i @satchel/sdk @category-labs/mera@0.2.0"} />
+      <CodeBlock lang="sh" file="terminal" code={"npm i satchel-sdk @category-labs/mera@0.2.0"} />
 
       <h2 id="output">What correct looks like</h2>
       <CodeBlock

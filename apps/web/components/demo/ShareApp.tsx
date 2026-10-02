@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { ns } from "@satchel/sdk";
+import { ns } from "satchel-sdk";
 import { isHex, keccak256, type Hex } from "viem";
 import { epochOf, grantOf, short, txUrl } from "@/lib/chain";
 import { MEMORY_NS } from "@/lib/config";

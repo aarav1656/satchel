@@ -5,7 +5,7 @@ import { REGISTRY_ADDRESS } from "./config";
  * one copy. scripts/check-built.mjs compares it with the built page and fails the build if they differ.
  * Plain JavaScript on purpose: it is executed as written.
  */
-export const QUICKSTART = `import { openOrEnrol, ns } from "@satchel/sdk";
+export const QUICKSTART = `import { openOrEnrol, ns } from "satchel-sdk";
 
 const s = await openOrEnrol({ rpId: location.hostname, appName: "My app" }); // opens your passkey, or creates one the first time
 const memory = ns("memory/assistant");
@@ -17,7 +17,7 @@ const note = await s.seal(notes, "call the dentist");   // a new folder, no seco
 await s.fingerprint(notes);                              // b4e6cf3b, equal on every device with this passkey`;
 
 /** Self-contained: every name it uses is defined in it. */
-export const GRANT_AND_REVOKE = `import { createGrantee, fetchGrant, ns, openOrEnrol } from "@satchel/sdk";
+export const GRANT_AND_REVOKE = `import { createGrantee, fetchGrant, ns, openOrEnrol } from "satchel-sdk";
 
 const registry = { address: "${REGISTRY_ADDRESS}" };   // Monad testnet
 const memory = ns("memory/assistant");

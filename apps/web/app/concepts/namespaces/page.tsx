@@ -15,7 +15,7 @@ export default function Page() {
       <h2 id="ns">ns()</h2>
       <CodeBlock
         file="namespaces.ts"
-        code={`import { ns } from "@satchel/sdk";
+        code={`import { ns } from "satchel-sdk";
 
 const memory = ns("${MEMORY_NS}");   // ok
 ns("Memory/Assistant");              // throws INVALID_NAMESPACE: uppercase

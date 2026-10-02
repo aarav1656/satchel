@@ -1,4 +1,4 @@
-import type { Registry } from "@satchel/sdk";
+import type { Registry } from "satchel-sdk";
 
 /** The deployed epoch registry (deployments/testnet.json). Chain 10143, Monad testnet. */
 export const REGISTRY_ADDRESS = "0xd6c895f5c9254dc6eaafc335fff0930fd7012e6d" as const;

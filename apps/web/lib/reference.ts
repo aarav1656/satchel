@@ -1,4 +1,4 @@
-import type { ErrorCode } from "@satchel/sdk";
+import type { ErrorCode } from "satchel-sdk";
 
 export interface Param {
   name: string;

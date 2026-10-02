@@ -11,7 +11,7 @@ export default function Page() {
     <Doc>
       <h1>API reference</h1>
       <p>
-        Everything exported from <code>@satchel/sdk</code>: the functions that open a vault, one session interface, the grant functions and the types around them. Each function lists the error codes it can throw, linked to the <Link href="/reference/errors/">error table</Link>.
+        Everything exported from <code>satchel-sdk</code>: the functions that open a vault, one session interface, the grant functions and the types around them. Each function lists the error codes it can throw, linked to the <Link href="/reference/errors/">error table</Link>.
       </p>
       <Callout>
         <p>

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { FetchedGrant } from "@satchel/sdk";
+import type { FetchedGrant } from "satchel-sdk";
 import { keccak256, type Hex } from "viem";
 import { KeyRail } from "@/components/KeyRail";
 import { epochOf, grantOf, short } from "@/lib/chain";

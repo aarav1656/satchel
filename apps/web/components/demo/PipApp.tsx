@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import { ns, parseSealed } from "@satchel/sdk";
+import { ns, parseSealed } from "satchel-sdk";
 import { toBytes } from "viem";
 import { KeyRail } from "@/components/KeyRail";
 import { epochOf } from "@/lib/chain";

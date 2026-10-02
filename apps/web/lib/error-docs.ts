@@ -1,4 +1,4 @@
-import { SatchelError, type ErrorCode } from "@satchel/sdk";
+import { SatchelError, type ErrorCode } from "satchel-sdk";
 import { ENTRIES } from "./reference";
 
 /** One authored cause per ErrorCode. Record<ErrorCode, ...> makes a code added to the SDK without a cause here a type error. */

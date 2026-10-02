@@ -1,5 +1,5 @@
 {
-  "name": "@satchel/sdk",
+  "name": "satchel-sdk",
   "version": "0.1.0",
   "description": "One passkey, many namespaced keys: seal data per app, grant and revoke readers through an epoch registry on Monad.",
   "license": "MIT",

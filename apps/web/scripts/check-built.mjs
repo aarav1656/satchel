@@ -2,7 +2,7 @@
 // shows and what the code does.
 //  1. The quickstart text on / is the QUICKSTART constant, the text shipped in the client bundle that the Run button executes is
 //     the same constant, and QuickstartRun.tsx runs that constant rather than a copy.
-//  2. Every function the docs name in code is a real export or member of @satchel/sdk, or is on a short list of other libraries' names.
+//  2. Every function the docs name in code is a real export or member of satchel-sdk, or is on a short list of other libraries' names.
 //  3. The error table and the error entries list the same codes and the same "Thrown by" names, and match the SDK's ErrorCode.
 import fs from "node:fs";
 import path from "node:path";
@@ -71,12 +71,12 @@ for (const r of routes) {
   for (const t of [...code, ...pres]) {
     for (const m of t.matchAll(/\b([A-Za-z_]\w*)\(\)/g)) {
       codeNames++;
-      if (!known.has(m[1]) && !OTHER.has(m[1])) fail(`/${r}: code names ${m[1]}(), which @satchel/sdk does not export`);
+      if (!known.has(m[1]) && !OTHER.has(m[1])) fail(`/${r}: code names ${m[1]}(), which satchel-sdk does not export`);
     }
   }
   for (const t of pres) {
-    for (const imp of t.matchAll(/import \{([^}]*)\} from "@satchel\/sdk"/g)) {
-      for (const n of imp[1].split(",").map((x) => x.trim().replace(/^type\s+/, "")).filter(Boolean)) if (!roots.has(n)) fail(`/${r}: imports ${n} from @satchel/sdk, which it does not export`);
+    for (const imp of t.matchAll(/import \{([^}]*)\} from "satchel-sdk"/g)) {
+      for (const n of imp[1].split(",").map((x) => x.trim().replace(/^type\s+/, "")).filter(Boolean)) if (!roots.has(n)) fail(`/${r}: imports ${n} from satchel-sdk, which it does not export`);
     }
     for (const m of t.matchAll(/(?<![\w.])s\.(\w+)\(/g)) if (!satchel.has(m[1])) fail(`/${r}: s.${m[1]}() is not a member of Satchel`);
     for (const m of t.matchAll(/\.reader\([^)]*\)\.(\w+)\(|(?<![\w.])reader\.(\w+)\(/g)) if (!reader.has(m[1] ?? m[2])) fail(`/${r}: reader.${m[1] ?? m[2]}() is not a member of Reader`);

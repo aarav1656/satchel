@@ -13,7 +13,7 @@ const DIFF = `--- a/web/src/lib/sealed.ts
 -  createSecretVaultWithExistingPasskey, decryptSecretVaultWithPasskey, isMeraError, parseSecretVault,
 -  type PasskeySecretVault,
 -} from "@category-labs/mera";
-+import { open, ns, parseSealed, SatchelError, type Sealed, type Satchel } from "@satchel/sdk";
++import { open, ns, parseSealed, SatchelError, type Sealed, type Satchel } from "satchel-sdk";
 @@
 -export type Sealed = { kind: Kind; by: string; at: number; vault: PasskeySecretVault | null; index: number };
 +export type Note = { kind: Kind; by: string; at: number; vault: Sealed | null; index: number };
@@ -48,7 +48,7 @@ const DIFF = `--- a/web/src/lib/sealed.ts
 +  if (e instanceof SatchelError) return \`\${e.message} \${e.fix}\`;`;
 
 const RESEAL = `import { decryptSecretVaultWithPasskey, parseSecretVault } from "@category-labs/mera";
-import { ns, type Satchel } from "@satchel/sdk";
+import { ns, type Satchel } from "satchel-sdk";
 
 const NOTES = ns("trustset/notes");
 

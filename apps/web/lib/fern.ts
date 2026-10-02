@@ -1,6 +1,6 @@
 "use client";
 
-import { createGrantee, fetchGrant, ns, parseSealed, SatchelError, type FetchedGrant } from "@satchel/sdk";
+import { createGrantee, fetchGrant, ns, parseSealed, SatchelError, type FetchedGrant } from "satchel-sdk";
 import { keccak256, toBytes, type Hex } from "viem";
 import { MEMORY_NS, REGISTRY } from "./config";
 import { FERN_DB, FERN_KEYS, FERN_STORE, type StoredMemory } from "./demo-store";

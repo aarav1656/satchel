@@ -29,7 +29,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         {children}
         <footer className="footer">
           <div className="footer-inner">
-            <span>@satchel/sdk, MIT</span>
+            <span>satchel-sdk, MIT</span>
             <Link href="/proof/">Proof</Link>
             <Link href="/reference/errors/">Error codes</Link>
             <span>Registry {REGISTRY_ADDRESS} on Monad testnet</span>

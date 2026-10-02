@@ -7,7 +7,7 @@ import { STORAGE } from "@/lib/demo-store";
 
 export const metadata: Metadata = { title: "Two apps" };
 
-const OWNER = `import { openOrEnrol, ns } from "@satchel/sdk";
+const OWNER = `import { openOrEnrol, ns } from "satchel-sdk";
 
 const registry = { address: "${REGISTRY_ADDRESS}" };
 const memory = ns("memory/assistant");
@@ -24,7 +24,7 @@ const link = \`https://fern.example/connect?grant=\${grant.txHash}\`;   // or a 
 const blob = await s.seal(memory, { likes: "metric units" });
 await fetch("https://pip.example/api/memories/1", { method: "PUT", body: blob.toBytes() });`;
 
-const READER = `import { createGrantee, fetchGrant, ns, parseSealed } from "@satchel/sdk";
+const READER = `import { createGrantee, fetchGrant, ns, parseSealed } from "satchel-sdk";
 
 const registry = { address: "${REGISTRY_ADDRESS}" };
 const b = await createGrantee();   // B's own key. b.publicKey is what B sent to A.

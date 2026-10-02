@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { Sealed, Satchel } from "@satchel/sdk";
+import type { Sealed, Satchel } from "satchel-sdk";
 import { failure } from "@/lib/errors-ui";
 import { promptCount, usePromptCount } from "@/lib/prompts";
 import { runSnippet } from "@/lib/run-snippet";

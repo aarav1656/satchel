@@ -1,4 +1,4 @@
-import type { Grant } from "@satchel/sdk";
+import type { Grant } from "satchel-sdk";
 import type { Address, Hex } from "viem";
 
 /**

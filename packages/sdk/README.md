@@ -1,9 +1,9 @@
-# @satchel/sdk
+# satchel-sdk
 
 One passkey, many namespaced keys. Seal data per app, hand a second app a revocable read grant, and cut it off with an epoch bump on Monad.
 
 ```ts
-import { openOrEnrol, ns } from "@satchel/sdk";
+import { openOrEnrol, ns } from "satchel-sdk";
 
 const s = await openOrEnrol({ rpId: location.hostname, appName: "My app" }); // opens your passkey, or creates one the first time
 const memory = ns("memory/assistant");
@@ -12,7 +12,7 @@ const back = await s.unsealJson(memory, blob);                                //
 ```
 
 ```
-npm i @satchel/sdk @category-labs/mera@0.2.0
+npm i satchel-sdk @category-labs/mera@0.2.0
 ```
 
 ## What you get
