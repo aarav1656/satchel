@@ -1,7 +1,7 @@
 // node scripts/check-links.mjs [origin]: crawls every route of the served static export, checks each internal link answers 200
 // and each #anchor exists in the target page. External links are listed, not fetched.
 const origin = process.argv[2] ?? "http://localhost:5190";
-const routes = ["/", "/concepts/passkey-and-prf/", "/concepts/namespaces/", "/concepts/envelopes/", "/concepts/grants-and-epochs/", "/guides/migrate-from-hkdf/", "/reference/api/", "/reference/errors/", "/pip/", "/pip/share/", "/fern/", "/proof/"];
+const routes = ["/", "/concepts/passkey-and-prf/", "/concepts/namespaces/", "/concepts/envelopes/", "/concepts/grants-and-epochs/", "/guides/two-apps/", "/guides/migrate-from-per-note-vaults/", "/reference/api/", "/reference/errors/", "/pip/", "/pip/share/", "/fern/", "/proof/"];
 const html = new Map();
 const get = async (p) => {
   if (!html.has(p)) {

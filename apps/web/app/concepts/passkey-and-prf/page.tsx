@@ -31,7 +31,7 @@ owner key = HKDF-SHA-256(root,  salt "satchel/v1", info "satchel/owner/secp256k1
 
       <h2 id="not-stored">What is stored</h2>
       <p>
-        The root exists in memory between <code>open()</code> and <code>close()</code>. Derived keys are computed on demand and zeroed after use. Browser storage holds ciphertext and a public credential id. The <Link href="/proof/">proof page</Link> scans localStorage, sessionStorage, IndexedDB and cookies in your own browser and flags any value that is neither.
+        The root exists in memory between <code>open()</code> and <code>close()</code>. Derived keys are computed on demand and zeroed after use. Browser storage holds ciphertext and a public credential id, which <code>openOrEnrol</code> remembers so a later visit is one prompt. The <Link href="/proof/">proof page</Link> scans localStorage, sessionStorage, IndexedDB and cookies in your own browser and flags any value that is neither.
       </p>
 
       <h2 id="support">Which passkeys work</h2>

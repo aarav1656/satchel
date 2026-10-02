@@ -9,7 +9,7 @@ export interface Entry {
   /** The name as exported from the package root, or `Satchel.seal` style for a member. scripts/prebuild.mjs compares these with dist/index.d.ts and the Satchel interface. */
   name: string;
   anchor: string;
-  kind: "function" | "method" | "type" | "interface" | "class";
+  kind: "function" | "method" | "type" | "interface" | "class" | "constant";
   signature: string;
   summary: string;
   params?: Param[];
@@ -43,10 +43,19 @@ export const SECTIONS: Section[] = [
         anchor: a("ns"),
         kind: "function",
         signature: "function ns(path: string): Namespace",
-        summary: "Validates a path once. The path is the HKDF info string (prefixed with satchel/ns/) and the unit of a grant.",
+        summary: "Validates a path once. The path is the HKDF info string (prefixed with satchel/ns/) and the unit of a grant. The path itself is not on chain: the registry and every sealed blob carry only its hash, nsHashOf(path).",
         params: [{ name: "path", type: "string", doc: "3 to 64 characters matching /^[a-z0-9]+([/-][a-z0-9]+)*$/, for example memory/assistant." }],
         returns: "The same string, branded as a Namespace.",
         throws: ["INVALID_NAMESPACE"],
+      },
+      {
+        name: "nsHashOf",
+        anchor: a("nsHashOf"),
+        kind: "function",
+        signature: "function nsHashOf(n: Namespace): Hex",
+        summary: "keccak256 of satchel/ns/ plus the path. This hash, never the path, is what the registry stores, what Granted events carry and what a sealed header holds, so a namespace name stays private to the apps that know it.",
+        returns: "A 32 byte hash as 0x-hex.",
+        throws: [],
       },
       {
         name: "OpenOptions",
@@ -60,7 +69,7 @@ export const SECTIONS: Section[] = [
   webAuthnClient?: WebAuthnClient;
   recover?: boolean;
 }`,
-        summary: "Options shared by open() and enrol().",
+        summary: "Options shared by open(), enrol() and openOrEnrol().",
         params: [
           { name: "rpId", type: "string", doc: "Must equal the rpId the passkey was created under, usually location.hostname of your production origin." },
           { name: "credential", type: "PasskeyCredentialMetadata", doc: "Mera's credential metadata. Omit to let the browser offer a passkey." },
@@ -88,6 +97,17 @@ export const SECTIONS: Section[] = [
         params: [{ name: "appName", type: "string", doc: "Shown on the passkey sheet, for example Satchel vault for Pip." }],
         returns: "A Satchel.",
         throws: ["PRF_UNAVAILABLE", "RPID_MISMATCH", "PASSKEY_CANCELLED"],
+      },
+      {
+        name: "openOrEnrol",
+        anchor: a("openOrEnrol"),
+        kind: "function",
+        signature: "function openOrEnrol(o: OpenOptions & { appName: string }): Promise<Satchel>",
+        summary:
+          "One call for a first and a later visit. It decides in this order. (1) A credential in the options: open() with it. (2) A marker in the store from an earlier openOrEnrol for this rpId: open() with that credential; a closed prompt throws PASSKEY_CANCELLED and never creates a second passkey. (3) No marker: open() lets the browser offer any passkey for this rpId, so a synced passkey from another device opens here; on success the marker is written. (4) That open() throws PASSKEY_CANCELLED, which WebAuthn cannot tell apart from no passkey: enrol() creates one and the marker is written. Any other error from open() is thrown as it is and never enrols.",
+        params: [{ name: "appName", type: "string", doc: "Shown on the passkey sheet when a passkey is created." }],
+        returns: "A Satchel. The marker holds the public credential id only and lives in the store (default IndexedDB); a runtime with no store skips it and lets the ceremony decide each time.",
+        throws: ["PRF_UNAVAILABLE", "RPID_MISMATCH", "PASSKEY_CANCELLED", "NO_SECOND_PASSKEY", "WRONG_PASSKEY", "STORE_UNAVAILABLE"],
       },
       {
         name: "fromPrfOutput",
@@ -118,6 +138,7 @@ export const SECTIONS: Section[] = [
   fingerprint(n: Namespace): Promise<string>;
   addPasskey(o: { appName: string }): Promise<void>;
   grant(n: Namespace, to: GranteePublicKey, o: { label: string }): Promise<Grant>;
+  regrant(n: Namespace, to: GranteePublicKey, o: { label: string }): Promise<Grant>;
   revoke(n: Namespace, grantId: string): Promise<{ epoch: number; txHash: Hex }>;
   close(): void;
 }`,
@@ -176,18 +197,30 @@ export const SECTIONS: Section[] = [
         anchor: a("Satchel.grant"),
         kind: "method",
         signature: "grant(n: Namespace, to: GranteePublicKey, o: { label: string }): Promise<Grant>",
-        summary: "Wraps the namespace's current epoch key to the grantee's public key with HPKE and records the grant in the registry. Resolves after the transaction has a successful receipt. The registry owner address pays gas.",
-        returns: "The Grant, including the wrapped key and the transaction hash.",
-        throws: ["SESSION_CLOSED", "INVALID_GRANTEE_KEY", "REGISTRY_UNREACHABLE"],
+        summary:
+          "Wraps the namespace's current epoch key to the grantee's public key with HPKE and records the grant in the registry. Before sending it reads the owner's balance and the gas estimate, and throws OWNER_UNFUNDED, naming the owner address and the shortfall, if the owner cannot pay. Resolves after the transaction has a successful receipt. The registry owner address pays gas.",
+        returns: "The Grant, including the wrapped key and the transaction hash. The txHash is all another app needs to rebuild it with fetchGrant().",
+        throws: ["SESSION_CLOSED", "INVALID_GRANTEE_KEY", "OWNER_UNFUNDED", "REGISTRY_UNREACHABLE"],
+      },
+      {
+        name: "Satchel.regrant",
+        anchor: a("Satchel.regrant"),
+        kind: "method",
+        signature: "regrant(n: Namespace, to: GranteePublicKey, o: { label: string }): Promise<Grant>",
+        summary:
+          "Issues a grant at the namespace's current epoch. Call it after revoke(): revoking any one grant moves the namespace to the next epoch for every reader, so each remaining reader's earlier grant opens only the records sealed before the revoke, and needs a fresh grant to read new ones. regrant is grant() under the name that says why it is being called, and it records one more grant in the registry.",
+        returns: "The new Grant at the current epoch.",
+        throws: ["SESSION_CLOSED", "INVALID_GRANTEE_KEY", "OWNER_UNFUNDED", "REGISTRY_UNREACHABLE"],
       },
       {
         name: "Satchel.revoke",
         anchor: a("Satchel.revoke"),
         kind: "method",
         signature: "revoke(n: Namespace, grantId: string): Promise<{ epoch: number; txHash: Hex }>",
-        summary: "Deactivates the grant and moves the namespace to the next epoch. Records sealed from then on use a key the revoked app cannot derive. Resolves after a successful receipt.",
+        summary:
+          "Deactivates the grant and moves the namespace to the next epoch. The epoch belongs to the namespace, not to the grant, so every reader's grant stops opening records sealed from then on: the revoked app for good, every other reader until it is granted again with regrant(). Records sealed before the revoke stay readable under the grants of their epoch. Resolves after a successful receipt; throws OWNER_UNFUNDED before sending if the owner cannot pay.",
         returns: "The new epoch and the transaction hash.",
-        throws: ["SESSION_CLOSED", "REGISTRY_UNREACHABLE"],
+        throws: ["SESSION_CLOSED", "OWNER_UNFUNDED", "REGISTRY_UNREACHABLE"],
       },
       {
         name: "Satchel.close",
@@ -248,7 +281,7 @@ export const SECTIONS: Section[] = [
         signature: `function createGrantee(keyPair?: CryptoKeyPair): Promise<{
   publicKey: GranteePublicKey;
   keyPair: CryptoKeyPair;
-  reader(g: Grant): Reader;
+  reader(g: Grant | FetchedGrant): Reader;
 }>`,
         summary: "Makes the reading app's identity. Pass keyPair to keep it across page loads: a non-extractable CryptoKeyPair can live in IndexedDB.",
         params: [{ name: "keyPair", type: "CryptoKeyPair", doc: "An ECDH P-256 pair from an earlier call. Omit to generate a fresh, non-extractable one." }],
@@ -269,11 +302,47 @@ export const SECTIONS: Section[] = [
   label: string;
   txHash: Hex;
 }`,
-        summary: "What the owner hands the reader. Everything in it is also on chain in the registry's Granted event.",
+        summary: "What the owner hands the reader. Every field except ns is also on chain in the registry's Granted event. The namespace path is not: the chain holds only nsHash, so ns is the path the owner or reader supplied, checked against that hash.",
         params: [
           { name: "wrappedKey", type: "Hex", doc: "HPKE (RFC 9180, DHKEM P-256, HKDF-SHA256, AES-128-GCM) seal of the epoch key to the grantee: 65 byte encapsulated key then 48 byte ciphertext." },
           { name: "epoch", type: "number", doc: "The one epoch this grant opens." },
         ],
+      },
+      {
+        name: "FetchedGrant",
+        anchor: a("FetchedGrant"),
+        kind: "type",
+        signature: "type FetchedGrant = Omit<Grant, \"ns\"> & { ns?: Namespace }",
+        summary: "A Grant read back from chain. The namespace path was never on chain, only its hash, so ns is present only when the caller named the namespace to fetchGrant(). createGrantee().reader() accepts it exactly as it accepts a Grant.",
+      },
+      {
+        name: "FetchGrantOptions",
+        anchor: a("FetchGrantOptions"),
+        kind: "interface",
+        signature: `interface FetchGrantOptions {
+  txHash: Hex;
+  registry: Address | Registry;
+  rpcUrl?: string;
+  chain?: Chain;
+  ns?: Namespace;
+}`,
+        summary: "What fetchGrant() needs to find one grant.",
+        params: [
+          { name: "txHash", type: "Hex", doc: "The hash grant() returned as txHash." },
+          { name: "registry", type: "Address | Registry", doc: "The registry the grant was sent to." },
+          { name: "rpcUrl", type: "string", doc: "Overrides the registry's RPC for this read." },
+          { name: "ns", type: "Namespace", doc: "The namespace the reader expects. Compared with the hash in the event, and returned as the Grant's ns." },
+        ],
+      },
+      {
+        name: "fetchGrant",
+        anchor: a("fetchGrant"),
+        kind: "function",
+        signature: `function fetchGrant(o: FetchGrantOptions & { ns: Namespace }): Promise<Grant>
+function fetchGrant(o: FetchGrantOptions): Promise<FetchedGrant>`,
+        summary: "Reads the Granted event from one transaction's receipt and returns the Grant a reader can open with its own key. One receipt lookup, never an eth_getLogs range scan, which Monad's public RPC caps at 100 blocks. The wrapped key in the event is HPKE-sealed to the grantee's public key, so another key's reader gets GRANT_NOT_FOR_KEY. This is how a grant crosses from one app to another: the owner hands over the transaction hash by URL, QR code, message or backend.",
+        returns: "The Grant. With ns given it is a Grant; without, a FetchedGrant.",
+        throws: ["NAMESPACE_MISMATCH", "REGISTRY_UNREACHABLE"],
       },
       {
         name: "Reader",
@@ -315,6 +384,26 @@ export const SECTIONS: Section[] = [
         summary: "The epoch registry. Defaults to Monad testnet (chain 10143); pass chain and rpcUrl for any other EVM chain.",
       },
       {
+        name: "epochOf",
+        anchor: a("epochOf"),
+        kind: "function",
+        signature: "function epochOf(r: Registry, owner: Address, nsHash: Hex): Promise<number>",
+        summary: "Reads a namespace's current epoch from the registry. A namespace that was never revoked reads as 1. Use it to check whether an earlier grant or revoke landed.",
+        params: [
+          { name: "owner", type: "Address", doc: "The registry owner, session.registryOwner." },
+          { name: "nsHash", type: "Hex", doc: "nsHashOf(namespace)." },
+        ],
+        returns: "The epoch, at least 1.",
+        throws: ["REGISTRY_UNREACHABLE"],
+      },
+      {
+        name: "registryAbi",
+        anchor: a("registryAbi"),
+        kind: "constant",
+        signature: "const registryAbi: Abi  // parseAbi of the registry's events and functions",
+        summary: "The registry's events (Granted, Revoked, Rotated) and functions (epochOf, grant, revoke, rotate, grantOf), typed for viem. Use it to read the registry directly.",
+      },
+      {
         name: "Store",
         anchor: a("Store"),
         kind: "interface",
@@ -340,6 +429,15 @@ export const SECTIONS: Section[] = [
   readonly docs: string;
 }`,
         summary: "The only error type the SDK throws for its own failures. message states the cause, fix states the next step, docs is the path of the matching entry in the error table.",
+      },
+      {
+        name: "isSatchelError",
+        anchor: a("isSatchelError"),
+        kind: "function",
+        signature: "function isSatchelError(e: unknown): e is SatchelError",
+        summary: "Narrows a caught value to SatchelError, so its code, fix and docs are typed.",
+        returns: "true when e is a SatchelError.",
+        throws: [],
       },
       {
         name: "ErrorCode",

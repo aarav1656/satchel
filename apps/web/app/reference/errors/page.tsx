@@ -1,17 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Doc } from "@/components/Doc";
-import { ERROR_DOCS } from "@/lib/error-docs";
-import { ENTRIES } from "@/lib/reference";
+import { errorRows } from "@/lib/error-docs";
 import { ns, parseSealed, SatchelError, type ErrorCode } from "@satchel/sdk";
 
 export const metadata: Metadata = { title: "Error codes" };
-
-/** The fix and docs path come from constructing the real SatchelError, so this page cannot disagree with the SDK build. */
-const info = (code: ErrorCode) => {
-  const e = new SatchelError(code, "");
-  return { fix: e.fix, docs: e.docs };
-};
 
 /** Messages captured by calling the SDK during the site build. */
 function captured(): Partial<Record<ErrorCode, string>> {
@@ -33,61 +26,58 @@ function captured(): Partial<Record<ErrorCode, string>> {
   return out;
 }
 
-const CODES = Object.keys(ERROR_DOCS) as ErrorCode[];
-const thrownBy = (code: ErrorCode) => ENTRIES.filter((e) => e.throws?.includes(code)).map((e) => e.name);
+const names = (row: { thrownBy: { name: string; anchor: string }[] }) =>
+  row.thrownBy.length === 0 ? (
+    "no documented function"
+  ) : (
+    row.thrownBy.map((t, i) => (
+      <span key={t.name}>
+        {i > 0 && ", "}
+        <Link href={`/reference/api/#${t.anchor}`}>{t.name}</Link>
+      </span>
+    ))
+  );
 
 export default function Page() {
   const seen = captured();
+  const rows = errorRows();
   return (
     <Doc>
       <h1>Error codes</h1>
       <p>
-        Every failure the SDK raises is a <code>SatchelError</code> with a <code>code</code>, a cause in the message, a <code>fix</code> and a <code>docs</code> path to its entry here. The fix text on this page is read from the SDK build, not retyped.
+        Every failure the SDK raises is a <code>SatchelError</code> with a <code>code</code>, a cause in the message, a <code>fix</code> and a <code>docs</code> path to its entry here. The fix text on this page is read from the SDK build, not retyped, and the summary table and the entries below are drawn from the same rows.
       </p>
       <div className="table-wrap">
         <table>
           <thead>
-            <tr><th>Code</th><th>Raised by</th></tr>
+            <tr><th>Code</th><th>Thrown by</th></tr>
           </thead>
           <tbody>
-            {CODES.map((c) => (
-              <tr key={c}>
-                <td><a href={`#${info(c).docs.split("#")[1]}`}><code>{c}</code></a></td>
-                <td className="muted">{ERROR_DOCS[c].where}</td>
+            {rows.map((r) => (
+              <tr key={r.code} data-testid="error-summary-row" data-code={r.code}>
+                <td><a href={`#${r.anchor}`}><code>{r.code}</code></a></td>
+                <td className="muted">{names(r)}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {CODES.map((c) => {
-        const { fix, docs } = info(c);
-        const id = docs.split("#")[1];
-        return (
-          <article className="api-entry" key={c}>
-            <h3 id={id} data-testid="error-code">{c}</h3>
-            <p>{ERROR_DOCS[c].cause}</p>
-            <p className="small"><strong>Fix.</strong> {fix}</p>
-            <p className="small muted">
-              Thrown by{" "}
-              {thrownBy(c).map((n, i) => (
-                <span key={n}>
-                  {i > 0 && ", "}
-                  <Link href={`/reference/api/#${ENTRIES.find((e) => e.name === n)?.anchor}`}>{n}</Link>
-                </span>
-              ))}
-              {thrownBy(c).length === 0 && "no documented function"}.
-            </p>
-            {seen[c] && (
-              <div className="terminal">
-                <div>{c}  {seen[c]}</div>
-                <div className="dim">fix: {fix}</div>
-                <div className="dim">docs: {docs}</div>
-              </div>
-            )}
-          </article>
-        );
-      })}
+      {rows.map((r) => (
+        <article className="api-entry" key={r.code} data-testid="error-detail" data-code={r.code}>
+          <h3 id={r.anchor} data-testid="error-code">{r.code}</h3>
+          <p>{r.cause}</p>
+          <p className="small"><strong>Fix.</strong> {r.fix}</p>
+          <p className="small muted">Thrown by {names(r)}.</p>
+          {seen[r.code] && (
+            <div className="terminal">
+              <div>{r.code}  {seen[r.code]}</div>
+              <div className="dim">fix: {r.fix}</div>
+              <div className="dim">docs: {r.docs}</div>
+            </div>
+          )}
+        </article>
+      ))}
     </Doc>
   );
 }

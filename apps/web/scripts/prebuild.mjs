@@ -18,7 +18,7 @@ run("bun", ["run", "build"], sdk);
 
 // 1. Every root export of the SDK has a reference entry, and every entry names a real export or Satchel/Reader member.
 const { ENTRIES } = await import("../lib/reference.ts");
-const { ERROR_DOCS } = await import("../lib/error-docs.ts");
+const { ERROR_CODES } = await import("../lib/error-docs.ts");
 const index = fs.readFileSync(path.join(sdk, "dist", "index.d.ts"), "utf8");
 const exported = new Set();
 for (const m of index.matchAll(/export\s+(?:type\s+)?\{([^}]*)\}/g)) {
@@ -55,11 +55,11 @@ const codes = [...errorsDts.match(/type ErrorCode =([^;]*);/)[1].matchAll(/"([A-
 if (codes.length < 10) fail(`parsed only ${codes.length} error codes`);
 const src = fs.readdirSync(path.join(sdk, "src")).map((f) => fs.readFileSync(path.join(sdk, "src", f), "utf8")).join("\n");
 for (const c of codes) {
-  if (!(c in ERROR_DOCS)) fail(`ErrorCode ${c} has no entry in lib/error-docs.ts`);
+  if (!ERROR_CODES.includes(c)) fail(`ErrorCode ${c} has no cause in lib/error-docs.ts`);
   if (!ENTRIES.some((e) => e.throws?.includes(c))) fail(`ErrorCode ${c} is in no function's Throws line`);
   if (!src.includes(`"${c}"`)) fail(`ErrorCode ${c} is never thrown in packages/sdk/src`);
 }
-for (const c of Object.keys(ERROR_DOCS)) if (!codes.includes(c)) fail(`lib/error-docs.ts documents ${c}, which the SDK no longer has`);
+for (const c of ERROR_CODES) if (!codes.includes(c)) fail(`lib/error-docs.ts documents ${c}, which the SDK no longer has`);
 for (const e of ENTRIES) for (const c of e.throws ?? []) if (!codes.includes(c)) fail(`${e.name} throws ${c}, which is not an ErrorCode`);
 
 // 3. The registry the site talks to is the deployed one, and its ABI has what the site calls.
@@ -99,6 +99,7 @@ take("abi", path.join(repo, "deployments", "SatchelRegistry.abi.json"), "Satchel
 take("clickThrough", latest(path.join(web, "results"), /^click-through-.*\.txt$/), "click-through.txt", false);
 take("onchain", latest(path.join(web, "results"), /^onchain-\d.*\.txt$/), "onchain-readback.txt", false);
 take("onchainNegative", path.join(web, "results", "negcontrol-onchain.txt"), "onchain-negative-control.txt", false);
+take("sdkMutations", path.join(web, "results", "sdk-new-mutations.txt"), "sdk-new-mutations.txt", false);
 const spikes = path.resolve(repo, "..", "..", "spikes");
 take("spikeDerive", path.join(spikes, "satchel-derive", "FINDINGS.md"), "spike-derive.md", false);
 take("spikeGrant", path.join(spikes, "satchel-grant", "FINDINGS.md"), "spike-grant.md", false);

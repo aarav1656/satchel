@@ -18,7 +18,13 @@ export const DOCS_NAV: NavGroup[] = [
       { href: "/concepts/grants-and-epochs/", label: "Grants and epochs" },
     ],
   },
-  { title: "Guides", items: [{ href: "/guides/migrate-from-hkdf/", label: "Migrate from per-note vaults" }] },
+  {
+    title: "Guides",
+    items: [
+      { href: "/guides/two-apps/", label: "Two apps" },
+      { href: "/guides/migrate-from-per-note-vaults/", label: "Migrate from per-note vaults" },
+    ],
+  },
   {
     title: "Reference",
     items: [

@@ -40,7 +40,7 @@ ns("memory//assistant");             // throws INVALID_NAMESPACE: empty segment`
           <tbody>
             <tr><td><code>memory/assistant</code></td><td>Pip, readable by Fern through a grant</td><td>what the assistant remembers about you</td></tr>
             <tr><td><code>memory/notes</code></td><td>Pip</td><td>a second folder under the same passkey, used on the proof page</td></tr>
-            <tr><td><code>trustset/notes</code></td><td>trustset</td><td>sealed notes, see the <Link href="/guides/migrate-from-hkdf/">migration guide</Link></td></tr>
+            <tr><td><code>trustset/notes</code></td><td>trustset</td><td>sealed notes, see the <Link href="/guides/migrate-from-per-note-vaults/">migration guide</Link></td></tr>
           </tbody>
         </table>
       </div>
