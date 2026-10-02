@@ -1,0 +1,14 @@
+== mutated build ==
+src/webauthn/satchel.ts(113,7): error TS2322: Type 'string' is not assignable to type 'number'.
+
+Error: error occurred in dts build
+    at Worker.<anonymous> (/private/tmp/firsthand/node_modules/.pnpm/tsup@8.5.1_postcss@8.5.28_tsx@4.23.13_typescript@5.9.3/node_modules/tsup/dist/index.js:1545:26)
+    at Worker.emit (node:events:508:28)
+    at MessagePort.<anonymous> (node:internal/worker:331:53)
+    at [nodejs.internal.kHybridDispatch] (node:internal/event_target:827:20)
+    at MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)
+DTS Build error
+/private/tmp/firsthand/packages/sdk:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @firsthand/sdk@0.1.0 build: `tsup`
+Exit status 1
+exit build=

@@ -1,0 +1,23 @@
+.                                        |  WARN  Unsupported engine: wanted: {"node":">=26"} (current: {"node":"v24.9.0","pnpm":"10.18.2"})
+
+> @firsthand/sdk@0.1.0 typecheck /private/tmp/firsthand/packages/sdk
+> tsc --noEmit -p tsconfig.json
+
+src/webauthn/satchel.ts(23,38): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BufferSource'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is not assignable to type 'ArrayBuffer'.
+          Types of property '[Symbol.toStringTag]' are incompatible.
+            Type '"SharedArrayBuffer"' is not assignable to type '"ArrayBuffer"'.
+src/webauthn/satchel.ts(23,63): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BufferSource'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is not assignable to type 'ArrayBuffer'.
+          Types of property '[Symbol.toStringTag]' are incompatible.
+            Type '"SharedArrayBuffer"' is not assignable to type '"ArrayBuffer"'.
+/private/tmp/firsthand/packages/sdk:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @firsthand/sdk@0.1.0 typecheck: `tsc --noEmit -p tsconfig.json`
+Exit status 2
+exit=2

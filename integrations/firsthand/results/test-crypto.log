@@ -1,0 +1,12 @@
+> @firsthand/crypto@0.1.0 test /private/tmp/firsthand/packages/crypto
+> vitest run
+
+
+ RUN  v4.1.11 /private/tmp/firsthand/packages/crypto
+
+
+ Test Files  6 passed (6)
+      Tests  48 passed (48)
+   Start at  21:10:47
+   Duration  1.87s (transform 1.99s, setup 0ms, import 5.47s, tests 2.18s, environment 1ms)
+

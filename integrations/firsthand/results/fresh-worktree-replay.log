@@ -1,0 +1,9 @@
+> tsc --noEmit -p tsconfig.json
+
+satchel.cjs
+satchel.cjs.map
+satchel.d.cts
+satchel.d.ts
+satchel.js
+satchel.js.map
+== fresh detached worktree of main a3a078c: git apply of 0001 patch and local-proof patch, pnpm install --frozen-lockfile, build of @firsthand/sdk and its workspace deps, typecheck (no tsc errors above) ==

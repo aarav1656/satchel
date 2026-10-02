@@ -1,0 +1,23 @@
+[
+  {"eval": "localStorage.clear(); document.getElementById('out').innerText"},
+  {"tclick": "passkeyA"},
+  {"wait": 2500},
+  {"tclick": "passkeyB"},
+  {"wait": 3000, "eval": "document.getElementById('out').innerText"},
+  {"tclick": "legacy"},
+  {"wait": 3000, "eval": "document.getElementById('out').innerText"},
+  {"tclick": "naive"},
+  {"wait": 4000, "eval": "document.getElementById('out').innerText"},
+  {"tclick": "adapter"},
+  {"wait": 4000, "eval": "document.getElementById('out').innerText"},
+  {"tclick": "mera"},
+  {"wait": 4000, "eval": "document.getElementById('out').innerText"},
+  {"tclick": "control"},
+  {"wait": 4000, "eval": "document.getElementById('out').innerText"},
+  {"goto_file": "/tmp/firsthand-harness-url-reload"},
+  {"wait": 3000, "eval": "'RELOAD ' + location.href + ' | ' + document.getElementById('out').innerText"},
+  {"tclick": "reopenA"},
+  {"wait": 4000, "eval": "document.getElementById('out').innerText"},
+  {"tclick": "reopenB"},
+  {"wait": 4000, "eval": "document.getElementById('out').innerText"}
+]

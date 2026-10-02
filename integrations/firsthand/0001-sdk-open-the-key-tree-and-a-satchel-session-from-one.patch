@@ -1,0 +1,132 @@
+From 4808996fff1afbfc506e8a90e056c30c19a6647c Mon Sep 17 00:00:00 2001
+From: aarav1656 <anshuk3917@gmail.com>
+Date: Fri, 2 Oct 2026 21:06:40 +0530
+Subject: [PATCH] sdk: open the key tree and a satchel session from one passkey
+ prompt, locker keys unchanged
+
+---
+ packages/sdk/src/webauthn/satchel.ts | 112 +++++++++++++++++++++++++++
+ 1 file changed, 112 insertions(+)
+ create mode 100644 packages/sdk/src/webauthn/satchel.ts
+
+diff --git a/packages/sdk/src/webauthn/satchel.ts b/packages/sdk/src/webauthn/satchel.ts
+new file mode 100644
+index 0000000..0449c3e
+--- /dev/null
++++ b/packages/sdk/src/webauthn/satchel.ts
+@@ -0,0 +1,112 @@
++import { getPasskeyPrfOutput, type WebAuthnClient } from "@category-labs/mera";
++import { CryptoError, MAX_NAMESPACES } from "@firsthand/core";
++import { KeyTree, PRF_EVAL_SALT, PRF_OUTPUT_LENGTH, type PrfSource } from "@firsthand/crypto";
++import { fromPrfOutput, type Namespace, ns, type OpenOptions, type Satchel } from "satchel-sdk";
++
++/**
++ * Satchel next to the locker, on one passkey tap and without moving a single locker key.
++ *
++ * `openWithSatchel` evaluates the PRF once, with FIRSTHAND's own salt, and builds two things from that one
++ * output: the `KeyTree` exactly as `KeyTree.fromSource` builds it (k_id, k_ns,e, k_dep, k_nonce unchanged), and a
++ * satchel session for sealing and on-chain revocable grants. The satchel root is not the PRF output. It is an
++ * HKDF branch of it under its own salt, so nothing a satchel grantee, a satchel-added second passkey or a satchel
++ * blob can reach is a locker key, and nothing in the locker's derivation reads it.
++ */
++const SATCHEL_ROOT_SALT = new TextEncoder().encode("FIRSTHAND/satchel-root/v1");
++const SATCHEL_ROOT_INFO = new TextEncoder().encode("root");
++
++async function satchelRoot(prf: Uint8Array): Promise<Uint8Array> {
++  const key = await crypto.subtle.importKey("raw", new Uint8Array(prf), "HKDF", false, [
++    "deriveBits",
++  ]);
++  const bits = await crypto.subtle.deriveBits(
++    { name: "HKDF", hash: "SHA-256", salt: SATCHEL_ROOT_SALT, info: SATCHEL_ROOT_INFO },
++    key,
++    PRF_OUTPUT_LENGTH * 8,
++  );
++  return new Uint8Array(bits);
++}
++
++/** The satchel namespace that mirrors locker namespace `index`: `firsthand/ns/<index>`. */
++export function firsthandNs(index: number): Namespace {
++  if (!Number.isInteger(index) || index < 0 || index >= MAX_NAMESPACES) {
++    throw new CryptoError(`namespace index out of range (0..${MAX_NAMESPACES - 1})`, {
++      context: { index },
++    });
++  }
++  return ns(`firsthand/ns/${index}`);
++}
++
++export interface SatchelSession {
++  /** The locker's key tree, derived exactly as `KeyTree.fromSource(source)` derives it. */
++  readonly keys: KeyTree;
++  readonly satchel: Satchel;
++  dispose(): void;
++}
++
++/** One PRF evaluation, one passkey prompt; both the key tree and the satchel session come from it. */
++export async function openWithSatchel(
++  source: PrfSource,
++  options: OpenOptions,
++): Promise<SatchelSession> {
++  const prf = await source.evaluate(PRF_EVAL_SALT);
++  const root = await satchelRoot(prf);
++  const keys = KeyTree.fromPrf(prf);
++  try {
++    const satchel = await fromPrfOutput(root, options);
++    return {
++      keys,
++      satchel,
++      dispose() {
++        satchel.close();
++        keys.dispose();
++      },
++    };
++  } catch (error) {
++    root.fill(0);
++    keys.dispose();
++    throw error;
++  }
++}
++
++export interface MeraPrfOptions {
++  readonly rpId: string;
++  /** Credential id of the enrolled passkey, as `savedCredentialId()` returns it. */
++  readonly credentialId: Uint8Array;
++  readonly webAuthnClient?: WebAuthnClient;
++  readonly timeoutMs?: number;
++}
++
++function base64Url(bytes: Uint8Array): string {
++  let binary = "";
++  for (const b of bytes) binary += String.fromCharCode(b);
++  return btoa(binary).replaceAll("+", "-").replaceAll("/", "_").replaceAll("=", "");
++}
++
++/**
++ * `WebAuthnPrfSource` over Mera's ceremony. Mera takes the PRF salt as an argument, so FIRSTHAND's fixed salt
++ * goes through unchanged and the passkey returns the same 32 bytes as `WebAuthnPrfSource` does.
++ */
++export class MeraPrfSource implements PrfSource {
++  readonly kind = "mera-prf";
++  readonly #options: MeraPrfOptions;
++
++  constructor(options: MeraPrfOptions) {
++    this.#options = options;
++  }
++
++  async evaluate(salt: Uint8Array): Promise<Uint8Array> {
++    const { rpId, credentialId, webAuthnClient, timeoutMs } = this.#options;
++    const { prfOutput } = await getPasskeyPrfOutput({
++      rpId,
++      credential: { credentialId: base64Url(credentialId) },
++      prfSalt: salt,
++      ...(webAuthnClient ? { webAuthnClient } : {}),
++      ...(timeoutMs !== undefined ? { timeout: timeoutMs } : {}),
++    });
++    if (prfOutput.length !== PRF_OUTPUT_LENGTH) {
++      throw new CryptoError(`unexpected PRF length ${prfOutput.length}`);
++    }
++    return prfOutput;
++  }
++}
+-- 
+2.52.0
+

@@ -1,0 +1,11 @@
+[
+  {"eval": "localStorage.clear(); document.getElementById('out').innerText"},
+  {"tclick": "passkeyA"},
+  {"wait": 2500},
+  {"tclick": "passkeyB"},
+  {"wait": 3000, "eval": "document.getElementById('out').innerText"},
+  {"tclick": "legacy"},
+  {"wait": 3000, "eval": "document.getElementById('out').innerText"},
+  {"tclick": "mutant"},
+  {"wait": 4000, "eval": "document.getElementById('out').innerText"}
+]

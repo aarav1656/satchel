@@ -1,0 +1,10 @@
+== mutated: appended 'const __mut: number = "x";' to packages/sdk/src/webauthn/satchel.ts ==
+
+> @firsthand/sdk@0.1.0 typecheck /private/tmp/firsthand/packages/sdk
+> tsc --noEmit -p tsconfig.json
+
+src/webauthn/satchel.ts(113,7): error TS2322: Type 'string' is not assignable to type 'number'.
+/private/tmp/firsthand/packages/sdk:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @firsthand/sdk@0.1.0 typecheck: `tsc --noEmit -p tsconfig.json`
+Exit status 2
+exit typecheck=
