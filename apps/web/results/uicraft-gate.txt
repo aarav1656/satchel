@@ -1,19 +1,19 @@
-uicraft gate, 2026-10-02T11:05:26Z, tree: apps/web at the final build
+uicraft gate, 2026-10-02T12:51:42Z, tree: apps/web after the satchel-sdk rename, docs menu toggle, proof rewrite
 
-== 1. clean tree (green)
-uicraft gate  scanned 30 files under ./apps/web
+== 1. clean tree
+uicraft gate  scanned 31 files under ./apps/web
 ok  0 high findings
 exit=0
 
 == 2. one banned pattern added to app/globals.css: transition: all 200ms ease-in (red)
-uicraft gate  scanned 30 files under ./apps/web
-high   transition-all     app/globals.css:77  transition-all / transition: all
-high   ease-in            app/globals.css:77  ease-in on UI feels laggy; use ease-out
+uicraft gate  scanned 31 files under ./apps/web
+high   transition-all     app/globals.css:214  transition-all / transition: all
+high   ease-in            app/globals.css:214  ease-in on UI feels laggy; use ease-out
 
 2 high  (exit 1)
 exit=1
 
 == 3. pattern removed, file restored (green again)
-uicraft gate  scanned 30 files under ./apps/web
+uicraft gate  scanned 31 files under ./apps/web
 ok  0 high findings
 exit=0

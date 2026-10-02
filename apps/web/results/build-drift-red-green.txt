@@ -1,0 +1,13 @@
+real drift: page.tsx shows QUICKSTART with 'metric' hand-edited to 'imperial'; bun run build must exit non-zero, 2026-10-02T12:52:18Z
+prebuild ok: 25 exports, 11 members, 17 error codes, 12 evidence files, registry 0xd6c895f5c9254dc6eaafc335fff0930fd7012e6d
+└ ○ /reference/errors
+$ bun scripts/check-built.mjs
+check-built FAIL (1):
+- the quickstart shown on / differs from lib/snippets.ts QUICKSTART:
+error: script "postbuild" exited with code 1
+build exit 
+
+restored, rebuilt:
+$ bun scripts/check-built.mjs
+check-built ok: quickstart on / === QUICKSTART === the shipped Run source (6 lines); 36 function names in docs code checked against 41 real names; 17 error table rows agree with 17 entries and 17 ErrorCodes
+build exit 

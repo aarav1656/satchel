@@ -1,0 +1,13 @@
+site checks, 2026-10-02T12:52:05Z
+== build (prebuild: exports, members, error codes, registry, evidence; next build; postbuild: check-built)
+prebuild ok: 25 exports, 11 members, 17 error codes, 12 evidence files, registry 0xd6c895f5c9254dc6eaafc335fff0930fd7012e6d
+check-built ok: quickstart on / === QUICKSTART === the shipped Run source (6 lines); 36 function names in docs code checked against 41 real names; 17 error table rows agree with 17 entries and 17 ErrorCodes
+== link checker on the served static export
+node:1: command not found: _load_nvm
+13 routes, 438 internal links checked, 0 broken, 4 external links not fetched
+== web unit tests
+
+ 9 pass
+ 0 fail
+ 21 expect() calls
+Ran 9 tests across 1 file. [390.00ms]
