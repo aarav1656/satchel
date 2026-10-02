@@ -1,0 +1,36 @@
+{
+  "name": "@satchel/sdk",
+  "version": "0.1.0",
+  "description": "One passkey, many namespaced keys: seal data per app, grant and revoke readers through an epoch registry on Monad.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "bun test test/",
+    "mutation": "bun run test/mutation.ts"
+  },
+  "dependencies": {
+    "@hpke/core": "^1.9.0",
+    "viem": "^2.57.0"
+  },
+  "peerDependencies": {
+    "@category-labs/mera": "0.2.0"
+  },
+  "devDependencies": {
+    "@category-labs/mera": "0.2.0",
+    "@types/bun": "latest",
+    "fast-check": "^4.10.0",
+    "typescript": "^5.9.0"
+  }
+}
