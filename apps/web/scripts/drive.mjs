@@ -45,6 +45,7 @@ let failed = false;
 const vars = {};
 // {eval, save: "x"} keeps a value in the driver; __VAR_x__ in a later eval, poll or assert expression becomes its JSON.
 const sub = (expr) => expr.replace(/__VAR_(\w+)__/g, (_, n) => JSON.stringify(vars[n] ?? null));
+const PEEK = `'focus=' + document.hasFocus() + ' visibility=' + document.visibilityState + ' | ' + (document.querySelector('.proof-live')?.innerText ?? document.body.innerText.slice(0, 200)).replace(/\\n/g, ' / ')`;
 const fail = (o) => { log({ ...o, FAIL: true }); failed = true; };
 try {
   await send("Emulation.setFocusEmulationEnabled", { enabled: true });
@@ -87,12 +88,12 @@ try {
         if (v && !(typeof v === "string" && v.startsWith("EXCEPTION"))) break;
         await sleep(500);
       }
-      if (!v || (typeof v === "string" && v.startsWith("EXCEPTION"))) { fail({ poll: s.label ?? s.poll.slice(0, 80), value: v }); break; }
+      if (!v || (typeof v === "string" && v.startsWith("EXCEPTION"))) { fail({ poll: s.label ?? s.poll.slice(0, 80), value: v, page: await ev(PEEK) }); break; }
       log({ poll: s.label ?? s.poll.slice(0, 50), value: v });
     }
     if (s.assert) {
       const v = await ev(sub(s.assert));
-      if (!v || (typeof v === "string" && v.startsWith("EXCEPTION"))) { fail({ assert: s.label ?? s.assert.slice(0, 80), value: v }); break; }
+      if (!v || (typeof v === "string" && v.startsWith("EXCEPTION"))) { fail({ assert: s.label ?? s.assert.slice(0, 80), value: v, page: await ev(PEEK) }); break; }
       log({ assert: s.label ?? s.assert.slice(0, 50), ok: true, value: typeof v === "string" ? v : undefined });
     }
     if (s.vauth === "reset") {

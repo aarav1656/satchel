@@ -15,6 +15,8 @@ const IDB = (db, key) =>
 const CLEAR = `(async()=>{localStorage.clear();sessionStorage.clear();await Promise.all(['fern','satchel'].map(n=>new Promise(r=>{const q=indexedDB.deleteDatabase(n);q.onsuccess=q.onerror=q.onblocked=()=>r()})));return 'cleared '+location.origin})()`;
 
 export default [
+  // on a script-free page, so no open IndexedDB connection from the app can block the delete
+  { navigate: `${ORIGIN}/icon.svg` },
   { eval: CLEAR, label: "clear origin storage" },
   // the quickstart on /: the Run button executes exactly the text on the page
   { navigate: `${ORIGIN}/` },
