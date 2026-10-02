@@ -1,0 +1,61 @@
+No files changed, compilation skipped
+Ran 19 tests for test/SatchelRegistry.t.sol:SatchelRegistryTest
+[PASS] testFuzz_everyBumpCountsExactlyOnce(uint8,uint8) (runs: 512, μ: 603241, ~: 401356)
+[PASS] testFuzz_grantRoundTrip(address,bytes32,bytes32,bytes,string) (runs: 512, μ: 97392, ~: 97660)
+[PASS] testFuzz_strangerCannotRevoke(address,bytes32) (runs: 512, μ: 95319, ~: 95397)
+[PASS] test_epochStartsAtOne() (gas: 15829)
+[PASS] test_grantAtCurrentEpochAfterRotate() (gas: 115848)
+[PASS] test_grantEmitsStoredFields() (gas: 95820)
+[PASS] test_grantIdsAreGlobalAndIncreasing() (gas: 245549)
+[PASS] test_grantOfUnknownIsZero() (gas: 12717)
+[PASS] test_grantStoresAndReturns() (gas: 94542)
+[PASS] test_noValueAccepted() (gas: 25038)
+[PASS] test_revokeForeignGrantReverts() (gas: 101948)
+[PASS] test_revokeInactivatesAndBumpsEpoch() (gas: 121897)
+[PASS] test_revokeOnlyAffectsThatNamespace() (gas: 124269)
+[PASS] test_revokeTwiceReverts() (gas: 119480)
+[PASS] test_revokeUnknownGrantReverts() (gas: 18281)
+[PASS] test_revokeWrongNamespaceReverts() (gas: 98424)
+[PASS] test_revokedGrantStaysReadableAndCannotBeRegranted() (gas: 192396)
+[PASS] test_rotateBumpsAndEmits() (gas: 43456)
+[PASS] test_rotateIsPerOwner() (gas: 69328)
+Suite result: ok. 19 passed; 0 failed; 0 skipped; finished in 210.78ms (503.92ms CPU time)
+Ran 3 tests for test/SatchelInvariant.t.sol:SatchelInvariantTest
+[PASS] invariant_epochsMatchModelAndNeverDecrease() (runs: 256, calls: 30720, reverts: 0)
+╭----------+-----------------+-------+---------+----------╮
+| Contract | Selector        | Calls | Reverts | Discards |
++=========================================================+
+| Handler  | doGrant         | 7618  | 0       | 0        |
+|----------+-----------------+-------+---------+----------|
+| Handler  | doRevoke        | 7750  | 0       | 0        |
+|----------+-----------------+-------+---------+----------|
+| Handler  | doRevokeWrongNs | 7691  | 0       | 0        |
+|----------+-----------------+-------+---------+----------|
+| Handler  | doRotate        | 7661  | 0       | 0        |
+╰----------+-----------------+-------+---------+----------╯
+[PASS] invariant_noOwnerTouchesAnothersState() (runs: 256, calls: 30720, reverts: 0)
+╭----------+-----------------+-------+---------+----------╮
+| Contract | Selector        | Calls | Reverts | Discards |
++=========================================================+
+| Handler  | doGrant         | 7618  | 0       | 0        |
+|----------+-----------------+-------+---------+----------|
+| Handler  | doRevoke        | 7750  | 0       | 0        |
+|----------+-----------------+-------+---------+----------|
+| Handler  | doRevokeWrongNs | 7691  | 0       | 0        |
+|----------+-----------------+-------+---------+----------|
+| Handler  | doRotate        | 7661  | 0       | 0        |
+╰----------+-----------------+-------+---------+----------╯
+[PASS] invariant_reachedInterestingStates() (runs: 256, calls: 30720, reverts: 0)
+╭----------+-----------------+-------+---------+----------╮
+| Contract | Selector        | Calls | Reverts | Discards |
++=========================================================+
+| Handler  | doGrant         | 7618  | 0       | 0        |
+|----------+-----------------+-------+---------+----------|
+| Handler  | doRevoke        | 7750  | 0       | 0        |
+|----------+-----------------+-------+---------+----------|
+| Handler  | doRevokeWrongNs | 7691  | 0       | 0        |
+|----------+-----------------+-------+---------+----------|
+| Handler  | doRotate        | 7661  | 0       | 0        |
+╰----------+-----------------+-------+---------+----------╯
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 98.83s (136.03s CPU time)
+Ran 2 test suites in 98.84s (99.05s CPU time): 22 tests passed, 0 failed, 0 skipped (22 total tests)

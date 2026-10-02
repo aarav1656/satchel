@@ -1,0 +1,28 @@
+{
+  "chainId": 10143,
+  "rpc": "https://testnet-rpc.monad.xyz",
+  "address": "0xd6c895f5c9254dc6eaafc335fff0930fd7012e6d",
+  "deployTx": "0x6d366472a4824adf46538492bf0feb94019bd332c997bcc98ae5586c3c114300",
+  "deployBlock": 67514971,
+  "deployer": "0xc81C53EA0DE0b1b384bBE18910F7dbEfD03F5C58",
+  "abi": "deployments/SatchelRegistry.abi.json",
+  "smokeTest": {
+    "smoker": "0x00F5e382C3a1e7E66008E1622ba8e3a975193f16",
+    "fundTx": "0x0afa35a7689064155495cf74f09acbdf791b3c92810c9520fe881a3ccfeb1cba",
+    "nsHash": "0x69f7260305e6b98411e0862f64a2d587fb0b04931626c6b784613295ca90aec1",
+    "grantId": 1,
+    "grantTx": "0x397282e2e2febf0a3246161fe72b87d9caf4f68c24aa7243bdae998cd8a56034",
+    "revokeTx": "0x64daf652244707bcfad73254ea9a59776c8fc95b7ca5da3b744c89a205905201",
+    "epochBefore": 1,
+    "epochAfter": 2,
+    "grantActiveAfterRevoke": false,
+    "foreignRevokeReverted": true
+  },
+  "gasUsed": {
+    "deploy": 562779,
+    "fund": 21000,
+    "grant": 137574,
+    "revoke": 78332
+  },
+  "deployerSpentMON": "0.159545458"
+}

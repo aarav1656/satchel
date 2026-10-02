@@ -1,0 +1,58 @@
+=== M1 delete owner check in revoke ===
+<         if (g.owner != msg.sender) revert NotGrantOwner();
+[FAIL: epoch != model: 3 != 2]
+[FAIL: Error != expected error: NamespaceMismatch() != NotGrantOwner()] test_revokeUnknownGrantReverts() (gas: 13075)
+[FAIL: foreign or invalid revoke succeeded]
+[FAIL: next call did not revert as expected; counterexample: calldata=0x5953c9c100000000000000000000000000000000000000000000000000000000000040f10000000000000000000000000000000000000000000000000000000000000513 args=[0x00000000000000000000000000000000000040F1, 0x0000000000000000000000000000000000000000000000000000000000000513]] testFuzz_strangerCannotRevoke(address,bytes32) (runs: 0, μ: 0, ~: 0)
+[FAIL: next call did not revert as expected] test_revokeForeignGrantReverts() (gas: 119410)
+Ran 2 test suites in 6.21s (6.39s CPU time): 17 tests passed, 5 failed, 0 skipped (22 total tests)
+Suite result: FAILED. 1 passed; 2 failed; 0 skipped; finished in 6.21s (12.18s CPU time)
+Suite result: FAILED. 16 passed; 3 failed; 0 skipped; finished in 185.78ms (368.53ms CPU time)
+RESULT: red (killed)
+=== M2 delete active check in revoke ===
+<         if (!g.active) revert GrantInactive();
+[FAIL: foreign or invalid revoke succeeded]
+[FAIL: next call did not revert as expected] test_revokeTwiceReverts() (gas: 119507)
+Ran 2 test suites in 43.94s (44.10s CPU time): 20 tests passed, 2 failed, 0 skipped (22 total tests)
+Suite result: FAILED. 18 passed; 1 failed; 0 skipped; finished in 169.66ms (438.54ms CPU time)
+Suite result: FAILED. 2 passed; 1 failed; 0 skipped; finished in 43.93s (55.74s CPU time)
+RESULT: red (killed)
+=== M3 revoke does not bump epoch ===
+<         newEpoch = epochOf(msg.sender, nsHash) + 1;
+>         newEpoch = epochOf(msg.sender, nsHash);
+[FAIL: assertion failed: 1 != 2; counterexample: calldata=0x18f7afaf00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002 args=[0, 2]] testFuzz_everyBumpCountsExactlyOnce(uint8,uint8) (runs: 0, μ: 0, ~: 0)
+[FAIL: assertion failed: 1 != 2] test_revokedGrantStaysReadableAndCannotBeRegranted() (gas: 189266)
+[FAIL: assertion failed: 1 != 2] test_revokeTwiceReverts() (gas: 119762)
+[FAIL: Revoked param mismatch at newEpoch: expected=2, got=1] test_revokeInactivatesAndBumpsEpoch() (gas: 117521)
+Ran 2 test suites in 111.63s (111.68s CPU time): 18 tests passed, 4 failed, 0 skipped (22 total tests)
+Suite result: FAILED. 15 passed; 4 failed; 0 skipped; finished in 51.99ms (138.03ms CPU time)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 111.63s (158.07s CPU time)
+RESULT: red (killed)
+=== M4 rotate does not bump epoch ===
+<         newEpoch = epochOf(msg.sender, nsHash) + 1;
+>         newEpoch = epochOf(msg.sender, nsHash);
+[FAIL: assertion failed: 1 != 2; counterexample: calldata=0x18f7afaf00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000 args=[2, 0]] testFuzz_everyBumpCountsExactlyOnce(uint8,uint8) (runs: 1, μ: 205779, ~: 205779)
+[FAIL: assertion failed: 1 != 2] test_grantAtCurrentEpochAfterRotate() (gas: 114405)
+[FAIL: assertion failed: 1 != 2] test_rotateIsPerOwner() (gas: 36997)
+[FAIL: Rotated param mismatch at newEpoch: expected=2, got=1] test_rotateBumpsAndEmits() (gas: 37555)
+Ran 2 test suites in 98.64s (98.79s CPU time): 18 tests passed, 4 failed, 0 skipped (22 total tests)
+Suite result: FAILED. 15 passed; 4 failed; 0 skipped; finished in 151.71ms (432.67ms CPU time)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 98.64s (135.65s CPU time)
+RESULT: red (killed)
+=== M5 delete namespace check in revoke ===
+<         if (g.nsHash != nsHash) revert NamespaceMismatch();
+[FAIL: epoch != model: 2 != 1]
+[FAIL: foreign or invalid revoke succeeded]
+[FAIL: next call did not revert as expected] test_revokeWrongNamespaceReverts() (gas: 116927)
+Ran 2 test suites in 5.77s (6.10s CPU time): 19 tests passed, 3 failed, 0 skipped (22 total tests)
+Suite result: FAILED. 1 passed; 2 failed; 0 skipped; finished in 5.77s (10.88s CPU time)
+Suite result: FAILED. 18 passed; 1 failed; 0 skipped; finished in 329.94ms (588.21ms CPU time)
+RESULT: red (killed)
+=== M6 rotate resets epoch to 2 once it passes 3 ===
+>         if (newEpoch > 3) newEpoch = 2;
+[FAIL: assertion failed: 2 != 4; counterexample: calldata=0x18f7afaf00000000000000000000000000000000000000000000000000000000000000d50000000000000000000000000000000000000000000000000000000000000014 args=[213, 20]] testFuzz_everyBumpCountsExactlyOnce(uint8,uint8) (runs: 5, μ: 587191, ~: 521361)
+Ran 2 test suites in 70.70s (70.81s CPU time): 21 tests passed, 1 failed, 0 skipped (22 total tests)
+Suite result: FAILED. 18 passed; 1 failed; 0 skipped; finished in 124.76ms (318.78ms CPU time)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 70.69s (106.86s CPU time)
+RESULT: red (killed)
+killed 6 of 6
