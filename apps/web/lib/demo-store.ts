@@ -1,12 +1,28 @@
 import type { Grant } from "@satchel/sdk";
 import type { Address, Hex } from "viem";
 
-/** Everything the demo apps keep in this browser is ciphertext or public: a credential id, an address, grants that are also on chain. */
+/**
+ * Everything the demo apps keep in this browser is ciphertext, public, or a key the browser will not export.
+ * Pip: a credential id, its registry address, its sealed memories (ciphertext) and the grants it issued (all of it is also on chain), in localStorage.
+ * Fern: a non-extractable key pair and the transaction hashes of the grants it was given, in its own IndexedDB database. Fern does not read Pip's grants.
+ * The one thing Fern reads from Pip's storage is the sealed memories: both apps are routes of one origin, so that ciphertext is the shared store.
+ */
 const KEY = {
   credential: "satchel.pip.credential",
   owner: "satchel.pip.owner",
   memories: "satchel.pip.memories",
   grants: "satchel.demo.grants",
+} as const;
+
+export const FERN_DB = "fern";
+export const FERN_STORE = "kv";
+export const FERN_KEYS = { identity: "grantee", grants: "grants" } as const;
+
+/** Where each thing lives, worded once. /fern and /guides/two-apps print these strings, so their copy follows the real key names. */
+export const STORAGE = {
+  memories: `localStorage key ${KEY.memories} (sealed bytes Pip wrote)`,
+  fernIdentity: `IndexedDB database ${FERN_DB}, key ${FERN_KEYS.identity} (a non-extractable key pair)`,
+  fernGrants: `IndexedDB database ${FERN_DB}, key ${FERN_KEYS.grants} (grant transaction hashes)`,
 } as const;
 
 export interface StoredCredential {

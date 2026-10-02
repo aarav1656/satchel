@@ -11,6 +11,7 @@ const PERSON: Partial<Record<ErrorCode, string>> = {
   GRANT_REVOKED: "Fern was revoked. It can still read what it saw before, and nothing sealed since.",
   GRANT_NOT_FOR_KEY: "This link was made for a different app.",
   REGISTRY_UNREACHABLE: "Monad did not answer or confirm in time. Retry in a moment.",
+  OWNER_UNFUNDED: "Pip's registry address needs a little testnet MON before it can record this on Monad. Send some from the faucet, then try again. Nothing was sent.",
   NO_SECOND_PASSKEY: "Add a second passkey so losing this device does not lose your memory.",
 };
 

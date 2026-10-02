@@ -55,6 +55,41 @@ export function classifyWebStorage(area: ScanRow["area"], key: string, value: st
   return keyLike(parsed) ? row("flagged", "looks like key material in the clear") : row("other", "not written by satchel: the browser, an extension or another app on this host");
 }
 
+const TX_HASH = /^0x[0-9a-fA-F]{64}$/;
+
+/** What an IndexedDB value must look like to count as ciphertext or public. `path` is db/store/key, `k` the key alone. */
+export function classifyIdb(path: string, k: string, v: unknown): ScanRow {
+  const mk = (verdict: Verdict, reason: string, bytes: number): ScanRow => ({ area: "indexedDB", key: path, bytes, verdict, reason });
+  if (v instanceof ArrayBuffer) {
+    if (k.startsWith("satchel/wrap/")) return mk("ciphertext", "root wrapped under a second passkey (AES-GCM)", v.byteLength);
+    if (k.startsWith("satchel/known/")) {
+      let marker: unknown;
+      try {
+        marker = JSON.parse(new TextDecoder().decode(v));
+      } catch {
+        return mk("flagged", "an unreadable value under a satchel/known key", v.byteLength);
+      }
+      const fields = marker && typeof marker === "object" ? Object.keys(marker) : ["?"];
+      return fields.every((f) => f === "credentialId" || f === "transports")
+        ? mk("public", "the public credential id openOrEnrol remembers for this rpId", v.byteLength)
+        : mk("flagged", `unexpected fields in the passkey marker: ${fields.join(", ")}`, v.byteLength);
+    }
+    return mk("flagged", "raw bytes in the clear under an unknown key", v.byteLength);
+  }
+  if (v && typeof v === "object" && "privateKey" in v && "publicKey" in v) {
+    const pair = v as CryptoKeyPair;
+    return pair.privateKey.extractable === false
+      ? mk("public", "non-extractable CryptoKey: the browser holds it and scripts cannot read it", 0)
+      : mk("flagged", "private key is extractable", 0);
+  }
+  if (path === "fern/kv/grants" && Array.isArray(v)) {
+    return v.every((h) => typeof h === "string" && TX_HASH.test(h))
+      ? mk("public", `${v.length} grant transaction hashes, each also on chain`, v.length * 66)
+      : mk("flagged", "a grants entry is not a transaction hash", 0);
+  }
+  return keyLike(v) ? mk("flagged", "looks like key material in the clear", 0) : mk("other", "not written by satchel", 0);
+}
+
 async function idbRows(): Promise<ScanRow[]> {
   const rows: ScanRow[] = [];
   const dbs = (await indexedDB.databases?.()) ?? [];
@@ -78,21 +113,7 @@ async function idbRows(): Promise<ScanRow[]> {
           r.onsuccess = () => resolve(r.result);
           r.onerror = () => reject(r.error);
         });
-        const key = `${info.name}/${storeName}/${String(k)}`;
-        const mk = (verdict: Verdict, reason: string, bytes: number): ScanRow => ({ area: "indexedDB", key, bytes, verdict, reason });
-        if (v instanceof ArrayBuffer) {
-          const wrapped = String(k).startsWith("satchel/wrap/");
-          rows.push(wrapped ? mk("ciphertext", "root wrapped under a second passkey (AES-GCM)", v.byteLength) : mk("flagged", "raw bytes in the clear under an unknown key", v.byteLength));
-        } else if (v && typeof v === "object" && "privateKey" in v && "publicKey" in v) {
-          const pair = v as CryptoKeyPair;
-          rows.push(
-            pair.privateKey.extractable === false
-              ? mk("public", "non-extractable CryptoKey: the browser holds it and scripts cannot read it", 0)
-              : mk("flagged", "private key is extractable", 0),
-          );
-        } else {
-          rows.push(keyLike(v) ? mk("flagged", "looks like key material in the clear", 0) : mk("other", "not written by satchel", 0));
-        }
+        rows.push(classifyIdb(`${info.name}/${storeName}/${String(k)}`, String(k), v));
       }
     }
     db.close();

@@ -5,11 +5,10 @@ import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { ns } from "@satchel/sdk";
 import { isHex, keccak256, type Hex } from "viem";
-import { grantOf, short, txUrl } from "@/lib/chain";
-import { MEMORY_NS, MIN_OWNER_BALANCE_WEI } from "@/lib/config";
+import { epochOf, grantOf, short, txUrl } from "@/lib/chain";
+import { MEMORY_NS } from "@/lib/config";
 import { grants, owner, type StoredGrant } from "@/lib/demo-store";
 import { failure, type Failure } from "@/lib/errors-ui";
-import { balanceOf } from "@/lib/chain";
 import { openVault, useSession } from "@/lib/vault";
 import { AppBar } from "./AppBar";
 import { PIP_LINKS } from "./PipApp";
@@ -24,6 +23,7 @@ export function ShareApp() {
   const session = useSession();
   const [gs, setGs] = useState<StoredGrant[]>([]);
   const [active, setActive] = useState<Record<string, boolean>>({});
+  const [nsEpoch, setNsEpoch] = useState<number | undefined>();
   const [busy, setBusy] = useState<Busy>();
   const [error, setError] = useState<Failure | undefined>();
   const [granted, setGranted] = useState<StoredGrant | undefined>();
@@ -40,7 +40,12 @@ export function ShareApp() {
     void (async () => {
       const next: Record<string, boolean> = {};
       for (const g of gs) next[g.grant.id] = (await grantOf(g.grant.id)).active;
-      if (live) setActive(next);
+      const first = gs[0];
+      const now = first ? await epochOf(first.owner, first.grant.nsHash) : undefined;
+      if (live) {
+        setActive(next);
+        setNsEpoch(now);
+      }
     })();
     return () => {
       live = false;
@@ -49,7 +54,7 @@ export function ShareApp() {
 
   const validConnect = connect !== null && isHex(connect) && connect.length === 132;
   const alreadyAllowed = validConnect
-    ? gs.find((g) => g.grant.granteeKeyHash === keccak256(connect as Hex) && g.revoked === undefined && active[g.grant.id] !== false)
+    ? gs.find((g) => g.grant.granteeKeyHash === keccak256(connect as Hex) && g.revoked === undefined && active[g.grant.id] !== false && (nsEpoch === undefined || g.grant.epoch === nsEpoch))
     : undefined;
 
   const allow = async () => {
@@ -58,11 +63,10 @@ export function ShareApp() {
     setError(undefined);
     try {
       const s = await openVault();
-      const have = await balanceOf(s.registryOwner);
-      if (have.wei < MIN_OWNER_BALANCE_WEI) {
-        throw new Error(`The registry address ${short(s.registryOwner)} holds ${have.mon} MON. Send testnet MON to it, then press Allow again.`);
-      }
-      const grant = await s.grant(ns(MEMORY_NS), connect as Hex, { label: appName });
+      // An app key that held a grant before is being let back in after a revoke: that is regrant(), the same transaction as grant().
+      const returning = gs.some((g) => g.grant.granteeKeyHash === keccak256(connect as Hex));
+      const issue = returning ? s.regrant.bind(s) : s.grant.bind(s);
+      const grant = await issue(ns(MEMORY_NS), connect as Hex, { label: appName });
       const stored: StoredGrant = { app: appName, owner: s.registryOwner, grant };
       grants.add(stored);
       setGranted(stored);
@@ -105,7 +109,7 @@ export function ShareApp() {
 
           {alreadyAllowed && !granted && (
             <div className="callout">
-              <p>{alreadyAllowed.app} already holds an active grant on {alreadyAllowed.grant.ns}. <Link href="/fern/">Return to {alreadyAllowed.app}</Link>.</p>
+              <p>{alreadyAllowed.app} already holds an active grant on {alreadyAllowed.grant.ns}. <Link href={`/fern/?grant=${alreadyAllowed.grant.txHash}`}>Return to {alreadyAllowed.app}</Link>.</p>
             </div>
           )}
 
@@ -141,8 +145,11 @@ export function ShareApp() {
                   {short(granted.grant.txHash)}
                 </a>
               </p>
+              <p className="small muted" data-testid="grant-handoff">
+                {granted.app} needs only this transaction hash: it rebuilds the grant from the receipt on Monad, with its own key.
+              </p>
               <div className="btn-row">
-                <Link href="/fern/" className="btn">
+                <Link href={`/fern/?grant=${granted.grant.txHash}`} className="btn">
                   Return to {granted.app}
                 </Link>
               </div>
@@ -170,6 +177,7 @@ export function ShareApp() {
           ) : (
             gs.map((g) => {
               const live = g.revoked === undefined && active[g.grant.id] !== false;
+              const behind = live && nsEpoch !== undefined && g.grant.epoch < nsEpoch;
               return (
                 <div className="card" key={g.grant.id} data-testid="grant-row" data-grant-id={g.grant.id} data-active={live ? "true" : "false"}>
                   <p className="status-line" style={{ marginTop: 0 }}>
@@ -177,9 +185,12 @@ export function ShareApp() {
                     <span className="badge">{g.grant.ns}</span>
                     <span className="badge">epoch {g.grant.epoch}</span>
                     <span className={live ? "badge-ok" : "badge-err"}>{live ? "active" : "revoked"}</span>
+                    {behind && <span className="badge">behind: folder is at epoch {nsEpoch}</span>}
                   </p>
                   <p className="small muted">
-                    {live
+                    {behind
+                      ? `${g.app}'s grant is still active and opens epoch ${g.grant.epoch} only. The folder moved to epoch ${nsEpoch} when another grant was revoked, so ${g.app} asks again to read anything sealed since.`
+                      : live
                       ? `${g.app} can read ${g.grant.ns}, epoch ${g.grant.epoch}. Revoking stops ${g.app} reading anything sealed from now on. ${g.app} keeps what it already read; no system can take that back.`
                       : `${g.app} is revoked. New memories are sealed at epoch ${g.revoked ? g.revoked.epoch : g.grant.epoch + 1} and ${g.app} cannot open them.`}
                   </p>
