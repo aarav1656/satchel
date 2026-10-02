@@ -1,0 +1,9 @@
+[
+  {"eval": "document.getElementById('out').innerText"},
+  {"click": "Open passkey"},
+  {"wait": 5000, "eval": "document.getElementById('out').innerText"},
+  {"click": "Enrol passkey"},
+  {"wait": 5000, "eval": "document.getElementById('out').innerText"},
+  {"click": "Unseal stored blob"},
+  {"wait": 1500, "eval": "document.getElementById('out').innerText"}
+]

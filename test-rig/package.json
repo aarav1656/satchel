@@ -1,0 +1,6 @@
+{
+  "name": "satchel-test-rig",
+  "private": true,
+  "type": "module",
+  "dependencies": { "viem": "^2.57.0" }
+}

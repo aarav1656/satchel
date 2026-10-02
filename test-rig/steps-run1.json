@@ -1,0 +1,19 @@
+[
+  {"eval": "localStorage.clear(); document.getElementById('out').innerText"},
+  {"click": "Enrol passkey"},
+  {"wait": 5000, "eval": "document.getElementById('out').innerText"},
+  {"click": "Seal known plaintext"},
+  {"wait": 3000, "eval": "document.getElementById('out').innerText"},
+  {"click": "Second namespace"},
+  {"wait": 3000, "eval": "document.getElementById('out').innerText"},
+  {"goto_file": "/tmp/satchel-rig-url-load2"},
+  {"wait": 3000, "eval": "'LOAD2 ' + location.href + ' | ' + document.getElementById('out').innerText"},
+  {"click": "Open passkey"},
+  {"wait": 5000, "eval": "document.getElementById('out').innerText"},
+  {"click": "Unseal stored blob"},
+  {"wait": 2000, "eval": "document.getElementById('out').innerText"},
+  {"click": "Second namespace"},
+  {"wait": 3000, "eval": "document.getElementById('out').innerText"},
+  {"click": "Grant, seal, revoke on Monad"},
+  {"wait": 30000, "eval": "document.getElementById('out').innerText"}
+]

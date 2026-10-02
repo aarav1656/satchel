@@ -1,0 +1,12 @@
+negative control: same owner and txs, but grantId 1 (the lead smoke test grant, a different owner and namespace). The checks go red.
+registry=0xd6c895f5c9254dc6eaafc335fff0930fd7012e6d chain=10143 read_at_block=67519411 grant_block=67519166 revoke_block=67519170
+PASS grant tx status success, to registry
+PASS revoke tx status success, to registry
+PASS both txs sent by the passkey-derived owner
+FAIL grantOf.owner is the passkey-derived owner
+FAIL grantOf.nsHash matches
+PASS grantOf.epoch is 1
+PASS grantOf.active is false after revoke
+PASS epochOf(owner, ns) is 2
+PASS an untouched namespace of the same owner is still epoch 1
+PASS revoke mined after grant

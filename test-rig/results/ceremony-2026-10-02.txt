@@ -1,0 +1,55 @@
+satchel SDK ceremony, 2026-10-02T10:27:55Z, origin http://localhost:5183, virtual authenticator ctap2/internal, resident key, user verification, PRF
+sdk build: e51d2612ba0ca653  rig bundle: 352fb4d74a953272
+registry: "address": "0xd6c895f5c9254dc6eaafc335fff0930fd7012e6d" chain 10143 (deployments/testnet.json)
+
+=== RUN 1 (authenticator A): enrol, seal, fund owner, fresh page load, open, unseal, second namespace, live grant and revoke ===
+READY origin=http://localhost:5183 stored_blob=yes
+> click "Enrol passkey" ok=true
+ENROL credential=5cdrk_uc2ja1MIQ40FIo62dYeDHOYtAkzH4YtcvSGGI rpId=localhost prompts create=1 get=0 total=1
+FP ns=memory/assistant fp=4cda9f4b
+OWNER address=0x8F077Ec609D4CE4eE3Ea8a6a1A89c72938a1Ad00
+> click "Seal known plaintext" ok=true
+SEALED ns=memory/assistant epoch=1 120 B hex=5341543101a01d55316b9b6f903e3f1214c1800bc026cd340e376d907b85cecb41ec9e15d80000000000000001e73a200d346e8a49570d3752c322d2499f8660794b7142e522b0bf8f9e0b3871a72dd66c5dbbb645231978b296f89c9dafbb186d63a732486a6a7c51dc2815e7398b468ce26c099cac5289
+FP ns=memory/assistant fp=4cda9f4b prompts create=1 get=0 total=1
+> click "Second namespace" ok=true
+SECOND ns=memory/notes epoch=1 fp=b4e6cf3b roundtrip={"note":"second namespace"} extra_prompts=0 prompts create=1 get=0 total=1
+--- fresh page load: http://localhost:5183/?load=2
+READY origin=http://localhost:5183 stored_blob=yes
+> click "Open passkey" ok=true
+OPEN credential=5cdrk_uc2ja1MIQ40FIo62dYeDHOYtAkzH4YtcvSGGI prompts create=0 get=1 total=1
+FP ns=memory/assistant fp=4cda9f4b
+OWNER address=0x8F077Ec609D4CE4eE3Ea8a6a1A89c72938a1Ad00
+> click "Unseal stored blob" ok=true
+UNSEALED ns=memory/assistant plaintext="satchel rig plaintext: pip prefers metric units" match=true prompts create=0 get=1 total=1
+> click "Second namespace" ok=true
+SECOND ns=memory/notes epoch=1 fp=b4e6cf3b roundtrip={"note":"second namespace"} extra_prompts=0 prompts create=0 get=1 total=1
+> click "Grant, seal, revoke on Monad" ok=true
+GRANT id=4 epoch=1 tx=0x604658b64bcf865b0cf4c725675ef9e7cdb79430d313cd2c16c5ee8d9d90b393 nsHash=0xa01d55316b9b6f903e3f1214c1800bc026cd340e376d907b85cecb41ec9e15d8 owner=0x8F077Ec609D4CE4eE3Ea8a6a1A89c72938a1Ad00
+LIVE before epoch=1 fern_reads="sealed before revoke"
+REVOKE id=4 newEpoch=2 tx=0xaa4c55926f2b3aa2690cf6ad4b5721780dcd669d5ab68402947d1b468adb331e
+LIVE after epoch=2 fern_on_new=GRANT_REVOKED fern_on_old="sealed before revoke" owner_reads_new="sealed after revoke"
+(between enrol and the fresh load, outside the page) FUNDED owner=0x8F077Ec609D4CE4eE3Ea8a6a1A89c72938a1Ad00 amount=0.1 MON tx=0xd2c43570fbfab2549d240f69d1066b7061efbb39da8b51983346cdcec583299f block=67519070 owner_balance=0.1 deployer_balance=4.636136882
+
+=== RUN 2 (authenticator B, new CDP session): open fails, enrol, try the run 1 blob ===
+READY origin=http://localhost:5183 stored_blob=yes
+> click "Open passkey" ok=true
+ERROR code=PASSKEY_CANCELLED message=Passkey prompt closed or no matching passkey was offered. fix=call open() again from a click handler and confirm the prompt. cause=NotAllowedError: The operation either timed out or was not allowed. See: https://www.w3.org/TR/webauthn-2/#sctn-privacy-considerations-client.
+> click "Enrol passkey" ok=true
+ENROL credential=wXXDJWeAV7wi8AE1cvUGeRUP6nPfJM6TufJ-Ny4hLsM rpId=localhost prompts create=1 get=1 total=2
+FP ns=memory/assistant fp=1b084435
+OWNER address=0xF70e6FA5EC7A1986BbCFCa82764ca3D796cC6f37
+> click "Unseal stored blob" ok=true
+ERROR code=WRONG_PASSKEY message=This passkey did not seal ns "memory/assistant" at epoch 1, or the ciphertext was altered. Nothing was decrypted. fix=open with the passkey that sealed this data, or use a second passkey added with addPasskey(). cause=SatchelError: This passkey did not seal ns "memory/assistant" at epoch 1, or the ciphertext was altered. Nothing was decrypted.
+
+=== INDEPENDENT ON-CHAIN READ (viem against the Monad testnet RPC, not the SDK) ===
+registry=0xd6c895f5c9254dc6eaafc335fff0930fd7012e6d chain=10143 read_at_block=67519354 grant_block=67519166 revoke_block=67519170
+PASS grant tx status success, to registry
+PASS revoke tx status success, to registry
+PASS both txs sent by the passkey-derived owner
+PASS grantOf.owner is the passkey-derived owner
+PASS grantOf.nsHash matches
+PASS grantOf.epoch is 1
+PASS grantOf.active is false after revoke
+PASS epochOf(owner, ns) is 2
+PASS an untouched namespace of the same owner is still epoch 1
+PASS revoke mined after grant
