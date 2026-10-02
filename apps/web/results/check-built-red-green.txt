@@ -1,4 +1,4 @@
-# check-built.mjs: it must be able to fail. Each case edits the built export in out/, runs the check, restores the file. 2026-10-02T12:32:49Z
+# check-built.mjs: it must be able to fail. Each case edits the built export in out/, runs the check, restores the file. 2026-10-02T12:33:45Z
 
 ## RED: the page shows different quickstart text than the source
 check-built FAIL (1):
@@ -8,7 +8,11 @@ import { openOrEnrol, ns } from "satchel-sdk";
 
 const s = await openOrEnrol({ rpId: location.hostname, appName: "My app" }); // opens your passkey, or creates one the first time
 exit 1
-MUTATION DID NOT APPLY: the Run button bundle executes different text than the page shows
+
+## RED: the Run button bundle executes different text than the page shows
+check-built FAIL (1):
+- the QUICKSTART string in the client bundle differs from lib/snippets.ts
+exit 1
 
 ## RED: the docs name a function the SDK does not export
 check-built FAIL (1):
