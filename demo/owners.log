@@ -1,0 +1,12 @@
+# Every address the satchel deployer 0xc81C53EA0DE0b1b384bBE18910F7dbEfD03F5C58 funded on Monad testnet.
+# Recovered from chain 2026-10-02 (nonce search, 10 sends); new runs append automatically (fund-owner.ts).
+# Per-run owners come from virtual passkeys that exist only during one run: their keys are gone. Never fund them by hand.
+67514976 owner=0x00f5e382c3a1e7e66008e1622ba8e3a975193f16 funded=0.1 tx=0x0afa35a7689064155495cf74f09acbdf791b3c92810c9520fe881a3ccfeb1cba registry smoke key, key kept in demo/.wallets.json (recoverable)
+67518634 owner=0x3d4cb477a3929fb019136abb5b8cf38ad7b11c42 funded=0.1 tx=0x886c0c124efdbb6ab27518f430527f98d6f6fec738388f9178e8494cd0561ae4 per-run virtual passkey, key not recoverable
+67519070 owner=0x8f077ec609d4ce4ee3ea8a6a1a89c72938a1ad00 funded=0.1 tx=0xd2c43570fbfab2549d240f69d1066b7061efbb39da8b51983346cdcec583299f per-run virtual passkey, key not recoverable
+67524356 owner=0x574f0153a31bfb117a7f212810c41e22700eb103 funded=0.1 tx=0x58644e85f7c54d95e567f1fc762b8cae8549bb6c09551824d715c1c950d006a0 per-run virtual passkey, key not recoverable
+67525066 owner=0xbd4b3b7b2c9ea04afbdaeee5f92092d44843add6 funded=0.1 tx=0x6159447849c71f120e36599515e84e66dbe75c5c4f9a79485ab4ba810796ecd9 per-run virtual passkey, key not recoverable
+67526525 owner=0x4c64202188418d3f315f16e791c86d3804674f30 funded=0.1 tx=0xd1923b5af4edef604a3fc72f94b0d224c116496948c4bdff59dbf6c11238d888 per-run virtual passkey, key not recoverable
+67544704 owner=0xc8b418f9528c2cd80444ce8e95703021ac13e0c7 funded=0.1 tx=0x31ec9070e49276b53cb4c9882c63494b400b6b6158fb661af7a4acd9cc6fd73a per-run virtual passkey, key not recoverable
+67545140 owner=0x2526d84443dd8fa2820cf5ea4e40a522eb3a743c funded=0.1 tx=0x71768ceca53ece87e508af41fbdd2d54a64f9526028fc00156846e6ec7fb299a per-run virtual passkey, key not recoverable; Kamal later sent 5 MON here (tx 0x69cc4bc56a9d901a2487fee0f77641a358b5cac6c03bf599c788fbed24d298fc, block 67545266), stranded
+67546590 owner=0x45bb4a929828c1442c7b0ef8bdda2d26e410fb4b funded=0.1 tx=0xb1793715fb2ccccfd23eca60d6b41e54c9a9e69a73d92d94c440fd430a57f641 per-run virtual passkey, key not recoverable

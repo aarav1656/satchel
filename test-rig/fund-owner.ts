@@ -21,6 +21,9 @@ const before = await pub.getBalance({ address: owner });
 const hash = await wallet.sendTransaction({ to: owner, value: AMOUNT });
 const receipt = await pub.waitForTransactionReceipt({ hash, timeout: 60_000 });
 if (receipt.status !== "success") throw new Error(`funding tx ${hash} reverted`);
+// Every funded owner is recorded before anything else can fail: run logs get overwritten, this file does not.
+fs.appendFileSync(new URL("../demo/owners.log", import.meta.url),
+  `${new Date().toISOString()} test-rig owner=${owner} funded=${formatEther(AMOUNT)} tx=${hash} block=${receipt.blockNumber} per-run virtual passkey, key not recoverable, never fund by hand\n`);
 const after = await pub.getBalance({ address: owner });
 if (after - before !== AMOUNT) throw new Error(`owner balance moved by ${formatEther(after - before)}, expected ${formatEther(AMOUNT)}`);
 console.log(`FUNDED owner=${owner} amount=${formatEther(AMOUNT)} MON tx=${hash} block=${receipt.blockNumber} owner_balance=${formatEther(after)} deployer_balance=${formatEther(await pub.getBalance({ address: account.address }))}`);
