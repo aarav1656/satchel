@@ -6,7 +6,11 @@ const CAUSES: Record<ErrorCode, string> = {
   PRF_UNAVAILABLE:
     "The authenticator returned no 32 byte PRF output, so there is nothing to derive keys from. Some password managers and security keys do not implement the WebAuthn PRF extension.",
   PASSKEY_CANCELLED:
-    "The passkey prompt was closed, timed out, or no passkey on this device matched. WebAuthn gives the page the same answer for all three, so open() cannot tell a closed prompt from a device with no passkey yet; enrol() and openOrEnrol() are the calls that create one.",
+    "The passkey prompt was closed or timed out. open() and enrol() raise it because WebAuthn gives the page the same answer for a closed prompt and for a device with no matching passkey; openOrEnrol() turns that answer into PASSKEY_NOT_FOUND whenever it was opening, and raises this only for a closed create prompt.",
+  PASSKEY_NOT_FOUND:
+    "openOrEnrol() was opening a passkey and none was chosen: the prompt was closed, or the passkey this device remembered was deleted, lives on another device, or belonged to an authenticator that is gone. When a remembered passkey fails, openOrEnrol() deletes that memory first, so the next call is a first visit and nothing is stuck. WebAuthn cannot tell a closed prompt from a missing passkey, so both end here. Nothing was created.",
+  CHOOSE_PASSKEY_MODE:
+    "openOrEnrol() found no remembered passkey and was given no mode of \"open\" or \"enrol\". It stops before any prompt, because a first visit that tried to open and then create would chain two WebAuthn ceremonies from one click, which browsers can refuse and which can duplicate a passkey.",
   RPID_MISMATCH:
     "The page origin is not the rpId the passkey was created under, for example a preview URL. A passkey works only under its own rpId.",
   WRONG_PASSKEY:

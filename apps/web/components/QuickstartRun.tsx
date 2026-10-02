@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import type { Sealed, Satchel } from "satchel-sdk";
+import { useEffect, useState } from "react";
+import { rememberedPasskey, type PasskeyMode, type Satchel, type Sealed } from "satchel-sdk";
 import { failure } from "@/lib/errors-ui";
 import { promptCount, usePromptCount } from "@/lib/prompts";
 import { runSnippet } from "@/lib/run-snippet";
@@ -9,18 +9,34 @@ import { QUICKSTART } from "@/lib/snippets";
 
 type Out = { lines: { text: string; tone?: "err" | "dim" }[] };
 
-/** Executes QUICKSTART, the same constant the page shows above this button. The first run creates the passkey, later runs open it. */
+/**
+ * Executes QUICKSTART, the same constant the page shows above the buttons. On a first visit the page asks which passkey
+ * ceremony the person wants, one button each, so every click runs exactly one WebAuthn prompt: "Create a passkey" is
+ * mode "enrol", "I already have one" is mode "open". Once this browser remembers a passkey there is one button.
+ */
 export function QuickstartRun() {
   const [busy, setBusy] = useState(false);
+  const [known, setKnown] = useState<boolean | undefined>();
   const [out, setOut] = useState<Out | undefined>();
   const prompts = usePromptCount();
 
-  const run = async () => {
+  const refresh = async () => {
+    try {
+      setKnown((await rememberedPasskey({ rpId: location.hostname })) !== undefined);
+    } catch {
+      setKnown(false);
+    }
+  };
+  useEffect(() => {
+    void refresh();
+  }, []);
+
+  const run = async (mode: PasskeyMode) => {
     setBusy(true);
     const before = promptCount();
     let s: Satchel | undefined;
     try {
-      const { values, sha256 } = await runSnippet(QUICKSTART, ["s", "memory", "blob", "back"]);
+      const { values, sha256 } = await runSnippet(QUICKSTART, ["s", "memory", "blob", "back"], { mode });
       s = values.s as Satchel;
       const blob = values.blob as Sealed;
       const used = promptCount() - before;
@@ -36,6 +52,7 @@ export function QuickstartRun() {
       setOut({ lines: [{ text: `${f.code}  ${f.message}`, tone: "err" }, ...(f.fix ? [{ text: `fix: ${f.fix}`, tone: "dim" as const }] : [])] });
     } finally {
       s?.close();
+      await refresh();
       setBusy(false);
     }
   };
@@ -43,9 +60,22 @@ export function QuickstartRun() {
   return (
     <div className="proof-live">
       <div className="btn-row" style={{ marginTop: "var(--s-3)" }}>
-        <button type="button" className="btn" disabled={busy} onClick={() => void run()} data-testid="quickstart-run">
-          {busy ? "Waiting for your passkey." : "Run the code above"}
-        </button>
+        {known === undefined && <span className="small muted">Looking for a passkey on this browser.</span>}
+        {known === false && (
+          <>
+            <button type="button" className="btn" disabled={busy} onClick={() => void run("enrol")} data-testid="quickstart-create">
+              {busy ? "Waiting for your passkey." : "Create a passkey"}
+            </button>
+            <button type="button" className="btn btn-secondary" disabled={busy} onClick={() => void run("open")} data-testid="quickstart-open">
+              I already have one
+            </button>
+          </>
+        )}
+        {known === true && (
+          <button type="button" className="btn" disabled={busy} onClick={() => void run("open")} data-testid="quickstart-run">
+            {busy ? "Waiting for your passkey." : "Run the code above"}
+          </button>
+        )}
         <span className="small muted">Passkey prompts on this page so far: {prompts}</span>
       </div>
       {out && (

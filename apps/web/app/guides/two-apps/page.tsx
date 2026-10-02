@@ -11,7 +11,7 @@ const OWNER = `import { openOrEnrol, ns } from "satchel-sdk";
 
 const registry = { address: "${REGISTRY_ADDRESS}" };
 const memory = ns("memory/assistant");
-const s = await openOrEnrol({ rpId: "pip.example", appName: "Pip", registry });
+const s = await openOrEnrol({ rpId: "pip.example", appName: "Pip", registry, mode: "enrol" });   // mode matters on a first visit only
 
 // What B sent: the publicKey from its createGrantee(). A public key, safe in a URL.
 const publicKeyFromB = "0x04...";

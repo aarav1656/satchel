@@ -92,7 +92,7 @@ const details = [...errors.matchAll(/<article[^>]*data-testid="error-detail" dat
   return [m[1], by ? text(by[1]).trim() : "(missing)"];
 });
 const codes = [...dts("errors.d.ts").match(/type ErrorCode =([^;]*);/)[1].matchAll(/"([A-Z_]+)"/g)].map((m) => m[1]);
-if (codes.length < 17) fail(`parsed only ${codes.length} error codes`);
+if (codes.length < 19) fail(`parsed only ${codes.length} error codes`);
 if (rows.length !== codes.length) fail(`the error table has ${rows.length} rows for ${codes.length} ErrorCodes`);
 if (details.length !== codes.length) fail(`the error page has ${details.length} entries for ${codes.length} ErrorCodes`);
 for (const c of codes) {

@@ -99,15 +99,38 @@ export const SECTIONS: Section[] = [
         throws: ["PRF_UNAVAILABLE", "RPID_MISMATCH", "PASSKEY_CANCELLED"],
       },
       {
+        name: "PasskeyMode",
+        anchor: a("PasskeyMode"),
+        kind: "type",
+        signature: `type PasskeyMode = "open" | "enrol"`,
+        summary: "What a first visit does in openOrEnrol: open a passkey the person already has, or create one.",
+      },
+      {
         name: "openOrEnrol",
         anchor: a("openOrEnrol"),
         kind: "function",
-        signature: "function openOrEnrol(o: OpenOptions & { appName: string }): Promise<Satchel>",
+        signature: `function openOrEnrol(o: OpenOptions & { appName: string; mode?: PasskeyMode }): Promise<Satchel>`,
         summary:
-          "One call for a first and a later visit. It decides in this order. (1) A credential in the options: open() with it. (2) A marker in the store from an earlier openOrEnrol for this rpId: open() with that credential; a closed prompt throws PASSKEY_CANCELLED and never creates a second passkey. (3) No marker: open() lets the browser offer any passkey for this rpId, so a synced passkey from another device opens here; on success the marker is written. (4) That open() throws PASSKEY_CANCELLED, which WebAuthn cannot tell apart from no passkey: enrol() creates one and the marker is written. Any other error from open() is thrown as it is and never enrols.",
-        params: [{ name: "appName", type: "string", doc: "Shown on the passkey sheet when a passkey is created." }],
-        returns: "A Satchel. The marker holds the public credential id only and lives in the store (default IndexedDB); a runtime with no store skips it and lets the ceremony decide each time.",
-        throws: ["PRF_UNAVAILABLE", "RPID_MISMATCH", "PASSKEY_CANCELLED", "NO_SECOND_PASSKEY", "WRONG_PASSKEY", "STORE_UNAVAILABLE"],
+          "One call for a first and a later visit, and one WebAuthn prompt per call: a browser grants a click one prompt, and a get followed by a create can be refused or leave a duplicate passkey. Decision rule, in order. (1) A credential in the options: open() with it. (2) A marker in the store from an earlier openOrEnrol for this rpId: open() with that credential and ignore mode. If that prompt is closed or its passkey is gone (deleted, made on another device or authenticator), the marker is deleted and PASSKEY_NOT_FOUND is thrown, so a stale marker never traps anyone and nothing is created. (3) No marker and mode \"open\": open() lets the browser offer any passkey for this rpId, so a synced passkey from another device opens here; a closed prompt or no passkey is PASSKEY_NOT_FOUND. (4) No marker and mode \"enrol\": enrol() creates one. (5) No marker and no valid mode: CHOOSE_PASSKEY_MODE, before any prompt. A successful (3) or (4) writes the marker. Any other error from the ceremony is thrown as it is. In a page, ask the person on a first visit (rememberedPasskey() says whether it is one) with two buttons, \"Create a passkey\" calling with mode \"enrol\" and \"I already have one\" calling with mode \"open\", each its own click.",
+        params: [
+          { name: "appName", type: "string", doc: "Shown on the passkey sheet when a passkey is created." },
+          { name: "mode", type: "PasskeyMode", doc: "Read only when no passkey is remembered. \"enrol\" creates a passkey, \"open\" uses one the person already has. Omitting it on a first visit throws CHOOSE_PASSKEY_MODE." },
+        ],
+        returns: "A Satchel. The marker holds the public credential id only and lives in the store (default IndexedDB); a runtime with no store skips it and the mode decides every call.",
+        throws: ["PRF_UNAVAILABLE", "RPID_MISMATCH", "PASSKEY_CANCELLED", "PASSKEY_NOT_FOUND", "CHOOSE_PASSKEY_MODE", "NO_SECOND_PASSKEY", "WRONG_PASSKEY", "STORE_UNAVAILABLE"],
+      },
+      {
+        name: "rememberedPasskey",
+        anchor: a("rememberedPasskey"),
+        kind: "function",
+        signature: "function rememberedPasskey(o: { rpId: string; store?: Store }): Promise<PasskeyCredentialMetadata | undefined>",
+        summary: "The credential openOrEnrol remembers for this rpId, or undefined on a first visit. Read it before any prompt to choose between one button (\"Run\") and two (\"Create a passkey\", \"I already have one\"). It starts no WebAuthn ceremony.",
+        params: [
+          { name: "rpId", type: "string", doc: "The rpId the marker was written under." },
+          { name: "store", type: "Store", doc: "Default: IndexedDB." },
+        ],
+        returns: "Mera's credential metadata, or undefined.",
+        throws: ["STORE_UNAVAILABLE"],
       },
       {
         name: "fromPrfOutput",
@@ -410,8 +433,9 @@ function fetchGrant(o: FetchGrantOptions): Promise<FetchedGrant>`,
         signature: `interface Store {
   get(key: string): Promise<Uint8Array | undefined>;
   put(key: string, value: Uint8Array): Promise<void>;
+  delete?(key: string): Promise<void>;
 }`,
-        summary: "Holds ciphertext and public records only: wrapped roots for added passkeys. Never a key in the clear. The default is IndexedDB.",
+        summary: "Holds ciphertext and public records only: wrapped roots for added passkeys and the public passkey marker. Never a key in the clear. The default is IndexedDB. delete is optional: a store without it has a stale marker overwritten with an empty value, which reads as absent.",
       },
     ],
   },

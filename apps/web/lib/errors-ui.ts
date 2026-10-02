@@ -4,6 +4,8 @@ import { SatchelError, type ErrorCode } from "satchel-sdk";
 const PERSON: Partial<Record<ErrorCode, string>> = {
   PRF_UNAVAILABLE: "This passkey cannot protect your memory. Pick a passkey from iCloud Keychain, Google Password Manager, Windows Hello or a security key.",
   PASSKEY_CANCELLED: "The passkey prompt was closed. Nothing was sealed. Try again.",
+  PASSKEY_NOT_FOUND: "No passkey was found for this address on this device. Pick another one, or create a new passkey.",
+  CHOOSE_PASSKEY_MODE: "Choose first: create a passkey, or use one you already have.",
   RPID_MISMATCH: "This address does not hold your vault. Open it at the address you created it on.",
   WRONG_PASSKEY: "That passkey did not create this vault.",
   NAMESPACE_MISMATCH: "That memory belongs to a different folder. Open it from memory/assistant.",

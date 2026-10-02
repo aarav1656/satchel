@@ -7,7 +7,8 @@ import { REGISTRY_ADDRESS } from "./config";
  */
 export const QUICKSTART = `import { openOrEnrol, ns } from "satchel-sdk";
 
-const s = await openOrEnrol({ rpId: location.hostname, appName: "My app" }); // opens your passkey, or creates one the first time
+// mode is "enrol" (create a passkey) or "open" (use one you have). A first visit needs it, one prompt either way; later visits ignore it.
+const s = await openOrEnrol({ rpId: location.hostname, appName: "My app", mode });
 const memory = ns("memory/assistant");
 const blob = await s.seal(memory, { likes: "metric units" });                  // Sealed, safe to store anywhere
 const back = await s.unsealJson(memory, blob);                                 // { likes: "metric units" }`;
@@ -26,7 +27,7 @@ const memory = ns("memory/assistant");
 const fern = await createGrantee();
 
 // App A (Pip) holds the passkey: it seals a record and grants Fern.
-const s = await openOrEnrol({ rpId: location.hostname, appName: "Pip", registry });
+const s = await openOrEnrol({ rpId: location.hostname, appName: "Pip", registry, mode: "enrol" });
 const blob = await s.seal(memory, { likes: "metric units" });
 const grant = await s.grant(memory, fern.publicKey, { label: "Fern" });   // one Monad transaction
 

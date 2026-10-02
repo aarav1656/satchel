@@ -1,6 +1,6 @@
 // drive.mjs URL STEPS.mjs OUTDIR : runs scripted steps in ONE pinned deepsurge tab (PIN_FILE), never opens a second tab.
 // Adapted from ~/.claude/scratch/cdp-tab.mjs. VAUTH=1 adds a virtual platform authenticator with PRF so passkey flows run headless.
-// Steps: {navigate} {eval} {poll, timeout} {assert} {click: "button text"} {click_sel: css} {set_text: {sel, text}} {wait_file} {wait: ms} {shot}
+// Steps: {navigate} {eval} {poll, timeout} {assert} {tclick: "button text"} (real Input.dispatchMouseEvent) {vauth: "reset"} {click: "button text"} (synthetic element.click()) {click_sel: css} {set_text: {sel, text}} {wait_file} {wait: ms} {shot}
 // A failed poll, assert or click exits 1: a step that cannot find its element is a failure, not a skip.
 import fs from "node:fs";
 import { execFileSync } from "node:child_process";
@@ -37,6 +37,9 @@ const ev = async (expr) => {
 // A server-rendered button exists before React attaches its handler; a click in that gap does nothing. Wait for hydration.
 const HYDRATED = `(()=>{const b=[...document.querySelectorAll('main button, .demo button, .doc-main button')];return document.readyState==='complete'&&(b.length===0||b.some(x=>Object.keys(x).some(k=>k.startsWith('__reactProps'))))})()`;
 const hydrate = async () => { for (let i = 0; i < 40 && !(await ev(HYDRATED)); i++) await sleep(500); };
+let vauthId;
+const addVauth = async () => (await send("WebAuthn.addVirtualAuthenticator", { options: { protocol: "ctap2", transport: "internal", hasResidentKey: true, hasUserVerification: true, isUserVerified: true, automaticPresenceSimulation: true, hasPrf: true } })).result.authenticatorId;
+const mouse = (type, x, y) => send("Input.dispatchMouseEvent", { type, x, y, button: "left", buttons: type === "mouseReleased" ? 0 : 1, clickCount: 1 });
 const log = (o) => console.error("STEP " + JSON.stringify(o));
 let failed = false;
 const vars = {};
@@ -48,7 +51,7 @@ try {
   if (process.env.VAUTH === "1") {
     await send("Page.bringToFront");
     await send("WebAuthn.enable", { enableUI: false });
-    await send("WebAuthn.addVirtualAuthenticator", { options: { protocol: "ctap2", transport: "internal", hasResidentKey: true, hasUserVerification: true, isUserVerified: true, automaticPresenceSimulation: true, hasPrf: true } });
+    vauthId = await addVauth();
   }
   await send("Page.navigate", { url });
   await sleep(3000);
@@ -89,6 +92,23 @@ try {
       const v = await ev(s.assert);
       if (!v || (typeof v === "string" && v.startsWith("EXCEPTION"))) { fail({ assert: s.label ?? s.assert.slice(0, 80), value: v }); break; }
       log({ assert: s.label ?? s.assert.slice(0, 50), ok: true, value: typeof v === "string" ? v : undefined });
+    }
+    if (s.vauth === "reset") {
+      // A fresh virtual authenticator: every credential the previous one held is gone, as for a passkey deleted or made elsewhere.
+      await send("WebAuthn.removeVirtualAuthenticator", { authenticatorId: vauthId });
+      vauthId = await addVauth();
+      log({ vauth: "reset", authenticatorId: vauthId });
+    }
+    if (s.tclick) {
+      // Trusted click: real Input.dispatchMouseEvent at the button's centre, so the page gets genuine user activation.
+      await send("Page.bringToFront");
+      await sleep(300);
+      const c = await ev(`(()=>{const b=[...document.querySelectorAll('button')].find(b=>b.innerText.trim().startsWith(${JSON.stringify(s.tclick)}));if(!b)return null;b.scrollIntoView({block:'center'});const r=b.getBoundingClientRect();return [r.x+r.width/2,r.y+r.height/2]})()`);
+      if (!c || typeof c === "string") { fail({ tclick: s.tclick, ok: false }); break; }
+      await mouse("mouseMoved", c[0], c[1]);
+      await mouse("mousePressed", c[0], c[1]);
+      await mouse("mouseReleased", c[0], c[1]);
+      log({ tclick: s.tclick, ok: true, at: c.map(Math.round) });
     }
     if (s.click || s.click_sel || s.set_text) {
       if (process.env.VAUTH === "1") { await send("Page.bringToFront"); await sleep(300); }
