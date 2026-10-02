@@ -1,7 +1,8 @@
-independent on-chain read, viem against the Monad testnet RPC, not the SDK, owner 0x4C64202188418d3F315f16e791c86d3804674F30
-registry=0xd6c895f5c9254dc6eaafc335fff0930fd7012e6d chain=10143 read_at_block=67526701 grant_block=67526566 revoke_block=67526591
-grant tx 0x06ac563e2b20c258ec1844b913703e45ee9c0ece3034534ffc146e45bf1fb66d status=success
-revoke tx 0x726e69da774fc145014e82591e8c1f74b9d952289d07f2ec912933f1c43e5123 status=success
+independent on-chain read, viem against the Monad testnet RPC, not the SDK, owner 0x45bb4A929828c1442c7B0EF8BDda2d26e410FB4B
+registry=0xd6c895f5c9254dc6eaafc335fff0930fd7012e6d chain=10143 read_at_block=67546839 grant_block=67546603 revoke_block=67546667
+grant tx 0x06f31a1f3cc584ab02ff7439f99a555161951ff751bbc44847062f1ed151825f status=success
+revoke tx 0xa20403e226a096c2f4311f090a90d7fa617a066bf2d4973667ec5d3e83486ad8 status=success
+regrant tx 0x969568f9863436c55fc500e674b145e0268143ef10f42a0ee6586d15790827d5 status=success grant_id=12 block=67546715
 PASS grant tx receipt status success, sent to the registry
 PASS revoke tx receipt status success, sent to the registry
 PASS both txs sent by the passkey-derived owner
@@ -13,3 +14,10 @@ PASS grantOf.active is false after revoke
 PASS epochOf(owner, memory/assistant) is 2
 PASS an untouched namespace of the same owner (memory/notes) is still epoch 1
 PASS revoke mined after grant
+PASS regrant tx receipt status success, sent to the registry by the owner
+PASS regrant mined after revoke
+PASS regrant is a new grant id, not the revoked one
+PASS grantOf(regrant).owner is the passkey-derived owner and its nsHash is memory/assistant
+PASS grantOf(regrant).epoch is 2 and it is active
+PASS grantOf(regrant).granteeKeyHash is keccak256 of Fern's public key
+PASS the first grant stays inactive after the regrant

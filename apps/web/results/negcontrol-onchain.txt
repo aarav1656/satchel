@@ -1,16 +1,24 @@
-negative control: same owner, txs and Fern key, but grant id 1 (the smoke test grant, a different owner and namespace). The checks go red.
-registry=0xd6c895f5c9254dc6eaafc335fff0930fd7012e6d chain=10143 read_at_block=67525357 grant_block=67525107 revoke_block=67525131
-grant tx 0x9cab0d78f5fecd89d84be8197a7932ce51521203496e8a34528a6994a4dad17e status=success
-revoke tx 0x53fb903e0424ee08c0ce4b8e19b10b36c3890cdaf56f704ff6835a9c78db5845 status=success
+negative control: the same read-back with a wrong Fern key and a wrong first-grant id must go red, 2026-10-02T12:49:23Z
+registry=0xd6c895f5c9254dc6eaafc335fff0930fd7012e6d chain=10143 read_at_block=67547370 grant_block=67546603 revoke_block=67546667
+grant tx 0x06f31a1f3cc584ab02ff7439f99a555161951ff751bbc44847062f1ed151825f status=success
+revoke tx 0xa20403e226a096c2f4311f090a90d7fa617a066bf2d4973667ec5d3e83486ad8 status=success
+regrant tx 0x969568f9863436c55fc500e674b145e0268143ef10f42a0ee6586d15790827d5 status=success grant_id=12 block=67546715
 PASS grant tx receipt status success, sent to the registry
 PASS revoke tx receipt status success, sent to the registry
 PASS both txs sent by the passkey-derived owner
-FAIL grantOf.owner is the passkey-derived owner
-FAIL grantOf.nsHash is keccak256(satchel/ns/memory/assistant)
-PASS grantOf.epoch is 1
+PASS grantOf.owner is the passkey-derived owner
+PASS grantOf.nsHash is keccak256(satchel/ns/memory/assistant)
+FAIL grantOf.epoch is 1
 FAIL grantOf.granteeKeyHash is keccak256 of Fern's public key
-PASS grantOf.active is false after revoke
+FAIL grantOf.active is false after revoke
 PASS epochOf(owner, memory/assistant) is 2
 PASS an untouched namespace of the same owner (memory/notes) is still epoch 1
 PASS revoke mined after grant
-exit status 1
+PASS regrant tx receipt status success, sent to the registry by the owner
+PASS regrant mined after revoke
+FAIL regrant is a new grant id, not the revoked one
+PASS grantOf(regrant).owner is the passkey-derived owner and its nsHash is memory/assistant
+PASS grantOf(regrant).epoch is 2 and it is active
+FAIL grantOf(regrant).granteeKeyHash is keccak256 of Fern's public key
+FAIL the first grant stays inactive after the regrant
+exit 1
