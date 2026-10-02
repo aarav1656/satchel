@@ -24,14 +24,21 @@ function Problem({ f }: { f: Failure }) {
   );
 }
 
-/** Every live panel needs an open vault. This asks for it once and shares the session with Pip. */
-function VaultGate({ children }: { children: (s: Satchel) => ReactNode }) {
+/** The one passkey prompt on this page. Every live result below reads the session it opens and fills in without another prompt. */
+export function ProofVault() {
   const session = useSession();
   const [stored, setStored] = useState<boolean | undefined>();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<Failure | undefined>();
   useEffect(() => setStored(credential.get() !== undefined), [session]);
-  if (session) return <>{children(session)}</>;
+  if (session) {
+    return (
+      <p className="status-line" data-testid="proof-vault-open">
+        <span className="badge-ok">vault open</span>
+        <span>One passkey prompt opened it. The results below filled in from this session.</span>
+      </p>
+    );
+  }
   const go = async () => {
     setBusy(true);
     setError(undefined);
@@ -45,16 +52,28 @@ function VaultGate({ children }: { children: (s: Satchel) => ReactNode }) {
     }
   };
   return (
-    <div className="proof-live">
-      <p className="small muted">
-        {stored ? "Opening your vault asks for your passkey once." : "No vault in this browser yet. Creating one asks for a passkey once; it is the same vault Pip uses."}
+    <div className="card">
+      <h3>{stored ? "Open your vault" : "Create your vault"}</h3>
+      <p className="muted small">
+        {stored ? "One passkey prompt opens it, and every result below fills in." : "No vault in this browser yet. One passkey prompt creates the same vault Pip uses, and every result below fills in."}
       </p>
-      <div className="btn-row" style={{ marginTop: 0 }}>
+      <div className="btn-row">
         <button type="button" className="btn" disabled={busy || stored === undefined} onClick={() => void go()} data-testid="proof-vault">
           {busy ? "Waiting for your passkey." : stored ? "Open my vault" : "Create my vault"}
         </button>
       </div>
       {error && <Problem f={error} />}
+    </div>
+  );
+}
+
+/** Renders its children from the open session, or a quiet placeholder until the vault is open. */
+function Live({ children }: { children: (s: Satchel) => ReactNode }) {
+  const session = useSession();
+  if (session) return <>{children(session)}</>;
+  return (
+    <div className="ghost-row" data-testid="proof-waiting">
+      Fills in when your vault is open.
     </div>
   );
 }
@@ -69,7 +88,11 @@ interface Derivation {
 function DerivationBody({ s }: { s: Satchel }) {
   const [rows, setRows] = useState<Derivation[] | undefined>();
   const [error, setError] = useState<Failure | undefined>();
-  const show = async () => {
+  useEffect(() => {
+    void show();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [s]);
+  async function show() {
     setError(undefined);
     try {
       const out: Derivation[] = [];
@@ -81,14 +104,9 @@ function DerivationBody({ s }: { s: Satchel }) {
     } catch (e) {
       setError(failure(e));
     }
-  };
+  }
   return (
     <div className="proof-live">
-      <div className="btn-row" style={{ marginTop: 0 }}>
-        <button type="button" className="btn" onClick={() => void show()} data-testid="show-derivation">
-          Show derivation
-        </button>
-      </div>
       {error && <Problem f={error} />}
       {rows && (
         <div className="terminal" data-testid="derivation">
@@ -106,12 +124,16 @@ function DerivationBody({ s }: { s: Satchel }) {
     </div>
   );
 }
-export const DerivationPanel = () => <VaultGate>{(s) => <DerivationBody s={s} />}</VaultGate>;
+export const DerivationPanel = () => <Live>{(s) => <DerivationBody s={s} />}</Live>;
 
 function WrongNamespaceBody({ s }: { s: Satchel }) {
   const [res, setRes] = useState<{ ok: string; fail: Failure; epoch: number; fp: string } | undefined>();
   const [error, setError] = useState<Failure | undefined>();
-  const run = async () => {
+  useEffect(() => {
+    void run();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [s]);
+  async function run() {
     setError(undefined);
     try {
       const a = ns(MEMORY_NS);
@@ -128,14 +150,9 @@ function WrongNamespaceBody({ s }: { s: Satchel }) {
     } catch (e) {
       setError(failure(e));
     }
-  };
+  }
   return (
     <div className="proof-live">
-      <div className="btn-row" style={{ marginTop: 0 }}>
-        <button type="button" className="btn" onClick={() => void run()} data-testid="wrong-ns">
-          Try the wrong namespace
-        </button>
-      </div>
       {error && <Problem f={error} />}
       {res && (
         <>
@@ -155,13 +172,16 @@ function WrongNamespaceBody({ s }: { s: Satchel }) {
     </div>
   );
 }
-export const WrongNamespacePanel = () => <VaultGate>{(s) => <WrongNamespaceBody s={s} />}</VaultGate>;
+export const WrongNamespacePanel = () => <Live>{(s) => <WrongNamespaceBody s={s} />}</Live>;
 
 const PLANT = "proof.plain-test-value";
 
-export function ScanPanel() {
+function ScanBody() {
   const [rows, setRows] = useState<ScanRow[] | undefined>();
   const [error, setError] = useState<string | undefined>();
+  useEffect(() => {
+    void scan();
+  }, []);
   const scan = async () => {
     setError(undefined);
     try {
@@ -174,8 +194,8 @@ export function ScanPanel() {
   return (
     <div className="proof-live">
       <div className="btn-row" style={{ marginTop: 0 }}>
-        <button type="button" className="btn" onClick={() => void scan()} data-testid="scan">
-          Scan this browser
+        <button type="button" className="btn btn-secondary" onClick={() => void scan()} data-testid="scan">
+          Scan again
         </button>
         <button
           type="button"
@@ -243,6 +263,8 @@ export function ScanPanel() {
   );
 }
 
+export const ScanPanel = () => <Live>{() => <ScanBody />}</Live>;
+
 function CrossDeviceBody({ s }: { s: Satchel }) {
   const [here, setHere] = useState<string | undefined>();
   const [first, setFirst] = useState<{ path: string; fp: string } | undefined>();
@@ -260,7 +282,7 @@ function CrossDeviceBody({ s }: { s: Satchel }) {
     <div className="proof-live">
       {here && (
         <>
-          <p className="small muted">This device opened {MEMORY_NS} with fingerprint <code data-testid="local-fp">{here}</code>. Open this link on another device that holds the same passkey, tap Open my vault, and the two fingerprints appear side by side.</p>
+          <p className="small muted">This device opened {MEMORY_NS} with fingerprint <code data-testid="local-fp">{here}</code>. Open this link on another device that holds the same passkey, open the vault there, and the two fingerprints appear side by side.</p>
           <div className="codeblock">
             <div className="codeblock-head">
               <span>device link</span>
@@ -293,4 +315,4 @@ function CrossDeviceBody({ s }: { s: Satchel }) {
     </div>
   );
 }
-export const CrossDevicePanel = () => <VaultGate>{(s) => <CrossDeviceBody s={s} />}</VaultGate>;
+export const CrossDevicePanel = () => <Live>{(s) => <CrossDeviceBody s={s} />}</Live>;
