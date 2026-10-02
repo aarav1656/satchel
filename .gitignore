@@ -1,0 +1,13 @@
+node_modules
+.env
+.env.*
+!.env.example
+demo/.wallets.json
+.progress/LEDGER.md
+contracts/out/
+contracts/cache/
+contracts/lib/
+apps/*/out/
+apps/*/.next/
+packages/*/dist/
+.vercel
