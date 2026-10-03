@@ -1,4 +1,5 @@
 import { execFileSync, spawn, type ChildProcess } from "node:child_process";
+import { createServer } from "node:net";
 import { readFileSync } from "node:fs";
 import { type Chain, createPublicClient, createWalletClient, http, type Address, type Hex } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
@@ -15,7 +16,19 @@ export function compileRegistry(): Hex {
   return art.bytecode.object as Hex;
 }
 
-export async function startAnvil(port: number, extra: string[] = []): Promise<{ rpcUrl: string; stop(): void; proc: ChildProcess }> {
+/** An unused port from the OS. A fixed port can answer from someone else's node, and the tests would then run against it. */
+const freePort = () =>
+  new Promise<number>((resolve, reject) => {
+    const srv = createServer();
+    srv.once("error", reject);
+    srv.listen(0, "127.0.0.1", () => {
+      const { port } = srv.address() as { port: number };
+      srv.close(() => resolve(port));
+    });
+  });
+
+export async function startAnvil(extra: string[] = []): Promise<{ rpcUrl: string; stop(): void; proc: ChildProcess }> {
+  const port = await freePort();
   const proc = spawn("anvil", ["--port", String(port), "--silent", "--hardfork", "osaka", ...extra], { stdio: "ignore" });
   const rpcUrl = `http://127.0.0.1:${port}`;
   const pub = createPublicClient({ chain: foundry, transport: http(rpcUrl) });

@@ -23,7 +23,7 @@ async function owner(seed: string) {
 
 beforeAll(async () => {
   bytecode = compileRegistry();
-  const a = await startAnvil(8546);
+  const a = await startAnvil();
   stop = a.stop;
   rpcUrl = a.rpcUrl;
   registry = { address: await deployRegistry(a.rpcUrl, bytecode), rpcUrl: a.rpcUrl, chain: foundry };
@@ -179,7 +179,7 @@ describe("property (5): a grant reader opens epoch e and throws on epoch e+1 aft
 
 describe("confirmation failures", () => {
   test("a tx that is accepted and then reverts in its block throws, with the revert named", async () => {
-    const a = await startAnvil(8547, ["--block-time", "2"]);
+    const a = await startAnvil(["--block-time", "2"]);
     try {
       const reg: Registry = { address: await deployRegistry(a.rpcUrl, bytecode), rpcUrl: a.rpcUrl, chain: foundry };
       const s = await fromPrfOutput(prfOf("slow-block"), { rpId: "x", registry: reg });
@@ -200,7 +200,7 @@ describe("confirmation failures", () => {
   }, 60_000);
 
   test("a tx that is never mined is reported unconfirmed after the 30 second window", async () => {
-    const a = await startAnvil(8548);
+    const a = await startAnvil();
     try {
       const reg: Registry = { address: await deployRegistry(a.rpcUrl, bytecode), rpcUrl: a.rpcUrl, chain: foundry };
       const s = await fromPrfOutput(prfOf("never-mined"), { rpId: "x", registry: reg });

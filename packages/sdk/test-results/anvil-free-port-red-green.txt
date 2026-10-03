@@ -1,0 +1,7 @@
+Root cause: test/anvil.ts startAnvil(port) treated any answer on the fixed port as its own anvil. 2026-10-03 another process held 8547
+("bun run test-wallet.ts 8547", a foreign JSON-RPC node, pid 90748), so the block-time test deployed to it and eth_estimateGas failed.
+red (old code, foreign listener on 8547): bun test test/registry.test.ts -t "accepted and then reverts"
+  (fail) confirmation failures > a tx that is accepted and then reverts in its block throws, with the revert named [1150.40ms]
+   0 pass / 1 fail   RpcRequestError: RPC Request failed, "Missing or invalid parameters" from http://127.0.0.1:8547
+green (startAnvil asks the OS for a free port; the foreign listener on 8547 still running): bun test test/registry.test.ts
+   9 pass / 0 fail, 138 expect() calls [44.70s]

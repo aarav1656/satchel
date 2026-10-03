@@ -39,7 +39,7 @@ async function owner(seed: string, balanceEth = 100) {
 
 beforeAll(async () => {
   bytecode = compileRegistry();
-  const a = await startAnvil(8549);
+  const a = await startAnvil();
   stop = a.stop;
   rpcUrl = a.rpcUrl;
   registry = { address: await deployRegistry(a.rpcUrl, bytecode), rpcUrl: a.rpcUrl, chain: foundry };
