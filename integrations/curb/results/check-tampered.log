@@ -1,2 +1,20 @@
+PASS  patched createAccount: 1 prompt
 FAIL  patched signIn: 1 prompt
+PASS  unpatched signIn: 2 prompts
+PASS  unpatched createAccount: 2 prompts
+PASS  patched signIn == created addresses (both roles)
+PASS  main's signIn on the patch's passkey returns the same two addresses
+PASS  patch's signIn on main's passkey returns main's two addresses
+PASS  deterministic across a fresh page load
+PASS  a different passkey yields different owner and trading keys
+PASS  owner and trading differ within one passkey
+PASS  withOwnerKey (patched impl) on the patched record: 1 prompt, matches record
+PASS  openTradingSession (patched impl) on the patched record: 1 prompt, matches record
+PASS  withOwnerKey (legacy impl) on the patched record: 1 prompt, matches record
+PASS  openTradingSession (legacy impl) on the patched record: 1 prompt, matches record
+PASS  patched withOwnerKey and openTradingSession accept a record made by main
+PASS  control: mutant (second output discarded) needs 2 prompts for create and signIn
+PASS  control: mutant still returns the same addresses, so the fallback never changes a key
+PASS  no RETRY or ERROR line in any run
+PASS  every run produced results (non-empty)
 18/19 claims hold

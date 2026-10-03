@@ -1,3 +1,4 @@
+npm:1: command not found: _load_nvm
 npm warn Unknown user config "allow-git". This will stop working in the next major version of npm.
 npm warn Unknown user config "min-release-age". This will stop working in the next major version of npm.
 

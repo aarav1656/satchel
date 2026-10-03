@@ -1,55 +1,55 @@
-curb keys.ts harness, 2026-10-02T15:39:53Z, origin http://localhost:5197, virtual authenticator ctap2/internal, resident key, user verification, PRF
+curb keys.ts harness, 2026-10-03T08:48:13Z, origin http://localhost:5197, virtual authenticator ctap2/internal, resident key, user verification, PRF
 patched module: /tmp/curb/web/src/lib/passkey/keys.ts git blob f11f2077999aae977b81ad08c98271ff342397d0 committed on branch satchel-keys
 unpatched module: main:web/src/lib/passkey/keys.ts git blob 3d4dd49485b50491957d699681eea3076ea1ca3a
 
 === RUN 1 (passkey A, patched module) ===
 READY origin=http://localhost:5197 variant=patched load=1
 > click "create" ok=true
-RESULT {"variant":"patched","load":"1","action":"create","impl":"patched","prompts":1,"create":1,"get":0,"ms":255,"owner":"0xdc47024659CA5Bf3b5317072e81f0711E491a0da","trading":"0x040Bb126f82E77AD0A70A9d1A4dDB1765a80A7B5"}
+RESULT {"variant":"patched","load":"1","action":"create","impl":"patched","prompts":1,"create":1,"get":0,"ms":416,"owner":"0x7C61dBc70ad5be00d255e7231A589E31A8486dcA","trading":"0xCCA2D348ea0f8129014d8Af3Dbd27887E34f5E77"}
 > click "signin" ok=true
-RESULT {"variant":"patched","load":"1","action":"signin","impl":"patched","prompts":1,"create":0,"get":1,"ms":178,"owner":"0xdc47024659CA5Bf3b5317072e81f0711E491a0da","trading":"0x040Bb126f82E77AD0A70A9d1A4dDB1765a80A7B5"}
+RESULT {"variant":"patched","load":"1","action":"signin","impl":"patched","prompts":1,"create":0,"get":1,"ms":130,"owner":"0x7C61dBc70ad5be00d255e7231A589E31A8486dcA","trading":"0xCCA2D348ea0f8129014d8Af3Dbd27887E34f5E77"}
 > click "xsignin" ok=true
-RESULT {"variant":"patched","load":"1","action":"signin","impl":"legacy","prompts":2,"create":0,"get":2,"ms":200,"owner":"0xdc47024659CA5Bf3b5317072e81f0711E491a0da","trading":"0x040Bb126f82E77AD0A70A9d1A4dDB1765a80A7B5"}
+RESULT {"variant":"patched","load":"1","action":"signin","impl":"legacy","prompts":2,"create":0,"get":2,"ms":96,"owner":"0x7C61dBc70ad5be00d255e7231A589E31A8486dcA","trading":"0xCCA2D348ea0f8129014d8Af3Dbd27887E34f5E77"}
 > click "owner" ok=true
-RESULT {"variant":"patched","load":"1","action":"owner","impl":"patched","prompts":1,"create":0,"get":1,"ms":76,"owner":"0xdc47024659CA5Bf3b5317072e81f0711E491a0da","matchesRecord":true}
+RESULT {"variant":"patched","load":"1","action":"owner","impl":"patched","prompts":1,"create":0,"get":1,"ms":45,"owner":"0x7C61dBc70ad5be00d255e7231A589E31A8486dcA","matchesRecord":true}
 > click "trading" ok=true
-RESULT {"variant":"patched","load":"1","action":"trading","impl":"patched","prompts":1,"create":0,"get":1,"ms":38,"trading":"0x040Bb126f82E77AD0A70A9d1A4dDB1765a80A7B5","matchesRecord":true}
+RESULT {"variant":"patched","load":"1","action":"trading","impl":"patched","prompts":1,"create":0,"get":1,"ms":55,"trading":"0xCCA2D348ea0f8129014d8Af3Dbd27887E34f5E77","matchesRecord":true}
 > click "xowner" ok=true
-RESULT {"variant":"patched","load":"1","action":"owner","impl":"legacy","prompts":1,"create":0,"get":1,"ms":52,"owner":"0xdc47024659CA5Bf3b5317072e81f0711E491a0da","matchesRecord":true}
+RESULT {"variant":"patched","load":"1","action":"owner","impl":"legacy","prompts":1,"create":0,"get":1,"ms":77,"owner":"0x7C61dBc70ad5be00d255e7231A589E31A8486dcA","matchesRecord":true}
 > click "xtrading" ok=true
-RESULT {"variant":"patched","load":"1","action":"trading","impl":"legacy","prompts":1,"create":0,"get":1,"ms":64,"trading":"0x040Bb126f82E77AD0A70A9d1A4dDB1765a80A7B5","matchesRecord":true}
+RESULT {"variant":"patched","load":"1","action":"trading","impl":"legacy","prompts":1,"create":0,"get":1,"ms":57,"trading":"0xCCA2D348ea0f8129014d8Af3Dbd27887E34f5E77","matchesRecord":true}
 --- fresh page load: http://localhost:5197/?b=patched&load=2
 READY origin=http://localhost:5197 variant=patched load=2
 > click "signin" ok=true
-RESULT {"variant":"patched","load":"2","action":"signin","impl":"patched","prompts":1,"create":0,"get":1,"ms":125,"owner":"0xdc47024659CA5Bf3b5317072e81f0711E491a0da","trading":"0x040Bb126f82E77AD0A70A9d1A4dDB1765a80A7B5"}
+RESULT {"variant":"patched","load":"2","action":"signin","impl":"patched","prompts":1,"create":0,"get":1,"ms":126,"owner":"0x7C61dBc70ad5be00d255e7231A589E31A8486dcA","trading":"0xCCA2D348ea0f8129014d8Af3Dbd27887E34f5E77"}
 
 === RUN 2 (passkey B, patched module, a different passkey) ===
 READY origin=http://localhost:5197 variant=patched load=1
 > click "create" ok=true
-RESULT {"variant":"patched","load":"1","action":"create","impl":"patched","prompts":1,"create":1,"get":0,"ms":238,"owner":"0x9Ab6bF922862B0D3A5Df2C2F70D44aDF44E5ED5B","trading":"0x8b8fa1b6d4E32b2305e5D29Cb05ce864FB3aB697"}
+RESULT {"variant":"patched","load":"1","action":"create","impl":"patched","prompts":1,"create":1,"get":0,"ms":337,"owner":"0xE12765497B0c3ebCBc2F33d2773422dd387369ab","trading":"0x4C4f13bf5cA34e6b8AbF5a2D85DE6F23FA160b90"}
 > click "signin" ok=true
-RESULT {"variant":"patched","load":"1","action":"signin","impl":"patched","prompts":1,"create":0,"get":1,"ms":116,"owner":"0x9Ab6bF922862B0D3A5Df2C2F70D44aDF44E5ED5B","trading":"0x8b8fa1b6d4E32b2305e5D29Cb05ce864FB3aB697"}
+RESULT {"variant":"patched","load":"1","action":"signin","impl":"patched","prompts":1,"create":0,"get":1,"ms":135,"owner":"0xE12765497B0c3ebCBc2F33d2773422dd387369ab","trading":"0x4C4f13bf5cA34e6b8AbF5a2D85DE6F23FA160b90"}
 > click "owner" ok=true
-RESULT {"variant":"patched","load":"1","action":"owner","impl":"patched","prompts":1,"create":0,"get":1,"ms":41,"owner":"0x9Ab6bF922862B0D3A5Df2C2F70D44aDF44E5ED5B","matchesRecord":true}
+RESULT {"variant":"patched","load":"1","action":"owner","impl":"patched","prompts":1,"create":0,"get":1,"ms":42,"owner":"0xE12765497B0c3ebCBc2F33d2773422dd387369ab","matchesRecord":true}
 
 === RUN 3 (control, passkey C, mutant: second PRF output discarded) ===
 READY origin=http://localhost:5197 variant=mutant load=1
 > click "create" ok=true
-RESULT {"variant":"mutant","load":"1","action":"create","impl":"mutant","prompts":2,"create":1,"get":1,"ms":228,"owner":"0x33885d454C368Ce6Bf4d9745149d3a930c1476a6","trading":"0x8F1aBafde3912032cd8293CE144156A588255D3E"}
+RESULT {"variant":"mutant","load":"1","action":"create","impl":"mutant","prompts":2,"create":1,"get":1,"ms":141,"owner":"0x55C19f492Be298B92D62800706337aF1D06736bd","trading":"0xc6715e111F421b92766ec3e9b5DA7E324A997976"}
 > click "signin" ok=true
-RESULT {"variant":"mutant","load":"1","action":"signin","impl":"mutant","prompts":2,"create":0,"get":2,"ms":58,"owner":"0x33885d454C368Ce6Bf4d9745149d3a930c1476a6","trading":"0x8F1aBafde3912032cd8293CE144156A588255D3E"}
+RESULT {"variant":"mutant","load":"1","action":"signin","impl":"mutant","prompts":2,"create":0,"get":2,"ms":124,"owner":"0x55C19f492Be298B92D62800706337aF1D06736bd","trading":"0xc6715e111F421b92766ec3e9b5DA7E324A997976"}
 
 === RUN 4 (baseline, passkey D, unpatched main creates and signs in, then the patch reads that passkey) ===
 READY origin=http://localhost:5197 variant=legacy load=1
 > click "create" ok=true
-RESULT {"variant":"legacy","load":"1","action":"create","impl":"legacy","prompts":2,"create":1,"get":1,"ms":369,"owner":"0x3c00fF3038a3536c9D3b26ea154495F00dA1a4d6","trading":"0xbfE6F646D4B01bbc55c68DB6c3E86bEcf44A6B52"}
+RESULT {"variant":"legacy","load":"1","action":"create","impl":"legacy","prompts":2,"create":1,"get":1,"ms":296,"owner":"0x14Af7a5Ef1FD51B1d006E80aC9F059c4405caf0A","trading":"0xa9a9332b0d1BDE9b68Fd8b7dD651Bc512b819552"}
 > click "signin" ok=true
-RESULT {"variant":"legacy","load":"1","action":"signin","impl":"legacy","prompts":2,"create":0,"get":2,"ms":245,"owner":"0x3c00fF3038a3536c9D3b26ea154495F00dA1a4d6","trading":"0xbfE6F646D4B01bbc55c68DB6c3E86bEcf44A6B52"}
+RESULT {"variant":"legacy","load":"1","action":"signin","impl":"legacy","prompts":2,"create":0,"get":2,"ms":143,"owner":"0x14Af7a5Ef1FD51B1d006E80aC9F059c4405caf0A","trading":"0xa9a9332b0d1BDE9b68Fd8b7dD651Bc512b819552"}
 > click "xsignin" ok=true
-RESULT {"variant":"legacy","load":"1","action":"signin","impl":"patched","prompts":1,"create":0,"get":1,"ms":73,"owner":"0x3c00fF3038a3536c9D3b26ea154495F00dA1a4d6","trading":"0xbfE6F646D4B01bbc55c68DB6c3E86bEcf44A6B52"}
+RESULT {"variant":"legacy","load":"1","action":"signin","impl":"patched","prompts":1,"create":0,"get":1,"ms":103,"owner":"0x14Af7a5Ef1FD51B1d006E80aC9F059c4405caf0A","trading":"0xa9a9332b0d1BDE9b68Fd8b7dD651Bc512b819552"}
 > click "xowner" ok=true
-RESULT {"variant":"legacy","load":"1","action":"owner","impl":"patched","prompts":1,"create":0,"get":1,"ms":76,"owner":"0x3c00fF3038a3536c9D3b26ea154495F00dA1a4d6","matchesRecord":true}
+RESULT {"variant":"legacy","load":"1","action":"owner","impl":"patched","prompts":1,"create":0,"get":1,"ms":147,"owner":"0x14Af7a5Ef1FD51B1d006E80aC9F059c4405caf0A","matchesRecord":true}
 > click "xtrading" ok=true
-RESULT {"variant":"legacy","load":"1","action":"trading","impl":"patched","prompts":1,"create":0,"get":1,"ms":62,"trading":"0xbfE6F646D4B01bbc55c68DB6c3E86bEcf44A6B52","matchesRecord":true}
+RESULT {"variant":"legacy","load":"1","action":"trading","impl":"patched","prompts":1,"create":0,"get":1,"ms":95,"trading":"0xa9a9332b0d1BDE9b68Fd8b7dD651Bc512b819552","matchesRecord":true}
 > click "trading" ok=true
-RESULT {"variant":"legacy","load":"1","action":"trading","impl":"legacy","prompts":1,"create":0,"get":1,"ms":135,"trading":"0xbfE6F646D4B01bbc55c68DB6c3E86bEcf44A6B52","matchesRecord":true}
+RESULT {"variant":"legacy","load":"1","action":"trading","impl":"legacy","prompts":1,"create":0,"get":1,"ms":104,"trading":"0xa9a9332b0d1BDE9b68Fd8b7dD651Bc512b819552","matchesRecord":true}

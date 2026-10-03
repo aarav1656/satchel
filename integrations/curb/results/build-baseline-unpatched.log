@@ -1,3 +1,4 @@
+npm:1: command not found: _load_nvm
 npm warn Unknown user config "allow-git". This will stop working in the next major version of npm.
 npm warn Unknown user config "min-release-age". This will stop working in the next major version of npm.
 
@@ -5,20 +6,27 @@ npm warn Unknown user config "min-release-age". This will stop working in the ne
 > next build
 
 ▲ Next.js 16.3.6 (Turbopack)
-✓ Running next.config.ts took 2.9s
+✓ Running next.config.ts took 168ms
 - Experiments (use with caution):
   ✓ inlineCss
 
   Creating an optimized production build ...
-✓ Compiled successfully in 7.8s
+✓ Compiled successfully in 6.4s
   Running TypeScript ...
-  Finished TypeScript in 5.9s ...
+  Finished TypeScript in 29.0s ...
   Collecting page data using 7 workers ...
   Generating static pages using 7 workers (0/14) ...
   Generating static pages using 7 workers (3/14) 
   Generating static pages using 7 workers (6/14) 
+Failed to build /more/page: /more (attempt 1 of 3) because it took more than 60 seconds. Retrying again shortly.
+Failed to build /opengraph-image.png/route: /opengraph-image.png (attempt 1 of 3) because it took more than 60 seconds. Retrying again shortly.
+Failed to build /orders/page: /orders (attempt 1 of 3) because it took more than 60 seconds. Retrying again shortly.
+Failed to build /page: / (attempt 1 of 3) because it took more than 60 seconds. Retrying again shortly.
+Failed to build /start/page: /start (attempt 1 of 3) because it took more than 60 seconds. Retrying again shortly.
+Failed to build /twitter-image.png/route: /twitter-image.png (attempt 1 of 3) because it took more than 60 seconds. Retrying again shortly.
+  Generating static pages using 7 workers (9/14) 
   Generating static pages using 7 workers (10/14) 
-✓ Generating static pages using 7 workers (14/14) in 393ms
+✓ Generating static pages using 7 workers (14/14) in 2.9min
   Finalizing page optimization ...
 
 Route (app)
