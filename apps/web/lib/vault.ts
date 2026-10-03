@@ -47,6 +47,21 @@ export async function openVault(): Promise<Satchel> {
   return session;
 }
 
+/** Wraps this vault's root to a second passkey, one prompt (a new passkey is created). Either passkey then opens the vault on this device. */
+export async function addSecondPasskey(): Promise<void> {
+  const s = session ?? (await openVault());
+  await s.addPasskey({ appName: "Satchel vault for Pip" });
+}
+
+/** Opens the vault with a passkey added by addSecondPasskey(); NO_SECOND_PASSKEY if the one the person picks was never added. */
+export async function openVaultWithSecondPasskey(): Promise<Satchel> {
+  session?.close();
+  session = await open({ rpId: rpId(), registry: REGISTRY, recover: true });
+  owner.set(session.registryOwner);
+  emit();
+  return session;
+}
+
 export function closeVault(): void {
   session?.close();
   session = undefined;

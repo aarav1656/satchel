@@ -8,6 +8,7 @@ for (const raw of fs.readFileSync(process.argv[2], "utf8").split("\n")) {
   else if (s.tclick) console.log(`${tag}> REAL INPUT click "${s.tclick}" ok=${s.ok} at=${JSON.stringify(s.at)}`);
   else if (s.tclick_sel) console.log(`${tag}> REAL INPUT click ${s.tclick_sel} ok=${s.ok} at=${JSON.stringify(s.at)}`);
   else if (s.type_into) console.log(`${tag}> REAL INPUT type "${s.type_into}" ok=${s.ok}`);
+  else if (s.vauth === "drop_first") console.log(`> first credential deleted from the authenticator (${s.before} held, credential ${s.removed}... removed): only the second passkey remains`);
   else if (s.vauth) console.log(`> fresh virtual authenticator ${s.authenticatorId} (every credential of the previous one is gone)`);
   else if (s.click) console.log(`${tag}> click "${s.click}" ok=${s.ok}`);
   else if (s.click_sel) console.log(`${tag}> click ${s.click_sel} ok=${s.ok}`);

@@ -102,6 +102,13 @@ try {
       vauthId = await addVauth();
       log({ vauth: "reset", authenticatorId: vauthId });
     }
+    if (s.vauth === "drop_first") {
+      // The first credential is deleted from the authenticator, as a lost or removed passkey: only the credential added since can open.
+      const { result } = await send("WebAuthn.getCredentials", { authenticatorId: vauthId });
+      if (!result || result.credentials.length < 2) { fail({ vauth: "drop_first", credentials: result?.credentials.length ?? 0 }); break; }
+      await send("WebAuthn.removeCredential", { authenticatorId: vauthId, credentialId: result.credentials[0].credentialId });
+      log({ vauth: "drop_first", before: result.credentials.length, removed: result.credentials[0].credentialId.slice(0, 12) });
+    }
     if (s.tclick) {
       // Trusted click: real Input.dispatchMouseEvent at the button's centre, so the page gets genuine user activation.
       await send("Page.bringToFront");

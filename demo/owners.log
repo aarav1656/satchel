@@ -14,3 +14,4 @@
 2026-10-03T07:31:39.713Z web-click-through owner=0xe2Ee352Ce6DD3e164497Bd9FAf2afD58167eB0a0 funded=0.1 tx=0xe79a3d5607c6d5ce969453f736fec1036849d68b1cf7cb8ed1000a9ab0f42af9 block=67770339 per-run virtual passkey, key not recoverable, never fund by hand
 2026-10-03T07:44:39.105Z devflow owner=0xDA12565907d115507E2459DB16473336e1b3A07C funded=0.1 tx=0x7e4ab6df31ab57c1925220b4050887cf03f314a1e48f20c8081c476ee830db74 block=67772921 key kept in devflow/.state/.prf, recoverable
 2026-10-03T08:01:27.261Z devflow owner=0xDA12565907d115507E2459DB16473336e1b3A07C funded=0.1 tx=0xd66e408bc79455aced265645a3ca70ec2f79e750ef09c98fbcceec40376e9859 block=67776261 key kept in devflow/.state/.prf, recoverable
+2026-10-03T09:46:09.670Z web-click-through owner=0x3F7e82E2e8c41EC06126289e6057A82FD197E0b2 funded=0.1 tx=0x753cbc0fe007f82527b0f184234bededc22bbbb132414d02bcd754e3d3850219 block=67797068 per-run virtual passkey, key not recoverable, never fund by hand

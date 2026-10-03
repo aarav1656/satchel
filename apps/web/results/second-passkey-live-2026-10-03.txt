@@ -1,0 +1,31 @@
+satchel second passkey, 2026-10-03T10:13:14Z, origin https://satchel-keys.vercel.app, virtual authenticator ctap2/internal with PRF, driver exit status 0 (0 = every assert and poll held)
+
+--- navigate https://satchel-keys.vercel.app/icon.svg
+cleared https://satchel-keys.vercel.app
+--- navigate https://satchel-keys.vercel.app/pip/
+wait ok: Pip first run offers Create
+> REAL INPUT click "Create my vault" ok=true at=[203,417]
+wait ok: vault created, owner address shown
+0x362E924ce67d0957dc33AE76422C85cD5C9FCa2c
+> REAL INPUT click "Save to memory" ok=true at=[204,436]
+wait ok: one memory sealed, fingerprint shown
+765c24fe
+Prefers metric units, writes in short sentences
+--- navigate https://satchel-keys.vercel.app/pip/
+wait ok: vault closed after a fresh load
+> REAL INPUT click "Open with my second passkey" ok=true at=[403,396]
+wait ok: CONTROL: second-passkey open before one is added is NO_SECOND_PASSKEY => Add a second passkey so losing this device does not lose your memory. |  | NO_SECOND_PASSKEY: The chosen passkey was never added to this vault with addPasskey(). Lost passkey, lost data. fix: call addPasskey() while the original passkey is available.
+CONTROL Add a second passkey so losing this device does not lose your memory. | NO_SECOND_PASSKEY: The chosen passkey was never added to this vault with addPasskey(). Lost passkey, lost data. fix: call addPasskey() while the original passkey is available.
+> REAL INPUT click "Open my vault" ok=true at=[198,396]
+wait ok: first passkey opens the vault, same fingerprint
+> REAL INPUT click "Add a second passkey" ok=true at=[226,450]
+wait ok: second passkey added => added | Either passkey now opens this vault on this device.
+> first credential deleted from the authenticator (2 held, credential y/vwPcXmy+qD... removed): only the second passkey remains
+--- navigate https://satchel-keys.vercel.app/pip/
+wait ok: vault closed after a fresh load, first passkey deleted
+> REAL INPUT click "Open with my second passkey" ok=true at=[403,396]
+wait ok: second passkey opened the vault
+ASSERT same fingerprint as the first passkey ok
+ASSERT same registry owner address as the first passkey ok
+ASSERT the memory sealed under the first passkey reads back ok
+SECOND PASSKEY opened: fp=765c24fe owner=0x362E924ce67d0957dc33AE76422C85cD5C9FCa2c memory="Prefers metric units, writes in short sentences"

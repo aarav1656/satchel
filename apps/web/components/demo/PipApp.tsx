@@ -10,7 +10,7 @@ import { MEMORY_NS, SUGGESTED_MEMORY } from "@/lib/config";
 import { credential, grants, memories, owner, type StoredCredential, type StoredGrant, type StoredMemory } from "@/lib/demo-store";
 import { failure, type Failure } from "@/lib/errors-ui";
 import { usePromptCount } from "@/lib/prompts";
-import { createVault, describeSealed, openVault, saveMemory, useSession } from "@/lib/vault";
+import { addSecondPasskey, createVault, describeSealed, openVault, openVaultWithSecondPasskey, saveMemory, useSession } from "@/lib/vault";
 import { AppBar } from "./AppBar";
 import { OwnerFunding } from "./OwnerFunding";
 
@@ -19,7 +19,7 @@ export const PIP_LINKS = [
   { href: "/pip/share/", label: "Sharing" },
 ];
 
-type Busy = "create" | "open" | "save" | undefined;
+type Busy = "create" | "open" | "save" | "second" | undefined;
 
 export function PipApp() {
   const session = useSession();
@@ -36,6 +36,7 @@ export function PipApp() {
   const [epoch, setEpoch] = useState(1);
   const [last, setLast] = useState<{ epoch: number; size: number } | undefined>();
   const [chainErr, setChainErr] = useState<string | undefined>();
+  const [secondAdded, setSecondAdded] = useState(false);
 
   const reload = useCallback(() => {
     setCred(credential.get());
@@ -127,6 +128,9 @@ export function PipApp() {
                 <button type="button" className="btn" disabled={busy !== undefined} onClick={() => void run("open", async () => void (await openVault()))}>
                   {busy === "open" ? "Waiting for your passkey." : "Open my vault"}
                 </button>
+                <button type="button" className="btn btn-secondary" disabled={busy !== undefined} onClick={() => void run("open", async () => void (await openVaultWithSecondPasskey()))}>
+                  Open with my second passkey
+                </button>
               </div>
             </div>
           )}
@@ -177,9 +181,25 @@ export function PipApp() {
           )}
 
           {hasVault && (
-            <p className="small muted">
-              Second passkey: if you lose this passkey and have no other, your memory cannot be opened by anyone. Add one from a device that has this vault with <code>addPasskey()</code>.
-            </p>
+            <div className="card">
+              <h3>Second passkey</h3>
+              <p className="muted small">
+                If you lose this passkey and have no other, your memory cannot be opened by anyone. A second passkey, added with <code>addPasskey()</code> while this one is open, opens the same vault on this device.
+              </p>
+              {session && (
+                <div className="btn-row">
+                  <button type="button" className="btn btn-secondary" disabled={busy !== undefined} onClick={() => void run("second", async () => { await addSecondPasskey(); setSecondAdded(true); })}>
+                    {busy === "second" ? "Waiting for your passkey." : "Add a second passkey"}
+                  </button>
+                </div>
+              )}
+              {secondAdded && (
+                <p className="status-line" data-testid="second-status">
+                  <span className="badge-ok">added</span>
+                  <span>Either passkey now opens this vault on this device.</span>
+                </p>
+              )}
+            </div>
           )}
 
           {(session || ownerAddr) && <OwnerFunding owner={session?.registryOwner ?? ownerAddr} />}
