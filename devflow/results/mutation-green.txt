@@ -1,0 +1,2 @@
+restored tarball, full run via devflow/run.sh:
+DEVFLOW PASS 6 steps  registry=0xd6c895f5c9254dc6eaafc335fff0930fd7012e6d

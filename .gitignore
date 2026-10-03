@@ -11,3 +11,5 @@ apps/*/out/
 apps/*/.next/
 packages/*/dist/
 .vercel
+devflow/.state/
+devflow/node_modules/

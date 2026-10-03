@@ -1,0 +1,40 @@
+satchel developer flow, 2026-10-03T08:00:48Z, node v24.9.0, tarball satchel-sdk-0.1.0.tgz sha256 67b93613d4e6e800
+--- npm pack
+npm notice 4.8kB dist/session.d.ts
+npm notice 14.4kB dist/session.js
+npm notice 541B dist/store.d.ts
+npm notice 1.1kB dist/store.js
+npm notice 1.1kB package.json
+npm notice Tarball Details
+npm notice name: satchel-sdk
+npm notice version: 0.1.0
+npm notice filename: satchel-sdk-0.1.0.tgz
+npm notice package size: 17.2 kB
+npm notice unpacked size: 60.2 kB
+npm notice shasum: b347a966d1550a5908e1794f1ab86acc59d86867
+npm notice integrity: sha512-hxq3zboHJ14bu[...]N9NDBNZd3YoZw==
+npm notice total files: 19
+npm notice
+satchel-sdk-0.1.0.tgz
+--- npm install (tarball, mera 0.2.0, typescript)
+npm warn Unknown user config "min-release-age". This will stop working in the next major version of npm.
+
+added 27 packages in 28s
+node_modules/satchel-sdk/dist/index.js
+node_modules/satchel-sdk/LICENSE
+--- typecheck consumer file against the shipped .d.ts
+npm warn Unknown user config "allow-git". This will stop working in the next major version of npm.
+npm warn Unknown user config "min-release-age". This will stop working in the next major version of npm.
+tsc exit 0
+Warning: This is a nightly build of Foundry. It is recommended to use the latest stable version. To mute this warning set `FOUNDRY_DISABLE_NIGHTLY_WARNING` in your environment. 
+
+--- owner 0xDA12565907d115507E2459DB16473336e1b3A07C balance 0.009928288000000000 MON
+FUNDED owner=0xDA12565907d115507E2459DB16473336e1b3A07C amount=0.1 MON tx=0xd66e408bc79455aced265645a3ca70ec2f79e750ef09c98fbcceec40376e9859 block=67776261 owner_balance=0.109928288 deployer_balance=3.614548582
+--- flow
+PASS derive  owner=0xDA12565907d115507E2459DB16473336e1b3A07C dev/memory-1b0aad5f=a2419a04 dev/notes-1b0aad5f=28abdeeb
+PASS seal/unseal  epoch=1 bytes=97 other-namespace=NAMESPACE_MISMATCH flipped=WRONG_PASSKEY truncated=SEAL_CORRUPT foreign=NOT_SEALED other-passkey=WRONG_PASSKEY
+PASS owner-unfunded  OWNER_UNFUNDED before any transaction
+PASS grant  id=23 tx=0x66748ea0d7cf30a37e8e765ca85d051f876738fa5b5828fdb8a60e79307e2c6d active=true epoch=1
+PASS revoke  tx=0x7b238eacc84182b9a5d93cbaa0b567cd5e951a63ac8d63d15d46d6d77f75e160 epoch 1->2 grant 23 active=false notes-epoch=1 new-memory=GRANT_REVOKED
+PASS regrant  id=24 tx=0xa5cc64daaa674df025efd95c18ca97327482140a3b4839fd48a7fd96e41d03a3
+DEVFLOW PASS 6 steps  registry=0xd6c895f5c9254dc6eaafc335fff0930fd7012e6d

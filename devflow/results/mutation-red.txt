@@ -1,0 +1,3 @@
+mutation: dist/session.js unseal() with the namespace check removed
+PASS derive  owner=0xDA12565907d115507E2459DB16473336e1b3A07C dev/memory-278ac11b=ba805953 dev/notes-278ac11b=0c1de2e8
+FAIL unseal under another namespace refuses
