@@ -7,11 +7,11 @@
   {"click": "seal3"},
   {"wait": 6000, "eval": "document.getElementById('out').innerText"},
   {"click": "open3"},
-  {"wait": 4000, "eval": "document.getElementById('out').innerText"},
+  {"wait": 12000, "eval": "document.getElementById('out').innerText"},
   {"goto_file": "/tmp/trustset-harness-url-load2"},
   {"wait": 3000, "eval": "'LOAD2 ' + location.href + ' | ' + document.getElementById('out').innerText"},
   {"click": "open3"},
-  {"wait": 4000, "eval": "document.getElementById('out').innerText"},
+  {"wait": 12000, "eval": "document.getElementById('out').innerText"},
   {"click": "openold"},
   {"wait": 4000, "eval": "document.getElementById('out').innerText"}
 ]

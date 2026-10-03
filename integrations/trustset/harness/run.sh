@@ -6,7 +6,7 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 TS=/tmp/trustset
-RIG=./test-rig
+RIG=$(cd ../../../test-rig && pwd)
 RPC_PORT=8561 PORT=5191 ART=/tmp/ts-out
 OUT=../results/ceremony.log
 LOG1=/tmp/trustset-run1.log LOG2=/tmp/trustset-run2.log LOG3=/tmp/trustset-run3.log LOG4=/tmp/trustset-run4.log

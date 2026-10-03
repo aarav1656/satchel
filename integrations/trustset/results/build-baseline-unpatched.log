@@ -5,12 +5,12 @@ npm warn Unknown user config "min-release-age". This will stop working in the ne
 > next build
 
 ▲ Next.js 16.3.5 (Turbopack)
-✓ Running next.config.ts took 2.1s
+✓ Running next.config.ts took 23ms
 
   Creating an optimized production build ...
-✓ Compiled successfully in 34.1s
+✓ Compiled successfully in 2.3s
   Running TypeScript ...
-  Finished TypeScript in 11.1s ...
+  Finished TypeScript in 4.6s ...
   Collecting page data using 7 workers ...
 AGENT_STATE is not set, so the live agent panel has nothing to read
   Generating static pages using 7 workers (0/10) ...
@@ -21,13 +21,13 @@ AGENT_STATE is not set, so the live agent panel has nothing to read
 Turbopack build encountered 2 warnings:
 ./src/app/api/chain/route.ts:46:34
 Warning: Dynamic filesystem access causes tracing of the whole project
-  [90m44 |[0m ... console.error([32m"LOCAL_RPC is not set, so the local chain cannot be reached"[0m); warnedLoc...
-  [90m45 |[0m ...
-[33m[1m>[0m [90m46 |[0m ...readFile(process.env.[33mLOCAL_DEMO_CONFIG[0m || join(root(), [32m"demo"[0m, [32m"config.json"[0m), [32m"utf8"[0m));
-  [90m   |[0m    [33m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
-  [90m47 |[0m ...method: [32m"POST"[0m, headers: { [32m"content-type"[0m: [32m"application/json"[0m },
-  [90m48 |[0m ...rpc: [32m"2.0"[0m, id: [35m1[0m, method: [32m"eth_blockNumber"[0m, params: [] }), signal: [33mAbortSignal[0m.timeou..[35m.[0m
-  [90m49 |[0m ...
+  44 | ... console.error("LOCAL_RPC is not set, so the local chain cannot be reached"); warnedLoc...
+  45 | ...
+> 46 | ...readFile(process.env.LOCAL_DEMO_CONFIG || join(root(), "demo", "config.json"), "utf8"));
+     |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  47 | ...method: "POST", headers: { "content-type": "application/json" },
+  48 | ...rpc: "2.0", id: 1, method: "eth_blockNumber", params: [] }), signal: AbortSignal.timeou...
+  49 | ...
 
 Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
 This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
@@ -46,13 +46,13 @@ Import trace:
 
 ./src/lib/demo.server.ts:123:21
 Warning: Dynamic filesystem access causes tracing of the whole project
-  [90m121 |[0m [36masync[0m [36mfunction[0m rows(): [33mPromise[0m<[33mRecord[0m<string, [33mRow[0m>> {
-  [90m122 |[0m   [36mlet[0m raw: string;
-[33m[1m>[0m [90m123 |[0m   [36mtry[0m { raw = [36mawait[0m readFile([33mSTORE[0m(), [32m"utf8"[0m); }
-  [90m    |[0m                     [33m[1m^^^^^^^^^^^^^^^^^^^^^^^^^[0m
-  [90m124 |[0m   [36mcatch[0m (e) { [36mif[0m ((e [36mas[0m { code?: string }).code === [32m"ENOENT"[0m) [36mreturn[0m {}; [36mthrow[0m e; }
-  [90m125 |[0m   /* a store that exists but does not parse is a fault to report, never an
-  [90m126 |[0m      empty store: treating it [36mas[0m empty registered a [36mnew[0m agent [36mfor[0m everybody
+  121 | async function rows(): Promise<Record<string, Row>> {
+  122 |   let raw: string;
+> 123 |   try { raw = await readFile(STORE(), "utf8"); }
+      |                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+  124 |   catch (e) { if ((e as { code?: string }).code === "ENOENT") return {}; throw e; }
+  125 |   /* a store that exists but does not parse is a fault to report, never an
+  126 |      empty store: treating it as empty registered a new agent for everybody
 
 Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
 This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.

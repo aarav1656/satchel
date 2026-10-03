@@ -6,6 +6,6 @@ NAMESPACE_MISMATCH     -> This note belongs to a different agent.
 SEAL_CORRUPT           -> This note is damaged on chain and cannot be opened.
 NOT_SEALED             -> This note is damaged on chain and cannot be opened.
 SESSION_CLOSED         -> The passkey session ended. Try again.
-REGISTRY_UNREACHABLE   -> sdk says REGISTRY_UNREACHABLE check the registry address and RPC, then retry. Read epochOf() first to see whether the earlier call landed.
+REGISTRY_UNREACHABLE   -> sdk says REGISTRY_UNREACHABLE check the registry address and RPC, then retry. Call epochOf(registry, session.registryOwner, nsHashOf(ns)) first to see whether the earlier call landed.
 STORE_UNAVAILABLE      -> sdk says STORE_UNAVAILABLE pass a store in OpenOptions; this runtime has no IndexedDB.
 plain Error            -> boom

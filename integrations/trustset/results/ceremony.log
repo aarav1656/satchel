@@ -1,17 +1,17 @@
-trustset sealed.ts harness, 2026-10-02T10:48:42Z, origin http://localhost:5191, virtual authenticator ctap2/internal, resident key, user verification, PRF
-patched module: /tmp/trustset/web/src/lib/sealed.ts git blob cedae7f455379ef50525580099cd88fd0562fed4 on branch satchel-sealed-notes
+trustset sealed.ts harness, 2026-10-03T10:18:54Z, origin http://localhost:5191, virtual authenticator ctap2/internal, resident key, user verification, PRF
+patched module: /tmp/trustset/web/src/lib/sealed.ts git blob efccd38322c63f5b820603528b386dbd1a031917 on branch satchel-sealed
 unpatched module: main:web/src/lib/sealed.ts git blob d836599860f08d83be5982ebec24373f3ab1375f
-sdk tarball: d14d0d3beac3d2b3  contracts: trustset src/SealedNotes.sol + KillSwitch.sol on anvil
-SETUP rpc=http://127.0.0.1:8561 killswitch=0x9F6E53CC6aC339FC5666F7f0689473e76Aa70eA4 sealednotes=0x32190cdca63e1f00Ce50a277a93b9f10829Dfb99 agentId=1 coldKey=0x59eb0f994bfbf537d2125Fef992aDE73005f797D
+sdk tarball: fcd8907bc808d8ca  contracts: trustset src/SealedNotes.sol + KillSwitch.sol on anvil
+SETUP rpc=http://127.0.0.1:8561 killswitch=0x6ea30E5bEFb6CD11F593baF18b4332Bd5b754E86 sealednotes=0x66Ee66692c0616d2306A0c2e45309Ed2EC2B25C2 agentId=1 coldKey=0xe007Afa8B085691C2C9ee7EEE340d78082819683
 
 === RUN 1 (authenticator A): old-format note by the unpatched module, seal 3, open 3 in one session, fresh load, open 3 again, open the old note ===
 READY origin=http://localhost:5191 variant=patched notes_on_chain=0
 > click "passkey" ok=true
-PASSKEY created credential=V_TMlyQhPq8g8UWuHWfFsdrhJXhh0o1NQA6_nNNFg5M rpId=localhost (setup, not part of the notes session) prompts create=1 get=0
+PASSKEY created credential=baMt9S8rzxs8zRdZJHg0LMUc362IOXGOcf7TK10iEys rpId=localhost (setup, not part of the notes session) prompts create=1 get=0
 > click "old" ok=true
 OLDNOTE sealed by main:web/src/lib/sealed.ts, stored 312 B, first 4 bytes "{"ve", prompts_for_this_seal=1 prompts create=1 get=1
 > click "seal3" ok=true
-SEAL3 sealed 3 notes in 444 ms, stored 117 B "SAT1", 119 B "SAT1", 122 B "SAT1", prompts_since_seal3_start=1 prompts create=1 get=2
+SEAL3 sealed 3 notes in 683 ms, stored 117 B "SAT1", 119 B "SAT1", 122 B "SAT1", prompts_since_seal3_start=1 prompts create=1 get=2
 > click "open3" ok=true
 READ readNotes returned 4 notes: mera-json, satchel, satchel, satchel
 OPEN3 opened 3 satchel notes, all match=true, prompts_since_session_start=1 prompts create=1 get=2
@@ -26,32 +26,30 @@ OPENOLD old-format note opened by patched openNote, match=true, prompts_for_this
 === RUN 2 (authenticator B, new CDP session): a different passkey tries the same notes ===
 READY origin=http://localhost:5191 variant=patched notes_on_chain=4
 > click "passkey" ok=true
-RETRY page lacked focus (attempt 1), asking again
-PASSKEY created credential=PoTKIp4l7PZX0OZ1pUab8wW-NNR9bLpy4xdjiLIKj4o rpId=localhost (setup, not part of the notes session) prompts create=2 get=0
+PASSKEY created credential=ycZOlyxLek4Tpj2JgUqKhY52sYQ1V-1J9OUm6f3GzfU rpId=localhost (setup, not part of the notes session) prompts create=1 get=0
 > click "negsat" ok=true
-NEGSAT code=WRONG_PASSKEY explainSeal="That passkey is not the one this note was sealed with." prompts_for_this_try=1 prompts create=2 get=1
+NEGSAT code=WRONG_PASSKEY explainSeal="That passkey is not the one this note was sealed with." prompts_for_this_try=1 prompts create=1 get=1
 > click "negsat" ok=true
-NEGSAT code=WRONG_PASSKEY explainSeal="That passkey is not the one this note was sealed with." prompts_for_this_try=1 prompts create=2 get=2
+NEGSAT code=WRONG_PASSKEY explainSeal="That passkey is not the one this note was sealed with." prompts_for_this_try=1 prompts create=1 get=2
 > click "negold" ok=true
-NEGOLD code=PASSKEY_OPERATION_FAILED explainSeal="The passkey prompt was closed, or there is no trustset passkey on this device yet." prompts_for_this_try=1 prompts create=2 get=3
+NEGOLD code=PASSKEY_OPERATION_FAILED explainSeal="The passkey prompt was closed, or there is no trustset passkey on this device yet." prompts_for_this_try=1 prompts create=1 get=3
 
 === RUN 3 (control, fresh chain, authenticator C): mutant sealed.ts with the session cache removed ===
-SETUP rpc=http://127.0.0.1:8561 killswitch=0xb7B595969DF12560e62E57f1F8A98A4B29dD2aEc sealednotes=0xFAED081ea53dBEC078f3B369B245eC5452E5DE3B agentId=1 coldKey=0x3f377813DE36626E21C41fd6a4E4574c35bee4C7
+SETUP rpc=http://127.0.0.1:8561 killswitch=0x1Af1B870Db0D46127C6aCb29D55fD68eaED77680 sealednotes=0x5Fd8b3c1a64628A778f4e0f5859683ab47FB8a4A agentId=1 coldKey=0xb370ba419e31A5F886B26Fe6B9D336cf2d9C1417
 READY origin=http://localhost:5191 variant=mutant notes_on_chain=0
 > click "passkey" ok=true
-PASSKEY created credential=TCOlGNvcqKghbuNdpnBYBU9YXOp89bELapL7A59G0cM rpId=localhost (setup, not part of the notes session) prompts create=1 get=0
+PASSKEY created credential=F59I-Ldd581SL73qGbqXhhP4dTq5m231JVIGPoF_HF0 rpId=localhost (setup, not part of the notes session) prompts create=1 get=0
 > click "seal3" ok=true
-SEAL3 sealed 3 notes in 392 ms, stored 117 B "SAT1", 119 B "SAT1", 122 B "SAT1", prompts_since_seal3_start=3 prompts create=1 get=3
+SEAL3 sealed 3 notes in 659 ms, stored 117 B "SAT1", 119 B "SAT1", 122 B "SAT1", prompts_since_seal3_start=3 prompts create=1 get=3
 > click "open3" ok=true
 READ readNotes returned 3 notes: satchel, satchel, satchel
 OPEN3 opened 3 satchel notes, all match=true, prompts_since_session_start=6 prompts create=1 get=6
 
 === RUN 4 (baseline, fresh chain, authenticator D): the unpatched module seals and opens the same three notes ===
-SETUP rpc=http://127.0.0.1:8561 killswitch=0x59F94Dbd8d6d24887B72F12C526acB64fB183bb1 sealednotes=0x2d61EE89c15C340aa288F338b2f4F261Ffa0AcEB agentId=1 coldKey=0xf95A5fbA7fE1d3ab852323d9D1BEA6D0163A7C08
+SETUP rpc=http://127.0.0.1:8561 killswitch=0x8aCD99d3C6Cab82B0774195A4EAC9ef956F671a0 sealednotes=0xc79913F8dB7fF39fa3D650C9150E936760322762 agentId=1 coldKey=0xFDA5CA5e6E2608d78fB03DfB3Dc6c49E8c396936
 READY origin=http://localhost:5191 variant=patched notes_on_chain=0
 > click "passkey" ok=true
-RETRY page lacked focus (attempt 1), asking again
-PASSKEY created credential=sgvuryHbY_Hype8veb_jA9Cq8cL0h1eGpCDE8ncEZWo rpId=localhost (setup, not part of the notes session) prompts create=2 get=0
+PASSKEY created credential=flq01pFHncawPOm5VNvwNSE_DGB1WwFmWOjsu9NmhXw rpId=localhost (setup, not part of the notes session) prompts create=1 get=0
 > click "legacy3" ok=true
-LEGACY3 unpatched module: sealed 3 notes (268 B "{"ve", 271 B "{"ve", 275 B "{"ve") prompts=3, then opened 3 notes, all match=true, prompts_since_session_start=6 prompts create=2 get=6
+LEGACY3 unpatched module: sealed 3 notes (268 B "{"ve", 271 B "{"ve", 275 B "{"ve") prompts=3, then opened 3 notes, all match=true, prompts_since_session_start=6 prompts create=1 get=6
 FWDCOMPAT an unpatched page reading a chain that now holds a satchel note sees: readable, readable, readable, unreadable
