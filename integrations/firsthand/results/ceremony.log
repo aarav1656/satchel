@@ -1,32 +1,33 @@
-firsthand satchel adapter harness, 2026-10-02T15:48:58Z, origin http://localhost:5192, virtual authenticator ctap2/internal, resident key, user verification, PRF, no chain
-adapter: /tmp/firsthand packages/sdk/src/webauthn/satchel.ts git blob 0449c3e3ce1a608643c8d725fa55cc1e116b69f3 on branch satchel-interop, base a3a078c
+firsthand satchel adapter harness, 2026-10-03T09:27:12Z, origin http://localhost:5192, virtual authenticator ctap2/internal, resident key, user verification, PRF, no chain
+adapter: /tmp/firsthand packages/sdk/src/webauthn/satchel.ts git blob 0449c3e3ce1a608643c8d725fa55cc1e116b69f3 on branch main, base 1cc5016
 unmodified: WebAuthnPrfSource.ts blob 9a673a7ffedc7b0cac22ac3df75c67d1cd73fe28, KeyTree (packages/crypto/src/kdf/keytree.ts) blob 97dcbaf4500af6c6968ca0f7bbd89df358867e35
-satchel-sdk tarball sha256 prefix: a8feeb37a83735f2
+satchel-sdk tarball sha256 prefix: fcd8907bc808d8ca
 
 === RUN 1: two passkeys, Firsthand's own unlock, satchel beside it, the adapter two ways, a control, a fresh load ===
-READY origin=http://localhost:5192 variant=adapter credentials_known=AB prompts get=0 create=0
+READY origin=http://localhost:5192 variant=adapter credentials_known=none prompts get=0 create=0
 > trusted click "passkeyA" ok=true
 > trusted click "passkeyB" ok=true
 PASSKEY A: created through Firsthand registerPasskey, prfEnabled=true rpId=localhost (setup, not part of any session) prompts get=0 create=1
 PASSKEY B: created through Firsthand registerPasskey, prfEnabled=true rpId=localhost (setup, not part of any session) prompts get=0 create=2
 > trusted click "legacy" ok=true
-LEGACY KeyTree.fromSource(WebAuthnPrfSource), Firsthand as it is: principal=0x8dcea72559c4 deposit=0xab20329431 k_ns(0,1)=00febec5 k_ns(1,7)=5bf468d8 k_nonce(1,7)=5fe05c7f prompts_for_this_unlock=1 prompts get=1 create=2
+LEGACY KeyTree.fromSource(WebAuthnPrfSource), Firsthand as it is: principal=0xf4673a16432f deposit=0x0fcd1b8523 k_ns(0,1)=b40c815e k_ns(1,7)=cf3fef14 k_nonce(1,7)=fb4c0544 prompts_for_this_unlock=1 prompts get=1 create=2
 > trusted click "naive" ok=true
-NAIVE locker unlock then satchel-sdk open() beside it: locker principal=0x8dcea72559c4 deposit=0xab20329431 k_ns(0,1)=00febec5 k_ns(1,7)=5bf468d8 k_nonce(1,7)=5fe05c7f; satchel fingerprint(firsthand/ns/0)=e593c4ff; prompts_for_this_unlock=2 prompts get=3 create=2
+NAIVE locker unlock then satchel-sdk open() beside it: locker principal=0xf4673a16432f deposit=0x0fcd1b8523 k_ns(0,1)=b40c815e k_ns(1,7)=cf3fef14 k_nonce(1,7)=fb4c0544; satchel fingerprint(firsthand/ns/0)=c54b7f2f; prompts_for_this_unlock=2 prompts get=3 create=2
 > trusted click "adapter" ok=true
-ADAPTER openWithSatchel(WebAuthnPrfSource): principal=0x8dcea72559c4 deposit=0xab20329431 k_ns(0,1)=00febec5 k_ns(1,7)=5bf468d8 k_nonce(1,7)=5fe05c7f prompts_for_this_unlock=1 prompts get=4 create=2
+ADAPTER openWithSatchel(WebAuthnPrfSource): principal=0xf4673a16432f deposit=0x0fcd1b8523 k_ns(0,1)=b40c815e k_ns(1,7)=cf3fef14 k_nonce(1,7)=fb4c0544 prompts_for_this_unlock=1 prompts get=4 create=2
 EQUAL adapter tree vs Firsthand's own tree, same passkey: all 5 fields equal=true differing_fields=0
-SATCHEL fingerprint(firsthand/ns/0)=ad3dee14 registryOwner=0x8Fd805e5BE7559fFa5C3899ADfEC6b9e1946D1Be equals_a_locker_deposit_address=false
+SATCHEL fingerprint(firsthand/ns/0)=1062642c registryOwner=0xe2Ca3d9Cd30159dD61b8dDabfF3b83D20B38bAc3 equals_a_locker_deposit_address=false
 SEALED sealed 3 blobs (127 B, 119 B, 126 B), opened all 3 in their own namespace: true, prompts get=4 create=2
 SEALED-NS blob of firsthand/ns/0 opened as firsthand/ns/1: code=NAMESPACE_MISMATCH; same blob with its header relabelled to ns/1: code=WRONG_PASSKEY; prompts get=4 create=2
 SESSION prompts_since_session_start=1 (unlock, 3 seals, 3 opens, 2 refused opens) prompts get=4 create=2
 > trusted click "mera" ok=true
-MERA openWithSatchel(MeraPrfSource, Firsthand's salt): principal=0x8dcea72559c4 deposit=0xab20329431 k_ns(0,1)=00febec5 k_ns(1,7)=5bf468d8 k_nonce(1,7)=5fe05c7f prompts_for_this_unlock=1 prompts get=5 create=2
+MERA openWithSatchel(MeraPrfSource, Firsthand's salt): principal=0xf4673a16432f deposit=0x0fcd1b8523 k_ns(0,1)=b40c815e k_ns(1,7)=cf3fef14 k_nonce(1,7)=fb4c0544 prompts_for_this_unlock=1 prompts get=5 create=2
 EQUAL mera-ceremony tree vs Firsthand's own tree, same passkey: equal=true differing_fields=0; satchel fingerprint equals the WebAuthnPrfSource session's: true
 > trusted click "control" ok=true
-CONTROL Mera with its own default salt: principal=0x13bb1c6399e6 deposit=0x005ae852f6 k_ns(0,1)=8a0077de k_ns(1,7)=abc9f1a1 k_nonce(1,7)=7dcfc9ef prompts_for_this_unlock=1
+CONTROL Mera with its own default salt: principal=0xe0217f382eeb deposit=0x804df3be33 k_ns(0,1)=7cb5eae9 k_ns(1,7)=cff950f3 k_nonce(1,7)=0e5b2326 prompts_for_this_unlock=1
 EQUAL default-salt tree vs Firsthand's own tree, same passkey: equal=false differing_fields=5 (a different salt must give different keys, so the equality check can fail)
 --- fresh page load: http://localhost:5192/?load=2
+loaded
 READY origin=http://localhost:5192 variant=adapter credentials_known=AB prompts get=0 create=0
 > trusted click "reopenA" ok=true
 REOPEN-A fresh page load, same passkey: tree equals the earlier legacy tree=true; blob sealed before the reload opens=true; satchel fingerprint unchanged=true; prompts_for_this_unlock=1 prompts get=1 create=0
@@ -40,7 +41,7 @@ READY origin=http://localhost:5192 variant=mutant credentials_known=AB prompts g
 PASSKEY A: created through Firsthand registerPasskey, prfEnabled=true rpId=localhost (setup, not part of any session) prompts get=0 create=1
 PASSKEY B: created through Firsthand registerPasskey, prfEnabled=true rpId=localhost (setup, not part of any session) prompts get=0 create=2
 > trusted click "legacy" ok=true
-LEGACY KeyTree.fromSource(WebAuthnPrfSource), Firsthand as it is: principal=0xd0fa902ee1f6 deposit=0x87821a8847 k_ns(0,1)=09120794 k_ns(1,7)=7c0fb1ea k_nonce(1,7)=52f9d5e3 prompts_for_this_unlock=1 prompts get=1 create=2
+LEGACY KeyTree.fromSource(WebAuthnPrfSource), Firsthand as it is: principal=0x4040b90a1640 deposit=0xf03248a776 k_ns(0,1)=749a8d8a k_ns(1,7)=8e9c3c7c k_nonce(1,7)=d34161fc prompts_for_this_unlock=1 prompts get=1 create=2
 > trusted click "mutant" ok=true
-MUTANT adapter with its key tree built from the satchel root: principal=0xcaf468f6dfc4 deposit=0xd575cd48de k_ns(0,1)=106b78d8 k_ns(1,7)=8cbd0d6c k_nonce(1,7)=c84090c7
+MUTANT adapter with its key tree built from the satchel root: principal=0xa5ed28a923d1 deposit=0xf7a5948130 k_ns(0,1)=31be0664 k_ns(1,7)=8b513542 k_nonce(1,7)=1fdbc7cf
 EQUAL mutant tree vs Firsthand's own tree: equal=false differing_fields=5

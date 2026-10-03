@@ -1,6 +1,41 @@
+packages/sdk build$ tsup
+CLI Building entry: src/browser.ts, src/deployment.ts, src/index.ts, src/webauthn/satchel.ts
+CLI Using tsconfig: tsconfig.json
+CLI tsup v8.5.1
+CLI Using tsup config: /private/tmp/firsthand/packages/sdk/tsup.config.ts
+CLI Target: es2022
+CLI Cleaning output folder
+CJS Build start
+ESM Build start
+DTS Build start
+ESM dist/browser.js              53.95 KB
+ESM dist/deployment.js           2.04 KB
+ESM dist/webauthn/satchel.js     2.39 KB
+ESM dist/index.js                51.59 KB
+ESM dist/deployment.js.map       5.25 KB
+ESM dist/webauthn/satchel.js.map 6.63 KB
+ESM dist/browser.js.map          156.29 KB
+ESM dist/index.js.map            149.74 KB
+ESM ⚡️ Build success in 1054ms
+CJS dist/webauthn/satchel.cjs     2.47 KB
+CJS dist/browser.cjs              55.14 KB
+CJS dist/deployment.cjs           2.20 KB
+CJS dist/index.cjs                52.66 KB
+CJS dist/webauthn/satchel.cjs.map 6.77 KB
+CJS dist/deployment.cjs.map       5.34 KB
+CJS dist/browser.cjs.map          157.36 KB
+CJS dist/index.cjs.map            150.79 KB
+CJS ⚡️ Build success in 1054ms
+DTS ⚡️ Build success in 9670ms
+DTS dist/browser.d.cts                  3.40 KB
+DTS dist/deployment.d.cts               1.92 KB
+DTS dist/webauthn/satchel.d.cts         1.46 KB
+DTS dist/index.d.cts                    21.66 KB
 DTS dist/FirsthandClient-Bf1Jh4wY.d.cts 19.92 KB
 DTS dist/browser.d.ts                   3.40 KB
 DTS dist/deployment.d.ts                1.92 KB
 DTS dist/webauthn/satchel.d.ts          1.46 KB
 DTS dist/index.d.ts                     21.66 KB
 DTS dist/FirsthandClient-Bf1Jh4wY.d.ts  19.92 KB
+Done
+exit=0

@@ -1,3 +1,5 @@
+.                                        |  WARN  Unsupported engine: wanted: {"node":">=26"} (current: {"node":"v24.9.0","pnpm":"10.18.2"})
+
 > @firsthand/sdk@0.1.0 test:unit /private/tmp/firsthand/packages/sdk
 > vitest run
 
@@ -7,6 +9,7 @@
 
  Test Files  5 passed (5)
       Tests  38 passed (38)
-   Start at  21:10:52
-   Duration  4.75s (transform 2.39s, setup 0ms, import 7.56s, tests 3.27s, environment 1ms)
+   Start at  14:40:15
+   Duration  6.79s (transform 6.48s, setup 0ms, import 15.37s, tests 3.85s, environment 1ms)
 
+exit=0

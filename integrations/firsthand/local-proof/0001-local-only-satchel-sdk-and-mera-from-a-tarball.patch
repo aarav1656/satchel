@@ -1,4 +1,4 @@
-From 4432a85d476f4ffdd096472f4953d02ff29bf853 Mon Sep 17 00:00:00 2001
+From 1cc50160e2d3d6303c9b98f16e74beb0b18a4fd7 Mon Sep 17 00:00:00 2001
 From: aarav1656 <anshuk3917@gmail.com>
 Date: Fri, 2 Oct 2026 21:06:41 +0530
 Subject: [PATCH] local only: satchel-sdk and mera from a tarball, ./satchel
@@ -7,8 +7,8 @@ Subject: [PATCH] local only: satchel-sdk and mera from a tarball, ./satchel
 ---
  packages/sdk/package.json   |  19 ++++++
  packages/sdk/tsup.config.ts |   4 +-
- pnpm-lock.yaml              | 130 +++++++++++++++++++++++++++++++++++-
- 3 files changed, 149 insertions(+), 4 deletions(-)
+ pnpm-lock.yaml              | 126 +++++++++++++++++++++++++++++++++++-
+ 3 files changed, 147 insertions(+), 2 deletions(-)
 
 diff --git a/packages/sdk/package.json b/packages/sdk/package.json
 index 29a25a7..6619f01 100644
@@ -62,18 +62,9 @@ index b1ff640..3540246 100644
 +  entry: ["src/index.ts", "src/browser.ts", "src/deployment.ts", "src/webauthn/satchel.ts"],
 +});
 diff --git a/pnpm-lock.yaml b/pnpm-lock.yaml
-index c9e2e18..1ed5ffe 100644
+index c9e2e18..b18adf6 100644
 --- a/pnpm-lock.yaml
 +++ b/pnpm-lock.yaml
-@@ -207,7 +207,7 @@ importers:
-         version: 5.9.3
-       vitest:
-         specifier: 'catalog:'
--        version: 4.1.11(@types/node@26.5.1)(@vitest/coverage-v8@4.1.11)(vite@8.3.0(@types/node@26.5.1)(esbuild@0.27.7)(terser@5.51.2)(tsx@4.23.13))
-+        version: 4.1.11(@types/node@26.5.1)(@vitest/coverage-v8@4.1.11)(vite@8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(terser@5.51.2)(tsx@4.23.13))
- 
-   apps/gateway:
-     dependencies:
 @@ -605,12 +605,18 @@ importers:
          specifier: 'catalog:'
          version: 4.6.2
@@ -93,15 +84,6 @@ index c9e2e18..1ed5ffe 100644
        tsup:
          specifier: 'catalog:'
          version: 8.5.1(postcss@8.5.28)(tsx@4.23.13)(typescript@5.9.3)
-@@ -619,7 +625,7 @@ importers:
-         version: 5.9.3
-       vitest:
-         specifier: 'catalog:'
--        version: 4.1.11(@types/node@26.5.1)(@vitest/coverage-v8@4.1.11)(vite@8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(terser@5.51.2)(tsx@4.23.13))
-+        version: 4.1.11(@types/node@26.5.1)(@vitest/coverage-v8@4.1.11)(vite@8.3.0(@types/node@26.5.1)(esbuild@0.27.7)(terser@5.51.2)(tsx@4.23.13))
- 
-   packages/test-vectors:
-     dependencies:
 @@ -1224,6 +1230,18 @@ packages:
      cpu: [x64]
      os: [win32]
@@ -188,7 +170,7 @@ index c9e2e18..1ed5ffe 100644
      resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
  
 +  satchel-sdk@file:../../../tmp/satchel-pack-fh/satchel-sdk-0.1.0.tgz:
-+    resolution: {integrity: sha512-foubmj6vwxYU2JcM/ljhTRA77NYOobu/Bifrxm/pLSXiqcoX2nHq0zjIuyQ7oHqn0VXFYRkQ+l4CBsxrnJ67PQ==, tarball: file:../../../tmp/satchel-pack-fh/satchel-sdk-0.1.0.tgz}
++    resolution: {integrity: sha512-iSwC84sdVE/JlnOo0NGZjRhSHocDKpWaxg93f4Lb0bs4U3LnhNvqdKWUtXqWmKmfSNMXDQIhAEILJ325nxfCug==, tarball: file:../../../tmp/satchel-pack-fh/satchel-sdk-0.1.0.tgz}
 +    version: 0.1.0
 +    peerDependencies:
 +      '@category-labs/mera': 0.2.0
@@ -272,7 +254,7 @@ index c9e2e18..1ed5ffe 100644
        std-env: 4.2.0
        tinyrainbow: 3.1.1
 -      vitest: 4.1.11(@types/node@26.5.1)(@vitest/coverage-v8@4.1.11)(vite@8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(terser@5.51.2)(tsx@4.23.13))
-+      vitest: 4.1.11(@types/node@26.5.1)(@vitest/coverage-v8@4.1.11)(vite@8.3.0(@types/node@26.5.1)(esbuild@0.27.7)(terser@5.51.2)(tsx@4.23.13))
++      vitest: 4.1.11(@types/node@26.5.1)(@vitest/coverage-v8@4.1.11)(vite@7.3.6(@types/node@26.5.1)(lightningcss@1.33.0)(terser@5.51.2)(tsx@4.23.13))
  
    '@vitest/expect@4.1.11':
      dependencies:
