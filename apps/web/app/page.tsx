@@ -2,7 +2,7 @@ import Link from "next/link";
 import { CodeBlock } from "@/components/CodeBlock";
 import { Callout, Doc } from "@/components/Doc";
 import { QuickstartRun } from "@/components/QuickstartRun";
-import { GRANT_AND_REVOKE, QUICKSTART, SECOND_NAMESPACE } from "@/lib/snippets";
+import { GRANT_AND_REVOKE, INSTALL, NODE_QUICKSTART, QUICKSTART, SECOND_NAMESPACE } from "@/lib/snippets";
 
 export default function Page() {
   return (
@@ -14,11 +14,20 @@ export default function Page() {
       <CodeBlock code={QUICKSTART} file="quickstart.js" snippet="quickstart" />
       <QuickstartRun />
       <p>
-        The passkey needs the WebAuthn PRF extension: iCloud Keychain, Google Password Manager, Windows Hello, 1Password, Proton Pass and YubiKey 5 have it. The buttons run the exact text above, import line included, against this site&apos;s own passkey. <code>openOrEnrol</code> shows one passkey prompt per call, so a first visit asks you which one: <strong>Create a passkey</strong> runs the code with <code>mode</code> set to <code>&quot;enrol&quot;</code>, <strong>I already have one</strong> runs it with <code>&quot;open&quot;</code>, each its own click and its own prompt. Once this browser remembers the passkey there is one button, <strong>Run the code above</strong>, and <code>mode</code> is ignored. If the remembered passkey is gone (deleted, or made on another device), the call forgets it, throws <Link href="/reference/errors/#passkey-not-found">PASSKEY_NOT_FOUND</Link> and both buttons come back. <Link href="/reference/api/#openorenrol">openOrEnrol</Link> lists the order it tries.
+        The passkey needs the WebAuthn PRF extension: iCloud Keychain, Google Password Manager, Windows Hello, 1Password, Proton Pass and YubiKey 5 have it. The buttons run the exact text above, import line included, against this site&apos;s own passkey. <code>openOrEnrol</code> shows one passkey prompt per call, so a first visit asks you which one: <strong>Create a passkey</strong> runs the code as written, <strong>I already have one</strong> runs it with the <code>mode</code> line set to <code>&quot;open&quot;</code>, each its own click and its own prompt. Once this browser remembers the passkey there is one button, <strong>Run the code above</strong>, and <code>mode</code> is ignored. If the remembered passkey is gone (deleted, or made on another device), the call forgets it, throws <Link href="/reference/errors/#passkey-not-found">PASSKEY_NOT_FOUND</Link> and both buttons come back. <Link href="/reference/api/#openorenrol">openOrEnrol</Link> lists the order it tries.
       </p>
 
       <h2 id="install">Install</h2>
-      <CodeBlock lang="sh" file="terminal" code={"npm i satchel-sdk @category-labs/mera@0.2.0"} />
+      <CodeBlock lang="sh" file="terminal" code={INSTALL} snippet="install" />
+      <p>
+        The package is served from this site as a tarball, so the line works in an empty directory today. Mera is the passkey layer and is pinned at 0.2.0.
+      </p>
+
+      <h2 id="node">The same in Node</h2>
+      <p>
+        There is no passkey in Node. A server, a test or a script that already holds the 32 byte PRF output opens the same vault with <code>fromPrfOutput</code>. Save this as <code>quickstart.mjs</code> after the install line and run <code>node quickstart.mjs</code>.
+      </p>
+      <CodeBlock code={NODE_QUICKSTART} file="quickstart.mjs" snippet="node-quickstart" />
 
       <h2 id="output">What correct looks like</h2>
       <CodeBlock

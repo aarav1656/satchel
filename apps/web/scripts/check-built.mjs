@@ -18,13 +18,15 @@ const page = (route) => fs.readFileSync(path.join(out, route, "index.html"), "ut
 if (!fs.existsSync(path.join(out, "index.html"))) throw new Error("no export in out/: run bun run build");
 
 // 1. quickstart
-const { QUICKSTART } = await import("../lib/snippets.ts");
+const { QUICKSTART, quickstartFor, INSTALL, NODE_QUICKSTART } = await import("../lib/snippets.ts");
 const home = page("");
 const block = home.match(/data-snippet="quickstart">[\s\S]*?<pre><code>([\s\S]*?)<\/code><\/pre>/);
 if (!block) fail("the quickstart code block (data-snippet=quickstart) is missing from /");
 else if (text(block[1]) !== QUICKSTART) fail(`the quickstart shown on / differs from lib/snippets.ts QUICKSTART:\n--- page\n${text(block[1])}\n--- source\n${QUICKSTART}`);
 const run = fs.readFileSync(path.join(web, "components", "QuickstartRun.tsx"), "utf8");
-if (!/import \{ QUICKSTART \} from "@\/lib\/snippets";/.test(run) || !/runSnippet\(QUICKSTART,/.test(run)) fail("QuickstartRun.tsx does not run the QUICKSTART constant from lib/snippets.ts");
+if (!/import \{ quickstartFor \} from "@\/lib\/snippets";/.test(run) || !/runSnippet\(quickstartFor\(mode\),/.test(run)) fail("QuickstartRun.tsx does not run the quickstart from lib/snippets.ts");
+const diff = QUICKSTART.split("\n").map((l, i) => (l === quickstartFor("open").split("\n")[i] ? null : i)).filter((i) => i !== null);
+if (diff.length !== 1 || !QUICKSTART.split("\n")[diff[0]].startsWith("const mode =")) fail("the open variant of the quickstart changes more than the mode line");
 if (/\.seal\(|\bns\(|openOrEnrol\(/.test(run)) fail("QuickstartRun.tsx carries its own SDK calls instead of running the snippet");
 const chunks = path.join(out, "_next", "static", "chunks");
 const first = QUICKSTART.split("\n")[0];
@@ -41,6 +43,18 @@ for (const f of fs.readdirSync(chunks).filter((n) => n.endsWith(".js"))) {
 }
 if (shipped === undefined) fail("the QUICKSTART text is not in any client chunk, so the Run button cannot be executing it");
 else if (shipped !== QUICKSTART) fail("the QUICKSTART string in the client bundle differs from lib/snippets.ts");
+
+// 1b. install line: the tarball it names is in the export, is the SDK version in packages/sdk, and the Node quickstart is on /
+{
+  const version = JSON.parse(fs.readFileSync(path.join(web, "..", "..", "packages", "sdk", "package.json"), "utf8")).version;
+  const url = INSTALL.match(/https:\/\/\S+\.tgz/)?.[0];
+  if (!url || !url.endsWith(`/satchel-sdk-${version}.tgz`)) fail(`INSTALL names ${url}, packages/sdk is version ${version}`);
+  else if (!fs.existsSync(path.join(out, path.basename(url)))) fail(`out/${path.basename(url)} is missing, so ${INSTALL} would 404`);
+  const shown = page("").match(/data-snippet="install">[\s\S]*?<pre><code>([\s\S]*?)<\/code><\/pre>/);
+  if (!shown || text(shown[1]) !== INSTALL) fail("the install line shown on / is not INSTALL");
+  const node = page("").match(/data-snippet="node-quickstart">[\s\S]*?<pre><code>([\s\S]*?)<\/code><\/pre>/);
+  if (!node || text(node[1]) !== NODE_QUICKSTART) fail("the Node quickstart shown on / is not NODE_QUICKSTART");
+}
 
 // 2. names
 const dts = (f) => fs.readFileSync(path.join(sdk, f), "utf8");

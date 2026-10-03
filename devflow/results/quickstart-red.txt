@@ -1,0 +1,8 @@
+red: ORIGIN points at a page without the snippets
+no install block on the page
+exit 
+red: check-built with the tarball missing from out/
+check-built FAIL (1):
+- out/satchel-sdk-0.1.0.tgz is missing, so npm i https://satchel-keys.vercel.app/satchel-sdk-0.1.0.tgz @category-labs/mera@0.2.0 would 404
+green: restored
+check-built ok: quickstart on / === QUICKSTART === the shipped Run source (7 lines); 36 function names in docs code checked against 43 real names; 19 error table rows agree with 19 entries and 19 ErrorCodes

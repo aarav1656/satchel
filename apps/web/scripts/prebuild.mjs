@@ -15,6 +15,11 @@ const run = (cmd, args, cwd) => execFileSync(cmd, args, { cwd, stdio: ["ignore",
 
 run("bun", ["scripts/link-sdk.mjs"], web);
 run("bun", ["run", "build"], sdk);
+// The packed SDK is shipped from this site (public/), so `npm i <site>/satchel-sdk-<version>.tgz` works before the registry has it.
+const sdkVersion = JSON.parse(fs.readFileSync(path.join(sdk, "package.json"), "utf8")).version;
+for (const f of fs.readdirSync(path.join(web, "public"))) if (/^satchel-sdk-.*\.tgz$/.test(f)) fs.rmSync(path.join(web, "public", f));
+run("npm", ["pack", "--pack-destination", path.join(web, "public")], sdk);
+if (!fs.existsSync(path.join(web, "public", `satchel-sdk-${sdkVersion}.tgz`))) fail(`npm pack did not produce satchel-sdk-${sdkVersion}.tgz`);
 
 // 1. Every root export of the SDK has a reference entry, and every entry names a real export or Satchel/Reader member.
 const { ENTRIES } = await import("../lib/reference.ts");

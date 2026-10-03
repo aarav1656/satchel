@@ -1,0 +1,14 @@
+satchel Node quickstart, 2026-10-03T09:02:16Z, origin https://satchel-keys.vercel.app, node v24.9.0, empty dir /tmp/satchel-quickstart.n4c3iz
+copied install line and quickstart from the page
+--- install line as copied
+npm i https://satchel-keys.vercel.app/satchel-sdk-0.1.0.tgz @category-labs/mera@0.2.0
+--- curl -I https://satchel-keys.vercel.app/satchel-sdk-0.1.0.tgz
+HTTP/2 200 
+content-type: application/octet-stream
+content-length: 17227
+  run `npm fund` for details
+
+found 0 vulnerabilities
+--- node quickstart.mjs
+{"likes":"metric units"}
+QUICKSTART PASS

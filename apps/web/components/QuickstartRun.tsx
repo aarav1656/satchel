@@ -5,7 +5,7 @@ import { rememberedPasskey, type PasskeyMode, type Satchel, type Sealed } from "
 import { failure } from "@/lib/errors-ui";
 import { promptCount, usePromptCount } from "@/lib/prompts";
 import { runSnippet } from "@/lib/run-snippet";
-import { QUICKSTART } from "@/lib/snippets";
+import { quickstartFor } from "@/lib/snippets";
 
 type Out = { lines: { text: string; tone?: "err" | "dim" }[] };
 
@@ -36,7 +36,7 @@ export function QuickstartRun() {
     const before = promptCount();
     let s: Satchel | undefined;
     try {
-      const { values, sha256 } = await runSnippet(QUICKSTART, ["s", "memory", "blob", "back"], { mode });
+      const { values, sha256 } = await runSnippet(quickstartFor(mode), ["s", "memory", "blob", "back"]);
       s = values.s as Satchel;
       const blob = values.blob as Sealed;
       const used = promptCount() - before;
