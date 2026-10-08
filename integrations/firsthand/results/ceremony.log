@@ -1,4 +1,4 @@
-firsthand satchel adapter harness, 2026-10-08T12:04:48Z, origin http://localhost:5192, virtual authenticator ctap2/internal, resident key, user verification, PRF, no chain
+firsthand satchel adapter harness, 2026-10-08T13:13:03Z, origin http://localhost:5192, virtual authenticator ctap2/internal, resident key, user verification, PRF, no chain
 adapter: /tmp/firsthand packages/sdk/src/webauthn/satchel.ts git blob 0449c3e3ce1a608643c8d725fa55cc1e116b69f3, based on upstream main a3a078c
 unmodified: WebAuthnPrfSource.ts blob 9a673a7ffedc7b0cac22ac3df75c67d1cd73fe28, KeyTree (packages/crypto/src/kdf/keytree.ts) blob 97dcbaf4500af6c6968ca0f7bbd89df358867e35
 npm_config_registry=https://registry.npmjs.org npm view satchel-sdk@0.1.0 version dist.tarball dist.integrity --json
@@ -47,3 +47,4 @@ PASSKEY B: created through Firsthand registerPasskey, prfEnabled=true rpId=local
 LEGACY KeyTree.fromSource(WebAuthnPrfSource), Firsthand as it is: principal=[redacted] deposit=[redacted] k_ns(0,1)=[redacted] k_ns(1,7)=[redacted] k_nonce(1,7)=[redacted] prompts_for_this_unlock=1 prompts get=1 create=2
 > trusted click "mutant" ok=true
 MUTANT adapter with its key tree built from the satchel root: principal=[redacted] deposit=[redacted] k_ns(0,1)=[redacted] k_ns(1,7)=[redacted] k_nonce(1,7)=[redacted] mutant tree vs Firsthand's own tree: equal=false differing_fields=5
+PASS browser assertions: Firsthand adapter/Mera parity, wrong-passkey refusal, and mutant mismatch

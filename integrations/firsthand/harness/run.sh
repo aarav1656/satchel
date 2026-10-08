@@ -16,9 +16,11 @@ CDP="$HOME/.claude/scratch/cdp-tab.mjs"
 PORT=5192 OUT=../results/ceremony.log
 LOG1=/tmp/firsthand-run1.log LOG2=/tmp/firsthand-run2.log
 MUT=$SDK/src/webauthn/satchel-mutant.ts
+MUTANT_STEPS=$(mktemp /tmp/satchel-firsthand-mutant-steps.XXXXXX.json)
+FIRSTHAND_STEPS=$(mktemp /tmp/satchel-firsthand-steps.XXXXXX.json)
 PNPM_STORE=$(mktemp -d /tmp/satchel-firsthand-pnpm.XXXXXX)
 redact_logs() { for f in "$LOG1" "$LOG2"; do [ ! -f "$f" ] || sed -E -i '' 's/(principal|deposit|k_ns\([^)]*\)|k_nonce\([^)]*\)|fingerprint\(firsthand\/ns\/0\))=[^ ;]+/\1=[redacted]/g' "$f"; done; }
-cleanup() { redact_logs; kill ${SERVER:-} 2>/dev/null || true; rm -f "$MUT" tsconfig.build.json; rm -rf "$PNPM_STORE"; }
+cleanup() { redact_logs; kill ${SERVER:-} 2>/dev/null || true; rm -f "$MUT" tsconfig.build.json "$MUTANT_STEPS" "$FIRSTHAND_STEPS"; rm -rf "$PNPM_STORE"; }
 trap cleanup EXIT
 export CDP_PORT=${CDP_PORT:-9396} VAUTH=1 PIN_FILE="$HOME/.cache/qa-tab-satchel-firsthand"
 
@@ -60,8 +62,9 @@ node serve.mjs $PORT & SERVER=$!
 sleep 1
 echo "http://localhost:$PORT/?load=2" > /tmp/firsthand-harness-url-reload
 
-node $CDP "http://localhost:$PORT/" steps-run1.json /tmp 2>$LOG1 >/dev/null
-node $CDP "http://localhost:$PORT/?b=mutant" steps-mutant.json /tmp 2>$LOG2 >/dev/null
+node -e 'const fs=require("fs"), focus=s=>s.flatMap(x=>x.tclick?[{activate:true},x]:[x]); fs.writeFileSync(process.argv[3],JSON.stringify(focus(JSON.parse(fs.readFileSync(process.argv[1],"utf8"))),null,2)+"\n"); fs.writeFileSync(process.argv[4],JSON.stringify(focus(JSON.parse(fs.readFileSync(process.argv[2],"utf8"))),null,2)+"\n")' steps-run1.json steps-mutant.json "$FIRSTHAND_STEPS" "$MUTANT_STEPS"
+node $CDP "http://localhost:$PORT/" "$FIRSTHAND_STEPS" /tmp 2>$LOG1 >/dev/null
+node $CDP "http://localhost:$PORT/?b=mutant" "$MUTANT_STEPS" /tmp 2>$LOG2 >/dev/null
 sed -E -i '' 's/(principal|deposit|k_ns\([^)]*\)|k_nonce\([^)]*\)|fingerprint\(firsthand\/ns\/0\))=[^ ;]+/\1=[redacted]/g' "$LOG1" "$LOG2"
 rg -q 'EQUAL adapter tree vs Firsthand.*equal=true' "$LOG1"
 rg -q 'EQUAL mera-ceremony tree vs Firsthand.*equal=true' "$LOG1"
