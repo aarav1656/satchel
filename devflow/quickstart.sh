@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# What a first developer does: copy the install line and the Node quickstart off the docs page into an empty directory and run them.
-# ORIGIN defaults to the live site. The text is cut out of the served HTML, not read from the source tree.
+# What a first developer does: copy the registry install line and the Node quickstart off the docs page into an empty directory and run them.
+# ORIGIN defaults to the live site. The text is cut out of the served HTML, not read from the source tree. The site-hosted
+# compatibility tarball is checked separately and must answer 200, but it is not the copied install command.
 set -euo pipefail
 ORIGIN=${ORIGIN:-https://satchel-keys.vercel.app}
 HERE=$(cd "$(dirname "$0")" && pwd); OUT=${OUT:-$HERE/results/quickstart-$(date +%F).txt}
@@ -18,8 +19,21 @@ JS
 {
   echo "satchel Node quickstart, $(date -u +%FT%TZ), origin $ORIGIN, node $(node -v), empty dir $D"
   cat copied.txt; echo "--- install line as copied"; cat install.sh
-  TGZ=$(grep -o 'https://[^ ]*\.tgz' install.sh); echo "--- curl -I $TGZ"; curl -sI "$TGZ" | sed -n '1p;/[Cc]ontent-type/p;/[Cc]ontent-length/p'
-  test "$(curl -s -o /dev/null -w '%{http_code}' "$TGZ")" = 200
+  if grep -q '\.tgz' install.sh; then
+    TGZ=$(grep -o 'https://[^ ]*\.tgz' install.sh); echo "--- curl -I $TGZ"; curl -sI "$TGZ" | sed -n '1p;/[Cc]ontent-type/p;/[Cc]ontent-length/p'
+    test "$(curl -s -o /dev/null -w '%{http_code}' "$TGZ")" = 200
+  else
+    echo "--- install line is the registry line, no tarball URL required"
+    grep -q 'satchel-sdk@' install.sh
+    grep -q '@category-labs/mera@0.2.0' install.sh
+  fi
+  TARBALL_PATH=$(grep -o '/satchel-sdk-[^"]*\.tgz' home.html | head -1 || true)
+  if [ -n "${TARBALL_PATH:-}" ]; then
+    TARBALL_URL="${ORIGIN%/}${TARBALL_PATH}"; echo "--- curl -I $TARBALL_URL (compatibility tarball)"; curl -sI "$TARBALL_URL" | sed -n '1p;/[Cc]ontent-type/p;/[Cc]ontent-length/p'
+    test "$(curl -s -o /dev/null -w '%{http_code}' "$TARBALL_URL")" = 200
+  else
+    echo "--- no fallback tarball link on the page"
+  fi
   echo '{"name":"qs","private":true,"type":"module"}' > package.json
   bash install.sh 2>&1 | grep -v "npm warn" | tail -3
   echo "--- node quickstart.mjs"; node quickstart.mjs | tee run.out

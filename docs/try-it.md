@@ -21,8 +21,10 @@ Reload the page and press **Run the code above**: same `fp`, one prompt. The fin
 In an empty directory:
 
 ```sh
-npm i https://satchel-keys.vercel.app/satchel-sdk-0.1.0.tgz @category-labs/mera@0.2.0
+npm i satchel-sdk@0.1.0 @category-labs/mera@0.2.0
 ```
+
+A compatibility tarball stays at https://satchel-keys.vercel.app/satchel-sdk-0.1.0.tgz for projects using the existing download URL.
 
 Save the Node quickstart from the home page (section "The same in Node") as `quickstart.mjs` and run `node quickstart.mjs`. You get:
 

@@ -15,7 +15,7 @@ const run = (cmd, args, cwd) => execFileSync(cmd, args, { cwd, stdio: ["ignore",
 
 run("bun", ["scripts/link-sdk.mjs"], web);
 run("bun", ["run", "build"], sdk);
-// The packed SDK is shipped from this site (public/), so `npm i <site>/satchel-sdk-<version>.tgz` works before the registry has it.
+// The packed SDK is still shipped from this site (public/) as a compatibility tarball, so the fallback link works alongside the registry line.
 const sdkVersion = JSON.parse(fs.readFileSync(path.join(sdk, "package.json"), "utf8")).version;
 for (const f of fs.readdirSync(path.join(web, "public"))) if (/^satchel-sdk-.*\.tgz$/.test(f)) fs.rmSync(path.join(web, "public", f));
 run("npm", ["pack", "--pack-destination", path.join(web, "public")], sdk);

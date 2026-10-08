@@ -44,14 +44,23 @@ for (const f of fs.readdirSync(chunks).filter((n) => n.endsWith(".js"))) {
 if (shipped === undefined) fail("the QUICKSTART text is not in any client chunk, so the Run button cannot be executing it");
 else if (shipped !== QUICKSTART) fail("the QUICKSTART string in the client bundle differs from lib/snippets.ts");
 
-// 1b. install line: the tarball it names is in the export, is the SDK version in packages/sdk, and the Node quickstart is on /
+// 1b. install line: INSTALL is the registry line for the SDK version in packages/sdk, the line shown on / is INSTALL,
+// the compatibility tarball is in the export, any labeled fallback link to it resolves, and the Node quickstart is on /
 {
   const version = JSON.parse(fs.readFileSync(path.join(web, "..", "..", "packages", "sdk", "package.json"), "utf8")).version;
-  const url = INSTALL.match(/https:\/\/\S+\.tgz/)?.[0];
-  if (!url || !url.endsWith(`/satchel-sdk-${version}.tgz`)) fail(`INSTALL names ${url}, packages/sdk is version ${version}`);
-  else if (!fs.existsSync(path.join(out, path.basename(url)))) fail(`out/${path.basename(url)} is missing, so ${INSTALL} would 404`);
+  const sdkSpec = `satchel-sdk@${version}`;
+  if (!INSTALL.includes(sdkSpec)) fail(`INSTALL does not name ${sdkSpec}: ${INSTALL}`);
+  if (!INSTALL.includes("@category-labs/mera@0.2.0")) fail(`INSTALL does not pin @category-labs/mera@0.2.0: ${INSTALL}`);
+  if (/\.tgz/.test(INSTALL)) fail(`INSTALL must be the registry line, not a tarball URL: ${INSTALL}`);
+  const tarball = `satchel-sdk-${version}.tgz`;
+  if (!fs.existsSync(path.join(out, tarball))) fail(`out/${tarball} is missing, so the compatibility tarball would 404`);
   const shown = page("").match(/data-snippet="install">[\s\S]*?<pre><code>([\s\S]*?)<\/code><\/pre>/);
   if (!shown || text(shown[1]) !== INSTALL) fail("the install line shown on / is not INSTALL");
+  const homeHtml = page("");
+  for (const m of homeHtml.matchAll(/href="(\/satchel-sdk-[^"]*\.tgz)"/g)) {
+    const target = m[1].replace(/^\//, "");
+    if (!fs.existsSync(path.join(out, target))) fail(`fallback link ${m[1]} would 404, out/${target} is missing`);
+  }
   const node = page("").match(/data-snippet="node-quickstart">[\s\S]*?<pre><code>([\s\S]*?)<\/code><\/pre>/);
   if (!node || text(node[1]) !== NODE_QUICKSTART) fail("the Node quickstart shown on / is not NODE_QUICKSTART");
 }

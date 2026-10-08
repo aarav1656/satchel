@@ -5,7 +5,7 @@ One passkey, many namespaced keys. An app seals its data under its own namespace
 Live: https://satchel-keys.vercel.app (Monad testnet, chain 10143). Registry: `0xd6c895f5c9254dc6eaafc335fff0930fd7012e6d`.
 
 ```sh
-npm i https://satchel-keys.vercel.app/satchel-sdk-0.1.0.tgz @category-labs/mera@0.2.0
+npm i satchel-sdk@0.1.0 @category-labs/mera@0.2.0
 ```
 
 ```js
@@ -35,7 +35,7 @@ Every row names the command that produced it. Chain facts are read with viem or 
 | Claim | Evidence |
 |---|---|
 | A developer installs from the packed tarball into an empty project and runs derive, seal, unseal, grant, fetchGrant, revoke, regrant against the testnet registry | `devflow/run.sh`: `DEVFLOW PASS 6 steps`, grant 23 tx `0x66748ea0d7cf30a37e8e765ca85d051f876738fa5b5828fdb8a60e79307e2c6d`, revoke tx `0x7b238eacc84182b9a5d93cbaa0b567cd5e951a63ac8d63d15d46d6d77f75e160` read back as epoch 1 to 2, regrant tx `0xa5cc64daaa674df025efd95c18ca97327482140a3b4839fd48a7fd96e41d03a3`; goes red when the namespace check is removed (`devflow/results/mutation-red.txt`) |
-| The install line and the Node quickstart copied off the live page print `{"likes":"metric units"}` | `devflow/quickstart.sh`: `QUICKSTART PASS`, the tarball URL answers 200 |
+| The install line and the Node quickstart copied off the live page print `{"likes":"metric units"}` | `devflow/quickstart.sh`: `QUICKSTART PASS`, the compatibility tarball answers 200 |
 | The browser quickstart, Pip and Fern run on the live site with real input, a virtual authenticator with PRF, and every receipt read back from chain | `apps/web/scripts/click-through.sh`, results in `apps/web/results/`; independent viem read passes 18 checks |
 | The first-run paths hold: Create, remembered passkey, stale marker to `PASSKEY_NOT_FOUND`, recovery | `apps/web/scripts/first-run.sh`, scenarios a, b, c on the live origin |
 | `SatchelRegistry` holds under fuzzing | 22 Foundry tests including 3 invariants, 6 of 6 mutants killed (`contracts/results/`) |

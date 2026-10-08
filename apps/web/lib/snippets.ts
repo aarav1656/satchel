@@ -17,7 +17,7 @@ const back = await s.unsealJson(memory, blob);                                 /
 export const quickstartFor = (mode: "enrol" | "open"): string => QUICKSTART.replace('const mode = "enrol";', `const mode = "${mode}";`);
 
 /** The install line shown on / and run by devflow/quickstart.sh, so a copied line and a tested line are one string. */
-export const INSTALL = "npm i https://satchel-keys.vercel.app/satchel-sdk-0.1.0.tgz @category-labs/mera@0.2.0";
+export const INSTALL = "npm i satchel-sdk@0.1.0 @category-labs/mera@0.2.0";
 
 /** Node has no passkey, so the PRF output comes from the caller: a server-side reader, a test, a script. Run as written with `node quickstart.mjs`. */
 export const NODE_QUICKSTART = `import { fromPrfOutput, ns } from "satchel-sdk";

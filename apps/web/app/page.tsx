@@ -20,7 +20,7 @@ export default function Page() {
       <h2 id="install">Install</h2>
       <CodeBlock lang="sh" file="terminal" code={INSTALL} snippet="install" />
       <p>
-        The package is served from this site as a tarball, so the line works in an empty directory today. Mera is the passkey layer and is pinned at 0.2.0.
+        The registry holds satchel-sdk 0.1.0, so the line works in an empty directory today. Mera is the passkey layer and is pinned at 0.2.0. A <a href="/satchel-sdk-0.1.0.tgz">compatibility tarball</a> stays on this site for projects using the existing download URL.
       </p>
 
       <h2 id="node">The same in Node</h2>
