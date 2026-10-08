@@ -1,25 +1,44 @@
 #!/usr/bin/env bash
-# Developer flow from the packed tarball: npm pack, install into an empty project, typecheck a consumer file, then run the
-# whole derive, seal, grant, revoke, regrant flow against the Monad testnet registry.
+# Developer flow from the published npm package: a clean `npm install satchel-sdk@0.1.0` from registry.npmjs.org into
+# an empty consumer, prove the lock entry came from the registry tarball, typecheck a consumer file against the
+# shipped .d.ts, then run the whole derive, seal, grant, revoke, regrant flow against the Monad testnet registry.
+# This proves what a developer gets from npm, not what a local pack produces.
 set -euo pipefail
 HERE=$(cd "$(dirname "$0")" && pwd); ROOT=$(cd "$HERE/.." && pwd)
-WORK=${WORK:-/tmp/satchel-devflow}; DAY=$(date +%F); OUT=${OUT:-$HERE/results/devflow-$DAY.txt}
-mkdir -p "$HERE/results" "$HERE/.state"; rm -rf "$WORK"; mkdir -p "$WORK"
-(cd "$ROOT/packages/sdk" && npm run build >/dev/null && npm pack --pack-destination "$WORK" 2>&1 | tail -16) > "$WORK/pack.txt"
-TGZ=$(ls "$WORK"/satchel-sdk-*.tgz)
+DAY=$(date +%F); OUT=${OUT:-$HERE/results/devflow-$DAY.txt}
+
+# The consumer dir. Default is a fresh mktemp; a supplied WORK must not already exist and must not be a broad path,
+# so this script can never delete a user directory. It is kept after the run for evidence and reuse.
+die() { echo "devflow: $*" >&2; exit 2; }
+if [ -z "${WORK:-}" ]; then
+  WORK=$(mktemp -d "${TMPDIR:-/tmp}/satchel-devflow.XXXXXXXX")
+else
+  case "$WORK" in
+    /|/tmp|/usr|/etc|/var|/opt|~|"$HOME"|.) die "WORK must not be a broad path: $WORK" ;;
+  esac
+  [ -e "$WORK" ] && die "WORK already exists; refusing to reuse or delete it: $WORK"
+  mkdir -p "$WORK"
+fi
+
+mkdir -p "$HERE/results" "$HERE/.state"
 {
-  echo "satchel developer flow, $(date -u +%FT%TZ), node $(node -v), tarball $(basename "$TGZ") sha256 $(shasum -a 256 "$TGZ" | cut -c1-16)"
-  echo "--- npm pack"; cat "$WORK/pack.txt"
+  echo "satchel developer flow (published package), $(date -u +%FT%TZ), node $(node -v), consumer $WORK"
   cd "$WORK"
-  cat > package.json <<'J'
-{ "name": "devflow-consumer", "private": true, "type": "module" }
-J
-  echo "--- npm install (tarball, mera 0.2.0, typescript)"
-  npm install --no-audit --no-fund "$TGZ" @category-labs/mera@0.2.0 typescript@5 2>&1 | tail -3
+  echo '{"name":"devflow-consumer","private":true,"type":"module"}' > package.json
+
+  echo "--- npm install satchel-sdk@0.1.0 @category-labs/mera@0.2.0 typescript@5 from https://registry.npmjs.org"
+  npm install --registry=https://registry.npmjs.org --no-audit --no-fund --save-exact \
+    satchel-sdk@0.1.0 @category-labs/mera@0.2.0 typescript@5 2>&1 | tail -3
   ls node_modules/satchel-sdk/dist/index.js node_modules/satchel-sdk/LICENSE
+
+  echo "--- prove the lock entry came from the registry tarball (not a local pack)"
+  cp "$HERE/registry-source.mjs" .
+  node registry-source.mjs "$WORK"
+
   echo "--- typecheck consumer file against the shipped .d.ts"
   cp "$HERE/types.ts" .
   npx tsc --noEmit --strict --module nodenext --moduleResolution nodenext --target es2022 --skipLibCheck types.ts && echo "tsc exit 0"
+
   cp "$HERE/flow.mjs" .
   export DEPLOYMENT="$ROOT/deployments/testnet.json" PRF_DIR="$HERE/.state"
   OWNER=$(node flow.mjs owner)

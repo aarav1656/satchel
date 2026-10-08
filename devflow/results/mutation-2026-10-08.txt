@@ -1,0 +1,32 @@
+2026-10-08: published satchel-sdk@0.1.0 checks
+
+Registry-source guard:
+  node --test devflow/registry-source.test.mjs
+  Removed resolved-URL rejection in devflow/registry-source.mjs temporarily.
+  RED: exit 1, 6 pass, 2 fail. The file: package and CLI refusal cases both failed.
+  Restored resolved-URL rejection.
+  GREEN: exit 0, 8 pass, 0 fail.
+
+Revoked-reader guard, isolated installed package only:
+  Changed installed dist/grant.js: if (head.epoch > g.epoch) to if (false).
+  DEPLOYMENT=deployments/testnet.json PRF_DIR=devflow/.state node flow.mjs run
+  RED: exit 1 at FAIL Fern cannot open the epoch 2 memory.
+  Testnet grant 29: 0xd182e06ab2a00b0ca17d7b83cfc0cadd1c7178ccc8832d702a0b77599b775a6a
+  Restored the installed guard to if (head.epoch > g.epoch).
+  First restoration run confirmed revoked-reader denial, then stopped at OWNER_UNFUNDED on regrant.
+  Reran bash devflow/run.sh with its existing 0.1 MON testnet funding path.
+  GREEN: exit 0, DEVFLOW PASS 6 steps, full result in devflow-2026-10-08.txt.
+  Grant 31: 0x79c954b7c758c931aa4e358de93621e005a4e439700fb2ac513a1c43ce18f42d
+  Revoke: 0x35130c033871d413245f93df0c71e59fbba964d3cf323f3ee686656e5b60e9ad
+  Regrant 32: 0xeffe94c2e52521c78a830fafaa7f40a32edfbcafdf3840ca9ecb70864c92b6e7
+  Registry read-back: grant 31 inactive, namespace epoch 2, untouched namespace epoch 1.
+  Revoked reader rejected epoch-2 memory with GRANT_REVOKED; regranted reader recovered tea.
+
+Production browser, https://satchel-keys.vercel.app, Brave native CDP, 390x844:
+  Created a virtual PRF-capable passkey using the actual quickstart button.
+  sealed ns=memory/assistant epoch=1 97 B (1 prompt); unsealed {"likes":"metric units"}.
+  With a new authenticator and a stale remembered credential, Run returned PASSKEY_NOT_FOUND.
+  Create a passkey and I already have one buttons returned.
+  Recreated passkey, ran again in the same session: fingerprint 34e77bb8 stayed stable, one prompt per action.
+  document.documentElement.scrollWidth > innerWidth was false at width 390.
+  Browser retained its own pinned tab; no screenshots or physical authenticator claims.

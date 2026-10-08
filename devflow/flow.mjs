@@ -1,6 +1,8 @@
-// The developer's path, run as a consumer would: satchel-sdk installed from the packed tarball, a real Monad testnet
-// registry, every chain post-condition read back with viem (not the SDK). `node flow.mjs owner` prints the persistent owner
-// address; `node flow.mjs run` executes the flow. The owner's PRF lives in .prf (gitignored), so one funding serves every run.
+// The developer's path, run as a consumer would: satchel-sdk installed from the published npm package (0.1.0, the
+// registry tarball), a real Monad testnet registry, every chain post-condition read back with viem (not the SDK).
+// `node flow.mjs owner` prints the persistent owner address; `node flow.mjs run` executes the flow. Receipts are awaited
+// with a bounded poll rather than read immediately. The owner's PRF lives in .prf (gitignored), so one funding serves
+// every run.
 import fs from "node:fs";
 import { createPublicClient, http, parseAbi } from "viem";
 import { monadTestnet } from "viem/chains";
@@ -31,7 +33,11 @@ const out = [];
 const ok = (name, detail) => { out.push(`PASS ${name}${detail ? `  ${detail}` : ""}`); console.log(out.at(-1)); };
 const must = (cond, name) => { if (!cond) { console.log(`FAIL ${name}`); process.exit(1); } };
 const code = async (p) => { try { await p; return "NO ERROR"; } catch (e) { return isSatchelError(e) ? e.code : `OTHER ${e?.message}`; } };
-const receipt = async (tx) => { const r = await pub.getTransactionReceipt({ hash: tx }); must(r.status === "success", `receipt ${tx} success`); return r; };
+const receipt = async (tx) => {
+  const r = await pub.waitForTransactionReceipt({ hash: tx, timeout: 60_000, pollingInterval: 400, retryCount: 8 });
+  must(r.status === "success", `receipt ${tx} success`);
+  return r;
+};
 
 // 1. derive: one PRF output, isolated namespaces, stable across sessions
 const run = Buffer.from(crypto.getRandomValues(new Uint8Array(4))).toString("hex");

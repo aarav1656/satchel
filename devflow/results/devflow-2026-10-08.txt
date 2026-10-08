@@ -1,0 +1,25 @@
+satchel developer flow (published package), 2026-10-08T11:27:09Z, node v24.9.0, consumer /var/folders/3q/_mxxn9_d72j97qgtpv9dh4sc0000gn/T//satchel-devflow.jPse96m2
+--- npm install satchel-sdk@0.1.0 @category-labs/mera@0.2.0 typescript@5 from https://registry.npmjs.org
+npm warn Unknown user config "min-release-age". This will stop working in the next major version of npm.
+
+added 27 packages in 2s
+node_modules/satchel-sdk/LICENSE
+node_modules/satchel-sdk/dist/index.js
+--- prove the lock entry came from the registry tarball (not a local pack)
+registry-source OK version=0.1.0 resolved=https://registry.npmjs.org/satchel-sdk/-/satchel-sdk-0.1.0.tgz integrity=sha512-iSwC84sdVE/JlnOo0NGZjRhSHocDKpWaxg93f4Lb0bs4U3LnhNvqdKWUtXqWmKmfSNMXDQIhAEILJ325nxfCug==
+--- typecheck consumer file against the shipped .d.ts
+npm warn Unknown user config "allow-git". This will stop working in the next major version of npm.
+npm warn Unknown user config "min-release-age". This will stop working in the next major version of npm.
+tsc exit 0
+Warning: This is a nightly build of Foundry. It is recommended to use the latest stable version. To mute this warning set `FOUNDRY_DISABLE_NIGHTLY_WARNING` in your environment. 
+
+--- owner 0xDA12565907d115507E2459DB16473336e1b3A07C balance 0.013199036000000000 MON
+FUNDED owner=0xDA12565907d115507E2459DB16473336e1b3A07C amount=0.1 MON tx=0x8ba2e08b25d33ea9f09a2ffa8434564c9efc1cee26acecd5105897f14087bfdb block=69242809 owner_balance=0.113199036 deployer_balance=3.410230922
+--- flow
+PASS derive  owner=0xDA12565907d115507E2459DB16473336e1b3A07C dev/memory-77d24ce1=61338625 dev/notes-77d24ce1=e33d9ca7
+PASS seal/unseal  epoch=1 bytes=97 other-namespace=NAMESPACE_MISMATCH flipped=WRONG_PASSKEY truncated=SEAL_CORRUPT foreign=NOT_SEALED other-passkey=WRONG_PASSKEY
+PASS owner-unfunded  OWNER_UNFUNDED before any transaction
+PASS grant  id=31 tx=0x79c954b7c758c931aa4e358de93621e005a4e439700fb2ac513a1c43ce18f42d active=true epoch=1
+PASS revoke  tx=0x35130c033871d413245f93df0c71e59fbba964d3cf323f3ee686656e5b60e9ad epoch 1->2 grant 31 active=false notes-epoch=1 new-memory=GRANT_REVOKED
+PASS regrant  id=32 tx=0xeffe94c2e52521c78a830fafaa7f40a32edfbcafdf3840ca9ecb70864c92b6e7
+DEVFLOW PASS 6 steps  registry=0xd6c895f5c9254dc6eaafc335fff0930fd7012e6d
