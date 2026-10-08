@@ -1,0 +1,4 @@
+Command: npm_config_registry=https://registry.npmjs.org npm view satchel-sdk@0.1.0 version dist.tarball dist.integrity --json
+Registry URL: https://registry.npmjs.org/satchel-sdk/-/satchel-sdk-0.1.0.tgz
+Registry version: 0.1.0
+Registry integrity: sha512-iSwC84sdVE/JlnOo0NGZjRhSHocDKpWaxg93f4Lb0bs4U3LnhNvqdKWUtXqWmKmfSNMXDQIhAEILJ325nxfCug==

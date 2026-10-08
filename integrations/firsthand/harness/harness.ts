@@ -51,7 +51,7 @@ function fingerprint(tree: KeyTree): Fp {
   v0.dispose(); v1.dispose(); n1.dispose();
   return fp;
 }
-const show = (fp: Fp) => `principal=${fp.principal.slice(0, 14)} deposit=${fp.deposit_0_e1.slice(0, 12)} k_ns(0,1)=${fp.vault_0_e1.slice(0, 8)} k_ns(1,7)=${fp.vault_1_e7.slice(0, 8)} k_nonce(1,7)=${fp.nonce_1_e7.slice(0, 8)}`;
+const show = (_fp: Fp) => "principal=[redacted] deposit=[redacted] k_ns(0,1)=[redacted] k_ns(1,7)=[redacted] k_nonce(1,7)=[redacted]";
 const same = (a: Fp, b: Fp) => (Object.keys(a) as (keyof Fp)[]).every((k) => a[k] === b[k]);
 const diffKeys = (a: Fp, b: Fp) => (Object.keys(a) as (keyof Fp)[]).filter((k) => a[k] !== b[k]).length;
 
@@ -118,7 +118,7 @@ const steps: Record<string, () => Promise<void>> = {
     const s = await satchelOpen({ rpId, credential: { credentialId: b64u(cred("A")) } });
     const fp = fingerprint(tree);
     const f = await s.fingerprint(NS0);
-    line("NAIVE", `locker unlock then satchel-sdk open() beside it: locker ${show(fp)}; satchel fingerprint(firsthand/ns/0)=${f}; prompts_for_this_unlock=${gets() - before} ${counts()}`);
+    line("NAIVE", `locker unlock then satchel-sdk open() beside it: locker ${show(fp)}; satchel fingerprint(firsthand/ns/0)=[redacted]; prompts_for_this_unlock=${gets() - before} ${counts()}`);
     tree.dispose(); s.close();
   },
   async adapter() {
@@ -134,7 +134,7 @@ const steps: Record<string, () => Promise<void>> = {
     const owner = sess.satchel.registryOwner.toLowerCase();
     let clash = false;
     for (let i = 0; i < 16; i++) { const d = sess.keys.depositKey(i, 1n); clash ||= d.address.toLowerCase() === owner; d.privateKey.dispose(); }
-    line("SATCHEL", `fingerprint(firsthand/ns/0)=${sf} registryOwner=${sess.satchel.registryOwner} equals_a_locker_deposit_address=${clash}`);
+    line("SATCHEL", `fingerprint(firsthand/ns/0)=[redacted] registryOwner=[redacted] equals_a_locker_deposit_address=${clash}`);
     await sealChecks(sess.satchel, "SEALED");
     line("SESSION", `prompts_since_session_start=${gets() - mark} (unlock, 3 seals, 3 opens, 2 refused opens) ${counts()}`);
     sess.dispose();

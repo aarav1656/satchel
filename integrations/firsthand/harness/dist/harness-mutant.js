@@ -61280,7 +61280,7 @@ init_keccak256();
 init_formatEther();
 init_formatGwei();
 
-// ../../../../../../../../../private/tmp/firsthand/node_modules/.pnpm/satchel-sdk@file+..+..+..+tmp+satchel-pack-fh+satchel-sdk-0.1.0.tgz_@category-labs+mera_82a5e9e90ad5da219eaf1330587715ce/node_modules/satchel-sdk/dist/errors.js
+// ../../../../../../../../../private/tmp/firsthand/node_modules/.pnpm/satchel-sdk@0.1.0_@category-labs+mera@0.2.0_viem@2.56.3_typescript@5.9.3_zod@4.6.2___typescript@5.9.3_zod@4.6.2/node_modules/satchel-sdk/dist/errors.js
 var FIXES = {
   PRF_UNAVAILABLE: "use iCloud Keychain, Google Password Manager, Windows Hello, 1Password, Proton Pass or a YubiKey 5.",
   PASSKEY_CANCELLED: "call the same function again from a click handler and confirm the passkey prompt.",
@@ -61316,7 +61316,7 @@ class SatchelError extends Error {
   }
 }
 
-// ../../../../../../../../../private/tmp/firsthand/node_modules/.pnpm/satchel-sdk@file+..+..+..+tmp+satchel-pack-fh+satchel-sdk-0.1.0.tgz_@category-labs+mera_82a5e9e90ad5da219eaf1330587715ce/node_modules/satchel-sdk/dist/derive.js
+// ../../../../../../../../../private/tmp/firsthand/node_modules/.pnpm/satchel-sdk@0.1.0_@category-labs+mera@0.2.0_viem@2.56.3_typescript@5.9.3_zod@4.6.2___typescript@5.9.3_zod@4.6.2/node_modules/satchel-sdk/dist/derive.js
 var { subtle } = globalThis.crypto;
 var enc = new TextEncoder;
 var SALT = enc.encode("satchel/v1");
@@ -63211,7 +63211,7 @@ class DhkemP256HkdfSha256 extends DhkemP256HkdfSha256Native {
 }
 class HkdfSha256 extends HkdfSha256Native {
 }
-// ../../../../../../../../../private/tmp/firsthand/node_modules/.pnpm/satchel-sdk@file+..+..+..+tmp+satchel-pack-fh+satchel-sdk-0.1.0.tgz_@category-labs+mera_82a5e9e90ad5da219eaf1330587715ce/node_modules/satchel-sdk/dist/sealed.js
+// ../../../../../../../../../private/tmp/firsthand/node_modules/.pnpm/satchel-sdk@0.1.0_@category-labs+mera@0.2.0_viem@2.56.3_typescript@5.9.3_zod@4.6.2___typescript@5.9.3_zod@4.6.2/node_modules/satchel-sdk/dist/sealed.js
 var { subtle: subtle2 } = globalThis.crypto;
 var MAGIC = [83, 65, 84, 49];
 var VERSION = 1;
@@ -63277,7 +63277,7 @@ async function openWith(key, blob) {
   }
 }
 
-// ../../../../../../../../../private/tmp/firsthand/node_modules/.pnpm/satchel-sdk@file+..+..+..+tmp+satchel-pack-fh+satchel-sdk-0.1.0.tgz_@category-labs+mera_82a5e9e90ad5da219eaf1330587715ce/node_modules/satchel-sdk/dist/grant.js
+// ../../../../../../../../../private/tmp/firsthand/node_modules/.pnpm/satchel-sdk@0.1.0_@category-labs+mera@0.2.0_viem@2.56.3_typescript@5.9.3_zod@4.6.2___typescript@5.9.3_zod@4.6.2/node_modules/satchel-sdk/dist/grant.js
 var { subtle: subtle3 } = globalThis.crypto;
 var suite = new CipherSuite({ kem: new DhkemP256HkdfSha256, kdf: new HkdfSha256, aead: new Aes128Gcm });
 var HPKE_INFO = new TextEncoder().encode("satchel/grant/v1");
@@ -63476,7 +63476,7 @@ var monadTestnet = /* @__PURE__ */ defineChain({
   },
   testnet: true
 });
-// ../../../../../../../../../private/tmp/firsthand/node_modules/.pnpm/satchel-sdk@file+..+..+..+tmp+satchel-pack-fh+satchel-sdk-0.1.0.tgz_@category-labs+mera_82a5e9e90ad5da219eaf1330587715ce/node_modules/satchel-sdk/dist/registry.js
+// ../../../../../../../../../private/tmp/firsthand/node_modules/.pnpm/satchel-sdk@0.1.0_@category-labs+mera@0.2.0_viem@2.56.3_typescript@5.9.3_zod@4.6.2___typescript@5.9.3_zod@4.6.2/node_modules/satchel-sdk/dist/registry.js
 var registryAbi = parseAbi([
   "event Granted(address indexed owner, bytes32 indexed nsHash, uint256 indexed grantId, uint64 epoch, bytes32 granteeKeyHash, bytes wrappedKey, string label)",
   "event Revoked(address indexed owner, bytes32 indexed nsHash, uint256 indexed grantId, uint64 newEpoch)",
@@ -63572,7 +63572,7 @@ async function revokeOnChain(r, ownerKey, nsHash, grantId) {
 }
 var sameAddress = (a, b) => a.toLowerCase() === b.toLowerCase();
 
-// ../../../../../../../../../private/tmp/firsthand/node_modules/.pnpm/satchel-sdk@file+..+..+..+tmp+satchel-pack-fh+satchel-sdk-0.1.0.tgz_@category-labs+mera_82a5e9e90ad5da219eaf1330587715ce/node_modules/satchel-sdk/dist/store.js
+// ../../../../../../../../../private/tmp/firsthand/node_modules/.pnpm/satchel-sdk@0.1.0_@category-labs+mera@0.2.0_viem@2.56.3_typescript@5.9.3_zod@4.6.2___typescript@5.9.3_zod@4.6.2/node_modules/satchel-sdk/dist/store.js
 var done = (req) => new Promise((resolve, reject) => {
   req.onsuccess = () => resolve(req.result);
   req.onerror = () => reject(req.error);
@@ -63602,7 +63602,7 @@ function resolveStore(given) {
   throw new SatchelError("STORE_UNAVAILABLE", "No store was passed and this runtime has no IndexedDB.");
 }
 
-// ../../../../../../../../../private/tmp/firsthand/node_modules/.pnpm/satchel-sdk@file+..+..+..+tmp+satchel-pack-fh+satchel-sdk-0.1.0.tgz_@category-labs+mera_82a5e9e90ad5da219eaf1330587715ce/node_modules/satchel-sdk/dist/session.js
+// ../../../../../../../../../private/tmp/firsthand/node_modules/.pnpm/satchel-sdk@0.1.0_@category-labs+mera@0.2.0_viem@2.56.3_typescript@5.9.3_zod@4.6.2___typescript@5.9.3_zod@4.6.2/node_modules/satchel-sdk/dist/session.js
 var { subtle: subtle4 } = globalThis.crypto;
 var enc2 = new TextEncoder;
 var wrapKeyName = (rpId, credentialId) => `satchel/wrap/${rpId}/${credentialId}`;
@@ -63976,7 +63976,7 @@ function fingerprint(tree) {
   n1.dispose();
   return fp;
 }
-var show = (fp) => `principal=${fp.principal.slice(0, 14)} deposit=${fp.deposit_0_e1.slice(0, 12)} k_ns(0,1)=${fp.vault_0_e1.slice(0, 8)} k_ns(1,7)=${fp.vault_1_e7.slice(0, 8)} k_nonce(1,7)=${fp.nonce_1_e7.slice(0, 8)}`;
+var show = (_fp) => "principal=[redacted] deposit=[redacted] k_ns(0,1)=[redacted] k_ns(1,7)=[redacted] k_nonce(1,7)=[redacted]";
 var same = (a, b) => Object.keys(a).every((k) => a[k] === b[k]);
 var diffKeys = (a, b) => Object.keys(a).filter((k) => a[k] !== b[k]).length;
 var cred = (slot) => unhex(store.getItem(`fh.cred${slot}`) ?? "");
@@ -64052,7 +64052,7 @@ var steps = {
     const s = await open2({ rpId, credential: { credentialId: b64u(cred("A")) } });
     const fp = fingerprint(tree);
     const f = await s.fingerprint(NS0);
-    line("NAIVE", `locker unlock then satchel-sdk open() beside it: locker ${show(fp)}; satchel fingerprint(firsthand/ns/0)=${f}; prompts_for_this_unlock=${gets() - before} ${counts()}`);
+    line("NAIVE", `locker unlock then satchel-sdk open() beside it: locker ${show(fp)}; satchel fingerprint(firsthand/ns/0)=[redacted]; prompts_for_this_unlock=${gets() - before} ${counts()}`);
     tree.dispose();
     s.close();
   },
@@ -64073,7 +64073,7 @@ var steps = {
       clash ||= d.address.toLowerCase() === owner;
       d.privateKey.dispose();
     }
-    line("SATCHEL", `fingerprint(firsthand/ns/0)=${sf} registryOwner=${sess.satchel.registryOwner} equals_a_locker_deposit_address=${clash}`);
+    line("SATCHEL", `fingerprint(firsthand/ns/0)=[redacted] registryOwner=[redacted] equals_a_locker_deposit_address=${clash}`);
     await sealChecks(sess.satchel, "SEALED");
     line("SESSION", `prompts_since_session_start=${gets() - mark} (unlock, 3 seals, 3 opens, 2 refused opens) ${counts()}`);
     sess.dispose();

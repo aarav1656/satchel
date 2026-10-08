@@ -6,16 +6,39 @@
 # Run 2: a mutant adapter whose key tree is built from the wrong root, to show the equality check can go red.
 set -euo pipefail
 cd "$(dirname "$0")"
-FH=/tmp/firsthand SDK=/tmp/firsthand/packages/sdk
+HARNESS_DIR=$PWD
+FH="${FIRSTHAND_ROOT:-/tmp/firsthand}" SDK="${FIRSTHAND_ROOT:-/tmp/firsthand}/packages/sdk"
+if [ ! -f "$SDK/package.json" ] || [ ! -f "$SDK/src/webauthn/satchel.ts" ]; then
+  echo "ERROR: FIRSTHAND_ROOT=$FH must be a patched Firsthand checkout with packages/sdk/package.json and src/webauthn/satchel.ts" >&2
+  exit 1
+fi
 CDP="$HOME/.claude/scratch/cdp-tab.mjs"
 PORT=5192 OUT=../results/ceremony.log
 LOG1=/tmp/firsthand-run1.log LOG2=/tmp/firsthand-run2.log
+MUT=$SDK/src/webauthn/satchel-mutant.ts
+PNPM_STORE=$(mktemp -d /tmp/satchel-firsthand-pnpm.XXXXXX)
+redact_logs() { for f in "$LOG1" "$LOG2"; do [ ! -f "$f" ] || sed -E -i '' 's/(principal|deposit|k_ns\([^)]*\)|k_nonce\([^)]*\)|fingerprint\(firsthand\/ns\/0\))=[^ ;]+/\1=[redacted]/g' "$f"; done; }
+cleanup() { redact_logs; kill ${SERVER:-} 2>/dev/null || true; rm -f "$MUT" tsconfig.build.json; rm -rf "$PNPM_STORE"; }
+trap cleanup EXIT
 export CDP_PORT=${CDP_PORT:-9396} VAUTH=1 PIN_FILE="$HOME/.cache/qa-tab-satchel-firsthand"
 
-MUT=$SDK/src/webauthn/satchel-mutant.ts
+REGISTRY_META=$(npm_config_registry=https://registry.npmjs.org npm view satchel-sdk@0.1.0 version dist.tarball dist.integrity --json)
+REGISTRY_VERSION=$(node -e 'console.log(JSON.parse(process.argv[1]).version)' "$REGISTRY_META")
+REGISTRY_URL=$(node -e 'console.log(JSON.parse(process.argv[1])["dist.tarball"])' "$REGISTRY_META")
+REGISTRY_INTEGRITY=$(node -e 'console.log(JSON.parse(process.argv[1])["dist.integrity"])' "$REGISTRY_META")
+node -e 'const p=JSON.parse(process.argv[1]); if(p.version!=="0.1.0"||p["dist.tarball"]!=="https://registry.npmjs.org/satchel-sdk/-/satchel-sdk-0.1.0.tgz"||!p["dist.integrity"]?.startsWith("sha512-")) process.exit(1)' "$REGISTRY_META"
+rg -F "resolution: {integrity: $REGISTRY_INTEGRITY}" "$FH/pnpm-lock.yaml" >/dev/null || { echo "ERROR: Firsthand lock integrity does not match npm registry metadata" >&2; exit 1; }
+echo "=== CLEAN REGISTRY INSTALL: satchel-sdk@0.1.0 ==="
+cd "$FH"
+npm_config_registry=https://registry.npmjs.org pnpm --registry=https://registry.npmjs.org --store-dir "$PNPM_STORE" --config.engine-strict=false install --force --filter @firsthand/sdk... --frozen-lockfile
+node -e 'const m=JSON.parse(process.argv[1]),p=require("./packages/sdk/node_modules/satchel-sdk/package.json"); if(p.version!==m.version||m.version!=="0.1.0") process.exit(1); console.log(`PASS installed satchel-sdk@${p.version}; lock integrity matches npm registry`)' "$REGISTRY_META"
+pnpm --config.engine-strict=false --filter @firsthand/sdk... build
+pnpm --config.engine-strict=false --filter @firsthand/sdk typecheck
+echo "PASS registry install, @firsthand/sdk build, and strict typecheck"
+cd "$HARNESS_DIR"
+
 sed 's/const keys = KeyTree.fromPrf(prf);/const keys = KeyTree.fromPrf(new Uint8Array(root));/' $SDK/src/webauthn/satchel.ts > $MUT
 cmp -s $SDK/src/webauthn/satchel.ts $MUT && { echo "mutation did not apply" >&2; exit 1; }
-trap 'kill ${SERVER:-} 2>/dev/null || true; rm -f $MUT tsconfig.build.json' EXIT
 bundle() { # $1 adapter file, $2 outfile
   cat > tsconfig.build.json <<J
 {"compilerOptions":{"baseUrl":".","paths":{
@@ -39,14 +62,23 @@ echo "http://localhost:$PORT/?load=2" > /tmp/firsthand-harness-url-reload
 
 node $CDP "http://localhost:$PORT/" steps-run1.json /tmp 2>$LOG1 >/dev/null
 node $CDP "http://localhost:$PORT/?b=mutant" steps-mutant.json /tmp 2>$LOG2 >/dev/null
+sed -E -i '' 's/(principal|deposit|k_ns\([^)]*\)|k_nonce\([^)]*\)|fingerprint\(firsthand\/ns\/0\))=[^ ;]+/\1=[redacted]/g' "$LOG1" "$LOG2"
+rg -q 'EQUAL adapter tree vs Firsthand.*equal=true' "$LOG1"
+rg -q 'EQUAL mera-ceremony tree vs Firsthand.*equal=true' "$LOG1"
+rg -q 'REOPEN-B.*code=WRONG_PASSKEY' "$LOG1"
+rg -q 'MUTANT adapter.*mutant tree vs Firsthand.*equal=false' "$LOG2"
+echo "PASS browser assertions: adapter/Mera parity, wrong-passkey refusal, mutant mismatch"
 
 {
   echo "firsthand satchel adapter harness, $(date -u +%FT%TZ), origin http://localhost:$PORT, virtual authenticator ctap2/internal, resident key, user verification, PRF, no chain"
-  echo "adapter: $FH packages/sdk/src/webauthn/satchel.ts git blob $(git -C $FH rev-parse HEAD~1:packages/sdk/src/webauthn/satchel.ts) on branch $(git -C $FH branch --show-current), base $(git -C $FH rev-parse --short main)"
+  echo "adapter: $FH packages/sdk/src/webauthn/satchel.ts git blob $(git -C $FH hash-object packages/sdk/src/webauthn/satchel.ts), based on upstream main $(git -C $FH rev-parse --short main)"
   echo "unmodified: WebAuthnPrfSource.ts blob $(git -C $FH rev-parse HEAD:packages/sdk/src/webauthn/WebAuthnPrfSource.ts), KeyTree (packages/crypto/src/kdf/keytree.ts) blob $(git -C $FH rev-parse HEAD:packages/crypto/src/kdf/keytree.ts)"
-  echo "satchel-sdk tarball sha256 prefix: $(shasum -a 256 /tmp/satchel-pack-fh/satchel-sdk-0.1.0.tgz | cut -c1-16)"
+  echo "npm_config_registry=https://registry.npmjs.org npm view satchel-sdk@0.1.0 version dist.tarball dist.integrity --json"
+  echo "registry metadata: version=$REGISTRY_VERSION resolved=$REGISTRY_URL integrity=$REGISTRY_INTEGRITY"
+  echo "satchel-sdk source: https://registry.npmjs.org/satchel-sdk/-/satchel-sdk-0.1.0.tgz (satchel-sdk@$(node -p "require('$SDK/node_modules/satchel-sdk/package.json').version"))"
+  echo "PASS consumer build and typecheck: pnpm --store-dir fresh-temp-store --config.engine-strict=false --filter @firsthand/sdk... build; pnpm --store-dir fresh-temp-store --config.engine-strict=false --filter @firsthand/sdk typecheck"
   echo; echo "=== RUN 1: two passkeys, Firsthand's own unlock, satchel beside it, the adapter two ways, a control, a fresh load ==="
-  node format-results.mjs $LOG1
+  node format-results.mjs "$LOG1" | sed -E 's/(principal|deposit|k_ns\([^)]*\)|k_nonce\([^)]*\)|fingerprint\(firsthand\/ns\/0\))=[^ ;]+/\1=[redacted]/g'
   echo; echo "=== RUN 2 (mutant): the adapter's key tree built from the satchel root instead of the PRF output ==="
-  node format-results.mjs $LOG2
+  node format-results.mjs "$LOG2" | sed -E 's/(principal|deposit|k_ns\([^)]*\)|k_nonce\([^)]*\)|fingerprint\(firsthand\/ns\/0\))=[^ ;]+/\1=[redacted]/g'
 } | tee $OUT
