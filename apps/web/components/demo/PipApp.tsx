@@ -103,8 +103,10 @@ export function PipApp() {
       <AppBar app="Pip" links={PIP_LINKS} />
       <div className="demo">
         <div className="demo-col">
-          <h1>Your assistant&apos;s memory</h1>
-          <p>Pip remembers what you tell it. Everything it remembers is sealed under <code>{MEMORY_NS}</code> with a key rebuilt from your passkey.</p>
+          <h1>Your trading note</h1>
+          <p>
+            Pip (App A) seals what you write under <code>{MEMORY_NS}</code>. Only ciphertext leaves this origin; the key is rebuilt from your passkey each visit.
+          </p>
 
           {!session && !hasVault && (
             <div className="card">
@@ -138,7 +140,7 @@ export function PipApp() {
           {session && (
             <div className="card">
               <label className="field-label" htmlFor="memory-draft">
-                Tell Pip something to remember
+                Trading note to seal
               </label>
               <textarea id="memory-draft" className="input" value={draft} onChange={(e) => setDraft(e.target.value)} />
               <div className="btn-row">
@@ -154,7 +156,7 @@ export function PipApp() {
                     })
                   }
                 >
-                  {busy === "save" ? "Sealing" : "Save to memory"}
+                  {busy === "save" ? "Sealing" : "Seal trading note"}
                 </button>
               </div>
               <p className="muted small" style={{ marginTop: "var(--s-3)" }}>Encrypted on this device before it is stored. Only ciphertext leaves the page.</p>

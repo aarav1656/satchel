@@ -1,6 +1,8 @@
 # satchel
 
-One passkey, many namespaced keys. An app seals its data under its own namespace with one passkey prompt, hands a second app a read grant, and takes it back with an epoch bump on Monad. No secret is stored anywhere: only ciphertext leaves the tab.
+Cross-app memory under one passkey: App A seals a trading note under `memory/trading-desk`, App B on another origin reads it through a revocable grant, and revoke fails closed on anything sealed after.
+
+The SDK exists so other teams can integrate; the product proof is Pip and Fern, not a wallet.
 
 Live: https://satchel-keys.vercel.app (Monad testnet, chain 10143). Registry: `0xd6c895f5c9254dc6eaafc335fff0930fd7012e6d`.
 

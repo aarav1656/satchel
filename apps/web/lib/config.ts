@@ -3,7 +3,13 @@ import type { Registry } from "satchel-sdk";
 /** The deployed epoch registry (deployments/testnet.json). Chain 10143, Monad testnet. */
 export const REGISTRY_ADDRESS = "0xd6c895f5c9254dc6eaafc335fff0930fd7012e6d" as const;
 export const REGISTRY: Registry = { address: REGISTRY_ADDRESS };
-export const MEMORY_NS = "memory/assistant";
+/** Cross-app AI memory for trading context (Track 04 idea 04). */
+export const MEMORY_NS = "memory/trading-desk";
 export const NOTES_NS = "memory/notes";
-export const SUGGESTED_MEMORY = "Prefers metric units, writes in short sentences";
+export const SUGGESTED_MEMORY =
+  "Long BTC perp above 94.2k only if funding stays negative; size half usual; exit if 4h close below 93.8k.";
+/** When set at build time, Pip publishes sealed notes here and Fern reads them (two origins, one passkey on Pip). */
+export const NOTE_BUS_URL = (process.env.NEXT_PUBLIC_NOTE_BUS ?? "").replace(/\/$/, "");
+/** App A origin for grant approval when App B runs on another port (e.g. http://127.0.0.1:5190). */
+export const SEALER_ORIGIN = (process.env.NEXT_PUBLIC_SEALER_ORIGIN ?? "").replace(/\/$/, "");
 export const MIN_OWNER_BALANCE_WEI = 20_000_000_000_000_000n; // 0.02 MON covers a grant (137k gas) and a revoke (78k gas) with headroom

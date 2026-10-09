@@ -5,7 +5,8 @@ import { useEffect, useState, type ReactNode } from "react";
 import { ns, type Satchel } from "satchel-sdk";
 import { KeyRail } from "@/components/KeyRail";
 import { CopyButton } from "@/components/CopyButton";
-import { MEMORY_NS, NOTES_NS } from "@/lib/config";
+import { MEMORY_NS, NOTE_BUS_URL, NOTES_NS } from "@/lib/config";
+import { unsealTradingNotesFromBus } from "@/lib/owner-notes";
 import { credential } from "@/lib/demo-store";
 import { failure, type Failure } from "@/lib/errors-ui";
 import { scanBrowser, type ScanRow } from "@/lib/scan";
@@ -269,10 +270,15 @@ function CrossDeviceBody({ s }: { s: Satchel }) {
   const [here, setHere] = useState<string | undefined>();
   const [first, setFirst] = useState<{ path: string; fp: string } | undefined>();
   const [link, setLink] = useState("");
+  const [fromBus, setFromBus] = useState<{ id: string; text: string; epoch: number }[] | undefined>();
   useEffect(() => {
     void s.fingerprint(ns(MEMORY_NS)).then(setHere);
     const m = /^#fp=([a-z0-9/-]+):([0-9a-f]{8})$/.exec(location.hash);
     if (m) setFirst({ path: m[1] as string, fp: m[2] as string });
+  }, [s]);
+  useEffect(() => {
+    if (!NOTE_BUS_URL) return;
+    void unsealTradingNotesFromBus(s).then(setFromBus).catch(() => setFromBus([]));
   }, [s]);
   useEffect(() => {
     if (here) setLink(`${location.origin}/proof/#fp=${MEMORY_NS}:${here}`);
@@ -291,6 +297,20 @@ function CrossDeviceBody({ s }: { s: Satchel }) {
             <pre><code data-testid="device-link">{link}</code></pre>
           </div>
         </>
+      )}
+      {fromBus && fromBus.length > 0 && (
+        <div className="card" data-testid="cross-device-notes">
+          <h3 style={{ fontSize: 18 }}>Trading notes from the bus (owner decrypt)</h3>
+          <p className="small muted">Same passkey on this client, no grant. Ciphertext came from the note bus only.</p>
+          <ul className="memory-list">
+            {fromBus.map((n) => (
+              <li key={n.id} data-testid="cross-device-note-row">
+                <span className="memory-text">{n.text}</span>
+                <span className="memory-meta">{MEMORY_NS} e{n.epoch}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
       {first && here && (
         <div data-testid="compare" data-equal={String(equal)}>

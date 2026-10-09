@@ -7,3 +7,4 @@ public/evidence
 lib/evidence.generated.json
 public/satchel-sdk-*.tgz
 .vercel
+.note-bus.json

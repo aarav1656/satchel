@@ -9,9 +9,9 @@ export const QUICKSTART = `import { openOrEnrol, ns } from "satchel-sdk";
 
 const mode = "enrol"; // "open" when this person already has a passkey; a first visit needs one, later visits ignore it
 const s = await openOrEnrol({ rpId: location.hostname, appName: "My app", mode });
-const memory = ns("memory/assistant");
-const blob = await s.seal(memory, { likes: "metric units" });                  // Sealed, safe to store anywhere
-const back = await s.unsealJson(memory, blob);                                 // { likes: "metric units" }`;
+const memory = ns("memory/trading-desk");
+const blob = await s.seal(memory, { note: "Half size above 94.2k; exit 93.8k 4h close" });   // Sealed, safe to store anywhere
+const back = await s.unsealJson(memory, blob);                                 // { note: "..." }`;
 
 /** The text the Run button executes: QUICKSTART with its one `mode` line set to the button the person pressed. */
 export const quickstartFor = (mode: "enrol" | "open"): string => QUICKSTART.replace('const mode = "enrol";', `const mode = "${mode}";`);
@@ -24,10 +24,10 @@ export const NODE_QUICKSTART = `import { fromPrfOutput, ns } from "satchel-sdk";
 
 const prf = crypto.getRandomValues(new Uint8Array(32));   // a real app passes the 32 byte PRF output its passkey returned
 const s = await fromPrfOutput(prf, { rpId: "localhost" });
-const memory = ns("memory/assistant");
-const blob = await s.seal(memory, { likes: "metric units" });
+const memory = ns("memory/trading-desk");
+const blob = await s.seal(memory, { note: "Half size above 94.2k" });
 const back = await s.unsealJson(memory, blob);
-console.log(JSON.stringify(back));                        // {"likes":"metric units"}`;
+console.log(JSON.stringify(back));`;
 
 export const SECOND_NAMESPACE = `const notes = ns("memory/notes");
 const note = await s.seal(notes, "call the dentist");   // a new folder, no second prompt
@@ -37,14 +37,14 @@ await s.fingerprint(notes);                              // b4e6cf3b, equal on e
 export const GRANT_AND_REVOKE = `import { createGrantee, fetchGrant, ns, openOrEnrol } from "satchel-sdk";
 
 const registry = { address: "${REGISTRY_ADDRESS}" };   // Monad testnet
-const memory = ns("memory/assistant");
+const memory = ns("memory/trading-desk");
 
 // App B (Fern) makes its own key. It never touches the passkey. fern.publicKey goes to the owner over any channel.
 const fern = await createGrantee();
 
 // App A (Pip) holds the passkey: it seals a record and grants Fern.
 const s = await openOrEnrol({ rpId: location.hostname, appName: "Pip", registry, mode: "enrol" });
-const blob = await s.seal(memory, { likes: "metric units" });
+const blob = await s.seal(memory, { note: "Half size above 94.2k" });
 const grant = await s.grant(memory, fern.publicKey, { label: "Fern" });   // one Monad transaction
 
 // App B needs only grant.txHash and the sealed bytes. It rebuilds the grant from the receipt and reads.

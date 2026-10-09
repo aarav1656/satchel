@@ -2,8 +2,9 @@
 
 import { createGrantee, fetchGrant, ns, parseSealed, SatchelError, type FetchedGrant } from "satchel-sdk";
 import { keccak256, toBytes, type Hex } from "viem";
-import { MEMORY_NS, REGISTRY } from "./config";
-import { FERN_DB, FERN_KEYS, FERN_STORE, type StoredMemory } from "./demo-store";
+import { MEMORY_NS, NOTE_BUS_URL, REGISTRY } from "./config";
+import { FERN_DB, FERN_KEYS, FERN_STORE, memories, type StoredMemory } from "./demo-store";
+import { fetchNotes } from "./note-bus";
 
 const done = <T,>(req: IDBRequest<T>) =>
   new Promise<T>((resolve, reject) => {
@@ -58,15 +59,38 @@ export type Row =
   | { id: string; at: number; epoch: number; size: number; state: "open"; text: string }
   | { id: string; at: number; epoch: number; size: number; state: "locked"; code: string; message: string };
 
+/** Pick the grant that may open a blob at `recordEpoch`. Fails closed when the record is newer than every grant. */
+export function grantForRecord(mine: FetchedGrant[], recordEpoch: number): FetchedGrant | undefined {
+  const exact = mine.find((g) => g.epoch === recordEpoch);
+  if (exact) return exact;
+  const sorted = [...mine].sort((a, b) => b.epoch - a.epoch);
+  const newest = sorted[0];
+  if (!newest || recordEpoch > newest.epoch) return undefined;
+  return newest;
+}
+
+export async function loadSealedNotes(): Promise<StoredMemory[]> {
+  if (NOTE_BUS_URL) return fetchNotes(NOTE_BUS_URL);
+  return memories.list();
+}
+
 /** Read every sealed memory through the grant that matches its epoch; a record newer than every grant comes back as the SDK's GRANT_REVOKED. */
-export async function readMemories(fern: Fern, mine: FetchedGrant[], memories: StoredMemory[]): Promise<Row[]> {
+export async function readMemories(fern: Fern, mine: FetchedGrant[], sealed: StoredMemory[]): Promise<Row[]> {
   const rows: Row[] = [];
-  for (const m of memories) {
+  for (const m of sealed) {
     const bytes = toBytes(m.hex);
     const head = parseSealed(bytes);
     const base = { id: m.id, at: m.at, epoch: head.epoch, size: bytes.length };
-    const pick = mine.find((g) => g.epoch === head.epoch) ?? [...mine].sort((a, b) => b.epoch - a.epoch)[0];
-    if (!pick) continue;
+    const pick = grantForRecord(mine, head.epoch);
+    if (!pick) {
+      rows.push({
+        ...base,
+        state: "locked",
+        code: "GRANT_REVOKED",
+        message: `No grant covers epoch ${head.epoch}.`,
+      });
+      continue;
+    }
     try {
       const out = await fern.reader(pick).unsealJson<{ text: string }>(bytes);
       rows.push({ ...base, state: "open", text: out.text });

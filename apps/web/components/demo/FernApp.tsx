@@ -7,10 +7,10 @@ import type { FetchedGrant } from "satchel-sdk";
 import { keccak256, type Hex } from "viem";
 import { KeyRail } from "@/components/KeyRail";
 import { epochOf, grantOf, short } from "@/lib/chain";
-import { MEMORY_NS } from "@/lib/config";
+import { MEMORY_NS, NOTE_BUS_URL, SEALER_ORIGIN } from "@/lib/config";
 import { memories, STORAGE } from "@/lib/demo-store";
 import { failure, type Failure } from "@/lib/errors-ui";
-import { acceptGrant, fernIdentity, isTxHash, loadGrants, readMemories, type Fern, type Row } from "@/lib/fern";
+import { acceptGrant, fernIdentity, isTxHash, loadGrants, loadSealedNotes, readMemories, type Fern, type Row } from "@/lib/fern";
 import { AppBar } from "./AppBar";
 
 const LINKS = [{ href: "/fern/", label: "Reader" }];
@@ -43,7 +43,7 @@ export function FernApp() {
     try {
       const grants = await loadGrants();
       setMine(grants);
-      setRows(await readMemories(fern, grants, memories.list()));
+      setRows(await readMemories(fern, grants, await loadSealedNotes()));
       const latest = grants[grants.length - 1];
       if (latest) {
         const g = await grantOf(latest.id);
@@ -85,7 +85,10 @@ export function FernApp() {
 
   const latest = mine[mine.length - 1];
   const cut = latest !== undefined && chain !== undefined && !chain.active;
-  const connectHref = fern ? `/pip/share/?connect=${fern.publicKey}&app=Fern` : "/pip/share/";
+  const sealerBase = SEALER_ORIGIN || "";
+  const connectHref = fern
+    ? `${sealerBase}/pip/share/?connect=${fern.publicKey}&app=Fern`
+    : `${sealerBase}/pip/share/`;
 
   return (
     <>
@@ -93,7 +96,9 @@ export function FernApp() {
       <div className="demo">
         <div className="demo-col">
           <h1>What Fern can see</h1>
-          <p>Fern is a second app. It holds its own key, never your passkey, and reads your memory only through a grant you issued.</p>
+          <p>
+            Fern is App B on another origin. It holds its own key, never your passkey, and reads your trading note only through a grant Pip issued. One tap to read after the grant lands.
+          </p>
 
           {mine.length === 0 && (
             <div className="card" data-testid="fern-empty">
@@ -170,7 +175,10 @@ export function FernApp() {
             <dt>grants</dt>
             <dd>{STORAGE.fernGrants}</dd>
             <dt>memories</dt>
-            <dd>{STORAGE.memories}, the one store Pip and Fern share because they are one origin. <Link href="/guides/two-apps/">Two apps</Link> covers two origins.</dd>
+            <dd>
+              {NOTE_BUS_URL ? `HTTPS note bus at ${NOTE_BUS_URL} (ciphertext only)` : `${STORAGE.memories}, same origin as Pip`}.{" "}
+              <Link href="/guides/two-apps/">Two apps</Link> covers the split-origin flow.
+            </dd>
           </dl>
         </div>
 

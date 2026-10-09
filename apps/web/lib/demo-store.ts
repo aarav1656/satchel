@@ -5,7 +5,7 @@ import type { Address, Hex } from "viem";
  * Everything the demo apps keep in this browser is ciphertext, public, or a key the browser will not export.
  * Pip: a credential id, its registry address, its sealed memories (ciphertext) and the grants it issued (all of it is also on chain), in localStorage.
  * Fern: a non-extractable key pair and the transaction hashes of the grants it was given, in its own IndexedDB database. Fern does not read Pip's grants.
- * The one thing Fern reads from Pip's storage is the sealed memories: both apps are routes of one origin, so that ciphertext is the shared store.
+ * Fern reads sealed notes from the note bus when NEXT_PUBLIC_NOTE_BUS is set (two origins), else from Pip's localStorage on the same origin.
  */
 const KEY = {
   credential: "satchel.pip.credential",

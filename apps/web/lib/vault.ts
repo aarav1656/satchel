@@ -5,7 +5,8 @@ import "./prompts";
 import { enrol, open, ns, parseSealed, type Satchel } from "satchel-sdk";
 import { toBytes, toHex } from "viem";
 import { credential, memories, owner } from "./demo-store";
-import { MEMORY_NS, REGISTRY } from "./config";
+import { MEMORY_NS, NOTE_BUS_URL, REGISTRY } from "./config";
+import { publishNotes } from "./note-bus";
 
 /** Pip's session. It lives in module memory: a client-side navigation keeps it, a reload closes it and the next action asks for the passkey again. */
 let session: Satchel | undefined;
@@ -75,6 +76,7 @@ export async function saveMemory(text: string) {
   const bytes = sealed.toBytes();
   const stored = { id: `${at}-${toHex(bytes.slice(-4)).slice(2)}`, at, hex: toHex(bytes) };
   memories.add(stored);
+  if (NOTE_BUS_URL) await publishNotes(memories.list(), NOTE_BUS_URL);
   return { stored, epoch: sealed.epoch, size: bytes.length };
 }
 
