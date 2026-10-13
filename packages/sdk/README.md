@@ -2,6 +2,10 @@
 
 One passkey, many namespaced keys. Seal data per app, hand a second app a revocable read grant, and cut it off with an epoch bump on Monad.
 
+Your users' data stays theirs. An AI assistant's memory, a trading journal or a settings blob is sealed in the browser under a key derived from the person's passkey. No server holds a key, no seed phrase exists, and the ciphertext is safe to store anywhere. When a second app needs the data, the person grants it in one transaction on Monad, and one more transaction ends that access.
+
+Live demo: [satchel-keys.vercel.app](https://satchel-keys.vercel.app). Registry on Monad testnet (10143): `0xd6c895f5c9254dc6eaafc335fff0930fd7012e6d`.
+
 ```ts
 import { openOrEnrol, ns } from "satchel-sdk";
 
@@ -15,6 +19,30 @@ const back = await s.unsealJson(memory, blob);                                //
 ```
 npm i satchel-sdk @category-labs/mera@0.2.0
 ```
+
+## Hand a second app a revocable grant
+
+```ts
+import { createGrantee, fetchGrant, ns } from "satchel-sdk";
+
+// App B (another origin) keeps its own P-256 key. It never touches the passkey.
+const appB = await createGrantee();
+
+// App A, with the person's session: one transaction on Monad.
+const memory = ns("memory/assistant");
+const grant = await s.grant(memory, appB.publicKey, { label: "App B" });
+
+// App B rebuilds the grant from the transaction hash alone and reads.
+const g = await fetchGrant({ txHash: grant.txHash, registry: REGISTRY, ns: memory });
+await appB.reader(g).unsealJson(blob);                                       // { likes: "metric units" }
+
+// Revoke: the namespace moves to the next epoch for every reader.
+await s.revoke(memory, grant.id);
+const fresh = await s.seal(memory, { likes: "tea" });                        // sealed at epoch 2
+await appB.reader(g).unseal(fresh);                                          // throws GRANT_REVOKED
+```
+
+Reseal what App B could already open after a revoke, and `regrant` any reader that should keep access.
 
 ## What you get
 
