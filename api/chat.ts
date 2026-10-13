@@ -1,6 +1,6 @@
 import { generateText, stepCountIs, tool } from "ai";
 import { z } from "zod";
-import { FERN_SYSTEM, LIMITS, originAllowed, parseChat, PIP_SYSTEM, rateLimited, withMemories } from "./_chat-input";
+import { FERN_SYSTEM, LIMITS, originAllowed, parseChat, PIP_SYSTEM, rateLimited, withMemories } from "./_chat-input.js";
 
 /** Through Vercel AI Gateway. On Vercel the project's OIDC token authenticates it, so no provider key exists in this repo. */
 const MODEL = "anthropic/claude-haiku-4.5";

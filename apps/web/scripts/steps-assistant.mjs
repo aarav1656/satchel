@@ -37,7 +37,8 @@ const say = (app, text) => [
   { type_into: { sel: `#${app}-chat-input`, text } },
   { tclick: "Send" },
 ];
-const turnsDone = (app, n) => `${all("turn")}.filter(t=>t.closest('[data-testid="${app}-chat"]')&&t.dataset.role==='assistant').length === ${n} && !${T("thinking")}`;
+// Pip's transcript can start with the probe turn below, so Pip counts are relative to the assistant turns present after it.
+const turnsDone = (app, n) => `${all("turn")}.filter(t=>t.closest('[data-testid="${app}-chat"]')&&t.dataset.role==='assistant').length === ${n} + (${app === "pip" ? "window.__base || 0" : "0"}) && !${T("thinking")}`;
 
 export default [
   // 1. the front door
@@ -57,6 +58,10 @@ export default [
   { tclick: "Create my vault" },
   { poll: `!!document.getElementById('pip-chat-input') && !!${T("owner-address")}`, timeout: 40000, label: "vault open, chat box and owner address shown" },
   { eval: `'OWNER address=' + ${T("owner-address")}.innerText + ' balance=' + ${T("owner-balance")}.innerText`, label: "owner" },
+  // what the deployed chat endpoint does right now, before any stand-in is installed: a reply, or its error shown in the page
+  ...say("pip", "Hello."),
+  { poll: `!!${T("chat-error")} || ${all("turn")}.some(t=>t.dataset.role==='assistant')`, timeout: 90000, label: "the chat endpoint answered the page" },
+  { eval: `(()=>{window.__base=${all("turn")}.filter(t=>t.dataset.role==='assistant').length;return 'ENDPOINT ' + (${T("chat-error")} ? 'error box: ' + ${T("chat-error")}.innerText.replace(/\\n/g,' | ') : 'reply: ' + ${all("turn")}.filter(t=>t.dataset.role==='assistant').pop().innerText.replace(/\\n/g,' | ')) + ' | memories sealed by it: ' + ${all("memory-row")}.length})()`, label: "endpoint probe" },
   ...(LIVE ? [] : [{ eval: MOCK, label: "model stand-in" }]),
   ...say("pip", "I'm vegetarian."),
   { poll: `${turnsDone("pip", 1)} && ${all("memory-row")}.length >= 1`, timeout: 90000, label: "Pip answered and a memory was sealed" },
