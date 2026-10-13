@@ -8,9 +8,12 @@ body{background:var(--canvas);background-image:linear-gradient(oklch(100% 0 0/.0
 #v{position:absolute;left:150px;top:740px;width:1620px;padding:22px 32px;border:1px solid var(--hair);border-radius:14px;background:var(--code);font:500 25px/1.5 "GMono";color:var(--text);opacity:0}
 #v b{color:var(--accent);font-weight:600}#v i{font-style:normal;color:var(--steel)}
 </style>
-<div class="c" id="g"><div class="k">Grant</div><div class="n">0.0117<small>MON</small></div><div class="d">114,536 gas at 102 gwei<br>block <b>70668572</b> &middot; status <b>1</b><br>5.0 s from click to receipt</div></div>
-<div class="c" id="r"><div class="k">Revoke, and the epoch moves</div><div class="n">0.0067<small>MON</small></div><div class="d">65,265 gas at 102 gwei<br>block <b>70668906</b> &middot; status <b>1</b><br>5.3 s from click to receipt, resealed</div></div>
-<div id="v"><i>any app, no key needed:</i> grantOf(41) &rarr; epoch <b>1</b>, active <b>false</b> &nbsp;&middot;&nbsp; epochOf(owner, memory/trading-desk) &rarr; <b>2</b></div>
+<div class="c" id="g"></div>
+<div class="c" id="r"></div>
+<div id="v"></div>
 <script src="engine.js"></script><script>
-window.render=(t)=>{$("#g").style.opacity=eo(seg(t,.3,.7));$("#r").style.opacity=eo(seg(t,2.6,3.0));$("#v").style.opacity=eo(seg(t,5.2,5.6))};
+const R=cue("run");$("#g").innerHTML=`<div class="k">Grant</div><div class="n">${R.gcost}<small>MON</small></div><div class="d">${R.ggas} gas at ${R.gwei} gwei<br>block <b>${R.gblock}</b> &middot; status <b>1</b><br>${R.gsec} s from click to receipt</div>`;
+$("#r").innerHTML=`<div class="k">Revoke, and the lock changes</div><div class="n">${R.rcost}<small>MON</small></div><div class="d">${R.rgas} gas at ${R.gwei} gwei<br>block <b>${R.rblock}</b> &middot; status <b>1</b><br>${R.rsec} s from click to receipt, locked again</div>`;
+$("#v").innerHTML=`<i>any app, no key needed:</i> grantOf(${R.gid}) &rarr; epoch <b>1</b>, active <b>false</b> &nbsp;&middot;&nbsp; epochOf(owner, memory/assistant) &rarr; <b>2</b>`;
+window.render=(t)=>{$("#g").style.opacity=eo(seg(t,.2,.6));$("#r").style.opacity=eo(seg(t,1.4,1.8));$("#v").style.opacity=eo(seg(t,2.8,3.2))};
 </script>

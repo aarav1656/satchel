@@ -1,73 +1,64 @@
 [
  {
-  "id": "p01",
-  "text": "A minute ago, this assistant read both of my memories."
+  "id": "q01",
+  "text": "You told ChatGPT you're vegetarian. Open any other AI app, and it has no idea."
  },
  {
-  "id": "p02",
-  "text": "Now it reads none. I did not ask it to forget. I revoked one key."
+  "id": "q02",
+  "text": "And the memory ChatGPT does keep lives on OpenAI's side. Its own help page says ChatGPT decides what to use."
  },
  {
-  "id": "p03",
-  "text": "That is satchel. Your assistant's memory, sealed to your passkey."
+  "id": "q03",
+  "text": "So today you pick one: start from zero in every app, or let one company keep a file on you."
  },
  {
-  "id": "p04",
-  "text": "Every assistant today makes you pick. Start each chat knowing nothing about you, or keep a file on you that the vendor holds."
+  "id": "q04",
+  "text": "Satchel is the third option. The memory of your assistant goes where you go, and only the apps you allow can read it."
  },
  {
-  "id": "p05",
-  "text": "ChatGPT's own help page lists what its memory draws on: past chats, saved memories, files, even Gmail. And ChatGPT decides which of it is relevant."
+  "id": "q05",
+  "text": "Meet Pip, an AI assistant. Tell it you're vegetarian. Pip locks that fact with your passkey, the fingerprint or face unlock your phone already uses."
  },
  {
-  "id": "p06",
-  "text": "And that memory is stuck there. The next app you try starts from zero."
+  "id": "q06",
+  "text": "What gets stored is scrambled. Without your passkey, it is noise."
  },
  {
-  "id": "p06b",
-  "text": "Any team adding memory to an assistant meets this same choice. Satchel is the third option, and it ships as a package."
+  "id": "q07",
+  "text": "Now try Fern, a different AI app, built by someone else. It knows nothing about you."
  },
  {
-  "id": "p07",
-  "text": "Satchel turns it around. Pip is the assistant. It seals each fact on your device, under a key only your passkey can make. Storage holds ciphertext."
+  "id": "q08",
+  "text": "So you give Fern a grant: a permission slip, written to Monad, that any app can check and no app can fake."
  },
  {
-  "id": "p08",
-  "text": "Fern, a second app, reads only through a grant. The grant is a wrapped key, recorded in a registry contract on Monad."
+  "id": "q09",
+  "text": "Ask Fern to plan your weekend. Vegetarian food, a flight out of Bangalore. You never told Fern a thing."
  },
  {
-  "id": "p09",
-  "text": "Revoke moves the folder to the next epoch. Pip seals every memory again. The key Fern holds opens nothing, and its next read fails with grant revoked.",
-  "cap": "Revoke moves the folder to the next epoch. Pip seals every memory again. The key Fern holds opens nothing, and its next read fails with GRANT_REVOKED."
+  "id": "q10",
+  "text": "Now change your mind. One tap. Pip locks every memory again, with a brand new key."
  },
  {
-  "id": "p10",
-  "text": "Why Monad? Grants and epochs have to sit where every app can read them and no app can rewrite them. A grant costs about one hundredth of a MON, and the revoke less.",
-  "cap": "Why Monad? Grants and epochs have to sit where every app can read them and no app can rewrite them. A grant costs about 0.012 MON, and the revoke less."
+  "id": "q11",
+  "text": "Fern's old permission slip fits the old lock. That lock is gone."
  },
  {
-  "id": "p11",
-  "text": "The registry has nineteen tests and two invariants. A mutation run breaks it six ways, and goes red six times.",
-  "cap": "The registry has 19 tests and 2 invariants. A mutation run breaks it six ways, and goes red six times."
+  "id": "q12",
+  "text": "Ask Fern again. Generic answer, none of your facts. Fern didn't promise to forget. It simply can't open them any more."
  },
  {
-  "id": "p12",
-  "text": "The S D K has eighty-nine tests. A fresh project installs it from the tarball and runs the whole flow against the live registry.",
-  "cap": "The SDK has 89 tests. A fresh project installs it from the tarball and runs the whole flow against the live registry."
+  "id": "q13",
+  "text": "Both taps are real Monad transactions, a few seconds each, read straight back from the chain."
  },
  {
-  "id": "p13",
-  "text": "Developers get all of it in one install: npm install satchel S D K. Seal, grant, revoke.",
-  "cap": "Developers get all of it in one install: npm install satchel-sdk. Seal, grant, revoke."
+  "id": "q14",
+  "text": "Any app can add this. One package: npm install satchel S D K. Lock, grant, revoke.",
+  "cap": "Any app can add this. One package: npm install satchel-sdk. Lock, grant, revoke."
  },
  {
-  "id": "p14",
-  "text": "We built every layer ourselves: the contract, the S D K, and the two apps that use them. Your memory should follow you between apps, and end when you say so.",
-  "cap": "We built every layer ourselves: the contract, the SDK, and the two apps that use them. Your memory should follow you between apps, and end when you say so."
- },
- {
-  "id": "p15",
-  "text": "Try Pip and Fern now at satchel dash keys dot ver sell dot app.",
-  "cap": "Try Pip and Fern now at satchel-keys.vercel.app."
+  "id": "q15",
+  "text": "Your AI's memory follows you to any app you allow, and one tap takes it back. Try it at satchel dash keys dot ver sell dot app.",
+  "cap": "Your AI's memory follows you to any app you allow, and one tap takes it back. Try it at satchel-keys.vercel.app."
  }
 ]

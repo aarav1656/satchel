@@ -134,6 +134,10 @@
   "wait": 500
  },
  {
+  "waitFor": "!!document.querySelector(\".top-nav a[href=\\\"/fern/\\\"]\")",
+  "timeout": 20000
+ },
+ {
   "clickSel": ".top-nav a[href=\"/fern/\"]"
  },
  {
@@ -309,7 +313,15 @@
   "wait": 400
  },
  {
+  "waitFor": "!!document.querySelector(\".top-nav a[href=\\\"/pip/\\\"]\")",
+  "timeout": 20000
+ },
+ {
   "clickSel": ".top-nav a[href=\"/pip/\"]"
+ },
+ {
+  "waitFor": "!!document.querySelector(\".app-bar nav a[href=\\\"/pip/share/\\\"]\")",
+  "timeout": 20000
  },
  {
   "clickSel": ".app-bar nav a[href=\"/pip/share/\"]"
@@ -354,6 +366,10 @@
   "mark": "to-pip"
  },
  {
+  "waitFor": "!!document.querySelector(\".app-bar nav a[href=\\\"/pip/\\\"]\")",
+  "timeout": 20000
+ },
+ {
   "clickSel": ".app-bar nav a[href=\"/pip/\"]"
  },
  {
@@ -374,6 +390,10 @@
  },
  {
   "mark": "to-fern"
+ },
+ {
+  "waitFor": "!!document.querySelector(\".top-nav a[href=\\\"/fern/\\\"]\")",
+  "timeout": 20000
  },
  {
   "clickSel": ".top-nav a[href=\"/fern/\"]"

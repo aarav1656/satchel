@@ -1,0 +1,5 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>body{background:#080c15}#t{position:absolute;left:260px;right:260px;top:330px;text-align:center;font:600 112px/1.04 "Bricolage";letter-spacing:-.04em;color:var(--ink);opacity:0;text-wrap:balance}#t em{font-style:normal;color:var(--accent)}</style>
+<div id="t"></div><script src="engine.js"></script><script>
+$("#t").innerHTML=cue("html","");window.render=(t)=>{const v=eo(seg(t,0,.5));$("#t").style.opacity=v;$("#t").style.transform=`translateY(${(1-v)*16}px) scale(${1+.02*seg(t,0,cue("dur",5))})`};
+</script>

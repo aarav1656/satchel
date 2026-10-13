@@ -1,14 +1,14 @@
 <!doctype html><meta charset="utf-8"><link rel="stylesheet" href="base.css">
 <style>
 body{background:var(--canvas)}
-#m{position:absolute;left:0;right:0;top:230px;display:flex;justify-content:center;color:var(--ink);opacity:0}
-#u{position:absolute;left:0;right:0;top:520px;text-align:center;font:600 92px "Bricolage";letter-spacing:-.035em;color:var(--ink);opacity:0}
-#i{position:absolute;left:50%;top:700px;transform:translateX(-50%);padding:20px 40px;border-radius:14px;background:var(--code);border:1px solid var(--hair);font:500 40px "GMono";color:var(--text);opacity:0}
+#m{position:absolute;left:0;right:0;top:130px;display:flex;justify-content:center;color:var(--ink);opacity:0}
+#s{position:absolute;left:200px;right:200px;top:460px;text-align:center;font:600 62px/1.15 "Bricolage";letter-spacing:-.03em;color:var(--ink);opacity:0}#u{position:absolute;left:0;right:0;top:700px;font-size:56px !important;color:var(--accent) !important;text-align:center;font:600 92px "Bricolage";letter-spacing:-.035em;color:var(--ink);opacity:0}
+#i{position:absolute;left:50%;top:830px;transform:translateX(-50%);padding:20px 40px;border-radius:14px;background:var(--code);border:1px solid var(--hair);font:500 40px "GMono";color:var(--text);opacity:0}
 #i b{color:var(--accent);font-weight:600}
 </style>
-<div id="m"><svg viewBox="150 180 760 440" fill="none" style="width:340px"><g stroke="currentColor" stroke-width="28" stroke-linecap="round"><path d="M 314 400 C 450 400, 480 226, 640 226"/><path d="M 314 400 L 640 400"/><path d="M 314 400 C 450 400, 480 574, 640 574"/></g><circle cx="250" cy="400" r="64" fill="currentColor"/><g fill="currentColor"><rect x="640" y="198" width="150" height="56" rx="14"/><rect x="640" y="372" width="150" height="56" rx="14"/><rect x="640" y="546" width="150" height="56" rx="14"/></g><path d="M 790 400 L 898 400" stroke="var(--accent)" stroke-width="28" stroke-linecap="round"/><circle cx="936" cy="400" r="30" fill="var(--canvas)" stroke="currentColor" stroke-width="20"/></svg></div><div id="u"></div><div id="i"><b>npm</b> i satchel-sdk</div>
+<div id="m"><svg viewBox="150 180 760 440" fill="none" style="width:260px"><g stroke="currentColor" stroke-width="28" stroke-linecap="round"><path d="M 314 400 C 450 400, 480 226, 640 226"/><path d="M 314 400 L 640 400"/><path d="M 314 400 C 450 400, 480 574, 640 574"/></g><circle cx="250" cy="400" r="64" fill="currentColor"/><g fill="currentColor"><rect x="640" y="198" width="150" height="56" rx="14"/><rect x="640" y="372" width="150" height="56" rx="14"/><rect x="640" y="546" width="150" height="56" rx="14"/></g><path d="M 790 400 L 898 400" stroke="var(--accent)" stroke-width="28" stroke-linecap="round"/><circle cx="936" cy="400" r="30" fill="var(--canvas)" stroke="currentColor" stroke-width="20"/></svg></div><div id="s"></div><div id="u"></div><div id="i"><b>npm</b> i satchel-sdk</div>
 <script src="engine.js"></script><script>
-$("#u").textContent=cue("url","satchel-keys.vercel.app");
-window.render=(t)=>{$("#m").style.opacity=eo(seg(t,0,.5));$("#u").style.opacity=eo(seg(t,.35,.85));$("#i").style.opacity=eo(seg(t,.9,1.4));
+$("#s").textContent=cue("line","");$("#u").textContent=cue("url","satchel-keys.vercel.app");
+window.render=(t)=>{$("#m").style.opacity=eo(seg(t,0,.5));$("#u").style.opacity=eo(seg(t,.9,1.4));$("#s").style.opacity=eo(seg(t,.35,.85));$("#s").style.transform="translateY("+((1-eo(seg(t,.35,.85)))*16)+"px)";$("#i").style.opacity=eo(seg(t,.9,1.4));
  $("#u").style.transform="translateY("+((1-eo(seg(t,.35,.85)))*16)+"px)"};
 </script>

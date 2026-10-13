@@ -8,7 +8,7 @@ h2{font:600 56px/1 "Bricolage";letter-spacing:-.03em;color:var(--ink)}
 .it{display:flex;align-items:center;gap:20px;margin-top:34px;padding:22px 24px;border-radius:12px;background:var(--soft);border:1px solid var(--hair);opacity:0}
 .it b{font:600 32px "Bricolage";color:var(--ink)}.it span{font:500 22px "GMono";color:var(--steel)}
 .dot{width:16px;height:16px;border-radius:50%;background:var(--accent);flex:none}.lock{background:none;border:3px solid var(--steel)}
-#cap{position:absolute;left:0;right:0;top:880px;text-align:center;font:600 40px "Bricolage";color:var(--ink);opacity:0;letter-spacing:-.02em}
+#cap{display:none;position:absolute;left:0;right:0;top:880px;text-align:center;font:600 40px "Bricolage";color:var(--ink);opacity:0;letter-spacing:-.02em}
 #cap em{font-style:normal;color:var(--accent)}
 </style>
 <div class="col" id="L"><h2>On Monad</h2><div class="sub">SatchelRegistry, readable by every app</div>
@@ -19,7 +19,7 @@ h2{font:600 56px/1 "Bricolage";letter-spacing:-.03em;color:var(--ink)}
 <div class="it" id="b2"><i class="dot lock"></i><div><b>Every key</b><br><span>derived from the passkey</span></div></div></div>
 <div id="cap"><em>Two</em> things on chain. Nothing readable.</div>
 <script src="engine.js"></script><script>
-window.render=(t)=>{
+window.render=(t)=>{t+=cue("from",0);
  $("#L").style.opacity=eo(seg(t,0,.35));$("#R").style.opacity=eo(seg(t,.2,.55));
  [["a1",.5],["a2",.85],["b1",1.2],["b2",1.55]].forEach(([id,s])=>{const e=$("#"+id);const p=eo(seg(t,s,s+.35));e.style.opacity=p;e.style.transform=`translateY(${(1-p)*14}px)`});
  $("#cap").style.opacity=eo(seg(t,2.2,2.6));

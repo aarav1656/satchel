@@ -16,14 +16,14 @@ body{background:var(--canvas);background-image:linear-gradient(oklch(100% 0 0/.0
 #reg .r{opacity:0}#reg .g{color:var(--accent)}#reg .x{color:var(--err)}
 #wire{position:absolute;left:0;top:0}
 </style>
-<div class="app" id="pip"><div class="hd"><h2>Pip</h2><span>an assistant</span></div><div class="chip">passkey <b>fp 4d24</b> &middot; memory/trading-desk &middot; <b id="fe">epoch 1</b></div>
+<div class="app" id="pip"><div class="hd"><h2>Pip</h2><span>an assistant</span></div><div class="chip">passkey <b>fp 4d24</b> &middot; memory/assistant &middot; <b id="fe">epoch 1</b></div>
  <div class="tile" id="p0" style="top:168px"></div><div class="tile" id="p1" style="top:300px"></div><div id="store">storage holds ciphertext only</div></div>
 <div class="app" id="fern"><div class="hd"><h2>Fern</h2><span>a second app, its own key</span></div><div class="chip" id="fk">fern key ba705948 &middot; <b id="fgs">no grant</b></div>
  <div class="tile" id="f0" style="top:168px"></div><div class="tile" id="f1" style="top:300px"></div></div>
 <svg id="wire" width="1920" height="1080"></svg>
-<div id="reg"><div class="h">SatchelRegistry on Monad</div><div class="r" id="r0">Granted &middot; <span class="g">grant 41 &middot; epoch 1</span></div><div class="r" id="r1">block 70668572 &middot; status 1</div><div class="r" id="r2">Revoked &middot; <span class="x">epoch 2</span></div><div class="r" id="r3">block 70668906 &middot; status 1</div></div>
+<div id="reg"><div class="h">SatchelRegistry on Monad</div><div class="r" id="r0">Granted &middot; <span class="g" id="rg"></span></div><div class="r" id="r1"></div><div class="r" id="r2">Revoked &middot; <span class="x">epoch 2</span></div><div class="r" id="r3"></div></div>
 <script src="engine.js"></script><script>
-const T8=cue("t8",8),T9=cue("t9",15);
+const T8=cue("t8",8),T9=cue("t9",15),FROM=cue("from",0),RUN=cue("run",{gid:41,gblock:70668572,rblock:70668906});
 const FACTS=["Vegetarian","Flies out of BLR"];
 const mix=(a,b,x)=>a+(b-a)*x;
 function env(open,tone){ // tone: n neutral, a accent, e error
@@ -38,7 +38,8 @@ function setTile(el,{a,open,tone,main,sub,ep,epErr,mono}){el.style.opacity=a;el.
  el.innerHTML=env(open,tone)+`<div class="tx"><div class="t1" style="${tone==="e"?"color:var(--err);font-family:GMono;font-size:27px":mono?"font-family:GMono;font-size:25px;font-weight:500;letter-spacing:0":""}">${main}</div><div class="t2">${sub}</div></div><div class="ep" style="${epErr?"text-decoration:line-through;color:var(--err);border-color:oklch(71% .19 22 / .4)":""}">${ep}</div>`}
 const path=(x1,y1,x2,y2)=>`M${x1} ${y1} C ${x1+140} ${y1}, ${x2-140} ${y2}, ${x2} ${y2}`;
 const X1=796,Y1=300,X2=1124,Y2=300;
-window.render=(t)=>{
+$("#rg").textContent="grant "+RUN.gid+" · epoch 1";$("#r1").textContent="block "+RUN.gblock+" · status 1";$("#r3").textContent="block "+RUN.rblock+" · status 1";
+window.render=(t)=>{t+=FROM;
  $("#pip").style.opacity=eo(seg(t,0,.4));$("#fern").style.opacity=eo(seg(t,.15,.55));
  const rev=seg(t,T9+3.2,T9+4.4), epoch=t>T9+1.8?2:1; // roll, then reseal
  $("#fe").textContent="epoch "+epoch;
@@ -59,7 +60,7 @@ window.render=(t)=>{
   let main=cut>0.5?"GRANT_REVOKED":(g>0.5?f:"locked, no grant"), sub=cut>0.5?"read 0 of 2 memories":(g>0.5?"opened with its own key":"Fern holds nothing yet");
   setTile($("#f"+i),{a,open,tone,main,sub,ep:cut>0.5?"grant e1":(g>0.5?"grant e1":"&mdash;"),epErr:cut>0.5});
  });
- $("#fgs").style.color=cut>0.5?"var(--err)":"var(--accent)";$("#fgs").textContent=cut>0.5?"grant revoked":(g>0.5?"grant 41 active":"no grant");
+ $("#fgs").style.color=cut>0.5?"var(--err)":"var(--accent)";$("#fgs").textContent=cut>0.5?"grant revoked":(g>0.5?"grant "+RUN.gid+" active":"no grant");
  // wire
  const drawn=eo(seg(t,T8+2.4,T8+3.4)), pathD=path(X1,Y1,X2,Y2);
  let w=`<g fill="none" stroke-linecap="round">`;

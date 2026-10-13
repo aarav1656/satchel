@@ -23,7 +23,8 @@ const ff = (args) => run("ffmpeg", ["-y", "-loglevel", "error", ...args]);
 const probe = (f) => PRE ? 1 : Number(execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", f], { encoding: "utf8" }));
 const tl = JSON.parse(fs.readFileSync(R(spec.timeline), "utf8"));
 const byId = Object.fromEntries(tl.lines.map((l) => [l.id, l]));
-const lock = (args) => run("lockf", ["-t", "900", "/tmp/deepsurge-rec.lock", ...args]);
+const lockRun = (args) => { for (let i = 0; i < 40; i++) { try { execFileSync("lockf", ["-t", "0", "/tmp/deepsurge-rec.lock", ...args], { stdio: ["ignore", "inherit", "inherit"] }); return; } catch (e) { if (e.status !== 75) throw e; execFileSync("sleep", ["15"]); } } throw new Error("the recording lock stayed busy"); };
+const lock = (args) => { if (!PRE) lockRun(args); };
 const hash = (o) => crypto.createHash("sha1").update(JSON.stringify(o)).digest("hex").slice(0, 12);
 
 let jobs = [];
@@ -118,7 +119,7 @@ spec.beats.forEach((b, bi) => {
   console.error(`beat ${bi} ${b.name}: ${t0.toFixed(2)}-${t1.toFixed(2)} (${d}s) boxes ${boxes.length}`);
 });
 if (PRE) {
-  if (sjobs.length) { const jf = R("work/sc/jobs.json"); fs.writeFileSync(jf, JSON.stringify(sjobs)); execFileSync("lockf", ["-t", "1500", "/tmp/deepsurge-rec.lock", "node", R("scene.mjs"), "--batch", jf], { stdio: "inherit" }); }
+  if (sjobs.length) { const jf = R("work/sc/jobs.json"); fs.writeFileSync(jf, JSON.stringify(sjobs)); lockRun(["node", R("scene.mjs"), "--batch", jf]); }
   console.error("pre pass done: " + sjobs.length + " scene clips"); process.exit(0);
 }
 const all = path.join(work, "all.txt"); fs.writeFileSync(all, files.map((f) => `file '${f}'`).join("\n"));

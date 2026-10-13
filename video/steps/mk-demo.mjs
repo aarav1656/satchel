@@ -13,6 +13,7 @@ const send = (n, text, app) => [
   mk(`${app}${n}-reply`),
 ];
 const mk = (n) => ({ mark: n });
+const nav = (sel) => [{ waitFor: `!!document.querySelector(${JSON.stringify(sel)})`, timeout: 20000 }, { clickSel: sel }];
 const box = (sel, name, hold = 3) => ({ boxSel: sel, name, hold, soft: true });
 const S = [
   { eval: CLEAR },
@@ -45,7 +46,7 @@ const S = [
 
   { rec: "c3-fern" },
   { wait: 500 },
-  { clickSel: `.top-nav a[href="/fern/"]` },
+  ...nav(`.top-nav a[href="/fern/"]`),
   { waitFor: `!!${T("fern-empty")}`, timeout: 20000 },
   { wait: 2200 },
   { click: "Connect to your memory", until: `!!${T("allow-card")}` },
@@ -90,8 +91,8 @@ const S = [
 
   { rec: "c6-revoke" },
   { wait: 400 },
-  { clickSel: `.top-nav a[href="/pip/"]` },
-  { clickSel: `.app-bar nav a[href="/pip/share/"]` },
+  ...nav(`.top-nav a[href="/pip/"]`),
+  ...nav(`.app-bar nav a[href="/pip/share/"]`),
   { waitFor: `${all("grant-row")}.length === 1 && ${all("grant-row")}[0].dataset.active === 'true'`, timeout: 30000 },
   { wait: 1800 },
   mk("revoke-click"),
@@ -103,13 +104,13 @@ const S = [
   box('[data-testid="grant-row"]', "revoked", 3.5),
   { wait: 3600 },
   mk("to-pip"),
-  { clickSel: `.app-bar nav a[href="/pip/"]` },
+  ...nav(`.app-bar nav a[href="/pip/"]`),
   { waitFor: `${all("memory-row")}.length === 2 && ${all("memory-row")}.every(r=>r.dataset.epoch==='2')`, timeout: 40000 },
   { wait: 1200 },
   box('[data-testid="memory-list"]', "epoch2", 3),
   { wait: 3200 },
   mk("to-fern"),
-  { clickSel: `.top-nav a[href="/fern/"]` },
+  ...nav(`.top-nav a[href="/fern/"]`),
   { waitFor: `${all("fern-row")}.length === 2 && ${all("fern-row")}.every(r=>r.dataset.state==='locked')`, timeout: 40000 },
   { wait: 1200 },
   box('[data-testid="fern-memories"]', "fern-locked", 3.5),

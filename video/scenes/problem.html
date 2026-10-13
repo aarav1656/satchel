@@ -17,6 +17,7 @@ h2{font:600 46px/1.05 "Bricolage";letter-spacing:-.03em;color:var(--ink)}.sub{ma
  <div class="row" id="b1"><i></i>vegetarian<u>their server</u></div><div class="row" id="b2"><i></i>flies out of BLR<u>their server</u></div><div class="row" id="b3"><i></i>works nights, hates mornings<u>their server</u></div><div class="row" id="b4"><i></i>gmail: flight receipts<u>their server</u></div><div class="stamp b" id="sb">their file, their rules</div></div>
 <script src="engine.js"></script><script>
 const p=(id,s,d=.35)=>{const e=$("#"+id),v=eo(seg(t_,s,s+d));e.style.opacity=v;e.style.transform=`translateY(${(1-v)*12}px)`};let t_=0;
-window.render=(t)=>{t_=t;$("#A").style.opacity=eo(seg(t,0,.35));$("#B").style.opacity=eo(seg(t,.2,.55));
+const ONLY=cue("only","");if(ONLY){const k=$("#"+ONLY);k.style.left="360px";k.style.width="1200px";k.style.height="760px";k.style.top="90px";k.style.padding="56px 64px";const o=ONLY==="A"?"B":"A";$("#"+o).style.display="none";k.querySelectorAll(".msg").forEach(m=>m.style.fontSize="38px");k.querySelectorAll(".row").forEach(m=>m.style.fontSize="32px");k.querySelector("h2").style.fontSize="64px"}
+window.render=(t)=>{t_=t;$("#A").style.opacity=eo(seg(t,0,.35));$("#B").style.opacity=eo(seg(t,ONLY?0:.2,ONLY?.35:.55));
  p("a1",.6);p("a2",1.6);p("a3",2.6);p("sa",3.4);p("b1",1.0);p("b2",1.7);p("b3",2.4);p("b4",3.1);p("sb",4.0)};
 </script>

@@ -6,18 +6,18 @@
  "lead": 0.12,
  "bg": "080c15",
  "labels": {
-  "owner": "Owner address, derived from the passkey",
-  "sealed": "Sealed at epoch 1, ciphertext only",
-  "allow": "Fern asks to read this folder",
-  "balance0": "The owner needs gas to grant",
+  "owner": "Vault open",
+  "sealed": "Stored scrambled",
+  "allow": "Fern asks. I decide.",
+  "balance0": "Small network fee",
   "balance1": "Funded",
-  "grant-tx": "Grant transaction on Monad",
+  "grant-tx": "The grant, on Monad",
   "fern-open": "Opened with Fern's own key",
-  "fern-read": "Read 2 of 2 memories",
-  "revoked": "Revoked, memories sealed again at epoch 2",
-  "epoch2": "Same memories, sealed at epoch 2",
-  "fern-locked": "GRANT_REVOKED",
-  "fern-read0": "Read 0 of 2 memories",
+  "fern-read": "Used both facts",
+  "revoked": "One tap: revoke",
+  "epoch2": "Locked again, new key",
+  "fern-locked": "Fern is locked out",
+  "fern-read0": "None of my facts",
   "qs-out": "The quickstart, run for real"
  },
  "errBoxes": [
@@ -27,13 +27,28 @@
  ],
  "beats": [
   {
-   "name": "goal",
+   "name": "title",
    "ids": [
-    "d01"
+    "e01"
    ],
    "pieces": [
     {
-     "still": "work/final/c1-vault.mp4",
+     "scene": "title",
+     "cues": {
+      "html": "Every new AI app asks who you are. <em>Again.</em>"
+     },
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "goal",
+   "ids": [
+    "e02"
+   ],
+   "pieces": [
+    {
+     "still": "work/final2/c1-vault.mp4",
      "at": 1,
      "fit": true,
      "push": {
@@ -47,14 +62,14 @@
   {
    "name": "vault",
    "ids": [
-    "d02"
+    "e03"
    ],
    "pieces": [
     {
-     "clip": "work/final/c1-vault.mp4",
-     "marks": "work/final/c1-vault/marks.json",
+     "clip": "work/final2/c1-vault.mp4",
+     "marks": "work/final2/c1-vault/marks.json",
      "ss": 1.2,
-     "se": 6.4,
+     "se": 6.5,
      "fit": true
     }
    ]
@@ -62,29 +77,14 @@
   {
    "name": "tell",
    "ids": [
-    "d03"
+    "e04"
    ],
    "pieces": [
     {
-     "clip": "work/final/c2-tell.mp4",
-     "marks": "work/final/c2-tell/marks.json",
+     "clip": "work/final2/c2-tell.mp4",
+     "marks": "work/final2/c2-tell/marks.json",
      "ss": 0.8,
-     "se": 9.6,
-     "fit": true
-    }
-   ]
-  },
-  {
-   "name": "seal",
-   "ids": [
-    "d04"
-   ],
-   "pieces": [
-    {
-     "clip": "work/final/c2-tell.mp4",
-     "marks": "work/final/c2-tell/marks.json",
-     "ss": 9.6,
-     "se": 15.2,
+     "se": 11,
      "fit": true
     }
    ]
@@ -92,29 +92,29 @@
   {
    "name": "second",
    "ids": [
-    "d05b"
+    "e05"
    ],
    "pieces": [
     {
-     "clip": "work/final/c2-tell.mp4",
-     "marks": "work/final/c2-tell/marks.json",
-     "ss": 15.2,
-     "se": 34.1,
+     "clip": "work/final2/c2-tell.mp4",
+     "marks": "work/final2/c2-tell/marks.json",
+     "ss": 11,
+     "se": 32,
      "fit": true
     }
    ]
   },
   {
-   "name": "cipher",
+   "name": "scrambled",
    "ids": [
-    "d05"
+    "e06"
    ],
    "pieces": [
     {
-     "clip": "work/final/c2-tell.mp4",
-     "marks": "work/final/c2-tell/marks.json",
-     "ss": 34.1,
-     "se": 39.5,
+     "clip": "work/final2/c2-tell.mp4",
+     "marks": "work/final2/c2-tell/marks.json",
+     "ss": 32,
+     "se": 37.2,
      "fit": true
     }
    ]
@@ -122,12 +122,12 @@
   {
    "name": "fern",
    "ids": [
-    "d06"
+    "e07"
    ],
    "pieces": [
     {
-     "clip": "work/final/c3-fern.mp4",
-     "marks": "work/final/c3-fern/marks.json",
+     "clip": "work/final2/c3-fern.mp4",
+     "marks": "work/final2/c3-fern/marks.json",
      "ss": 1.1,
      "se": 6,
      "fit": true
@@ -137,21 +137,14 @@
   {
    "name": "connect",
    "ids": [
-    "d07"
+    "e08"
    ],
    "pieces": [
     {
-     "clip": "work/final/c3-fern.mp4",
-     "marks": "work/final/c3-fern/marks.json",
+     "clip": "work/final2/c3-fern.mp4",
+     "marks": "work/final2/c3-fern/marks.json",
      "ss": 6,
-     "se": 12.5,
-     "speed": 1.3
-    },
-    {
-     "clip": "work/final/c4-fund.mp4",
-     "marks": "work/final/c4-fund/marks.json",
-     "ss": 0,
-     "se": 3.5,
+     "se": 8.6,
      "fit": true
     }
    ]
@@ -159,14 +152,14 @@
   {
    "name": "fund",
    "ids": [
-    "d08"
+    "e09"
    ],
    "pieces": [
     {
-     "clip": "work/final/c4-fund.mp4",
-     "marks": "work/final/c4-fund/marks.json",
-     "ss": 3.5,
-     "se": 12.69,
+     "clip": "work/final2/c4-fund.mp4",
+     "marks": "work/final2/c4-fund/marks.json",
+     "ss": 0.5,
+     "se": 7,
      "fit": true
     }
    ]
@@ -174,14 +167,14 @@
   {
    "name": "grant",
    "ids": [
-    "d09"
+    "e10"
    ],
    "pieces": [
     {
-     "clip": "work/final/c5-grant.mp4",
-     "marks": "work/final/c5-grant/marks.json",
+     "clip": "work/final2/c5-grant.mp4",
+     "marks": "work/final2/c5-grant/marks.json",
      "ss": 0,
-     "se": 9.8,
+     "se": 7.8,
      "fit": true
     }
    ]
@@ -189,12 +182,14 @@
   {
    "name": "split",
    "ids": [
-    "d09b"
+    "e11"
    ],
    "pieces": [
     {
      "scene": "split",
-     "cues": {},
+     "cues": {
+      "from": 3
+     },
      "fit": true
     }
    ]
@@ -202,29 +197,14 @@
   {
    "name": "fern-open",
    "ids": [
-    "d10b"
+    "e12"
    ],
    "pieces": [
     {
-     "clip": "work/final/c5-grant.mp4",
-     "marks": "work/final/c5-grant/marks.json",
-     "ss": 9.89,
-     "se": 15,
-     "fit": true
-    }
-   ]
-  },
-  {
-   "name": "ask",
-   "ids": [
-    "d10"
-   ],
-   "pieces": [
-    {
-     "clip": "work/final/c5-grant.mp4",
-     "marks": "work/final/c5-grant/marks.json",
-     "ss": 15,
-     "se": 21,
+     "clip": "work/final2/c5-grant.mp4",
+     "marks": "work/final2/c5-grant/marks.json",
+     "ss": 7.94,
+     "se": 13.2,
      "fit": true
     }
    ]
@@ -232,29 +212,28 @@
   {
    "name": "plan",
    "ids": [
-    "d11",
-    "d11b"
+    "e13"
    ],
    "pieces": [
     {
-     "clip": "work/final/c5-grant.mp4",
-     "marks": "work/final/c5-grant/marks.json",
-     "ss": 21,
-     "se": 30.65,
-     "speed": 8
+     "clip": "work/final2/c5-grant.mp4",
+     "marks": "work/final2/c5-grant/marks.json",
+     "ss": 13.2,
+     "se": 21.7,
+     "speed": 3
     },
     {
-     "clip": "work/final/c5-grant.mp4",
-     "marks": "work/final/c5-grant/marks.json",
-     "ss": 30.65,
-     "se": 37.3,
-     "speed": 8
+     "clip": "work/final2/c5-grant.mp4",
+     "marks": "work/final2/c5-grant/marks.json",
+     "ss": 21.7,
+     "se": 28.6,
+     "speed": 4
     },
     {
-     "clip": "work/final/c5-grant.mp4",
-     "marks": "work/final/c5-grant/marks.json",
-     "ss": 37.3,
-     "se": 41.7,
+     "clip": "work/final2/c5-grant.mp4",
+     "marks": "work/final2/c5-grant/marks.json",
+     "ss": 28.6,
+     "se": 32.8,
      "fit": true
     }
    ]
@@ -262,21 +241,21 @@
   {
    "name": "revoke",
    "ids": [
-    "d12"
+    "e14"
    ],
    "pieces": [
     {
-     "clip": "work/final/c6-revoke.mp4",
-     "marks": "work/final/c6-revoke/marks.json",
+     "clip": "work/final2/c6-revoke.mp4",
+     "marks": "work/final2/c6-revoke/marks.json",
      "ss": 2,
-     "se": 8.5,
-     "speed": 3
+     "se": 5.7,
+     "speed": 1.6
     },
     {
-     "clip": "work/final/c6-revoke.mp4",
-     "marks": "work/final/c6-revoke/marks.json",
-     "ss": 8.5,
-     "se": 14.4,
+     "clip": "work/final2/c6-revoke.mp4",
+     "marks": "work/final2/c6-revoke/marks.json",
+     "ss": 5.7,
+     "se": 10.8,
      "fit": true
     }
    ]
@@ -284,14 +263,14 @@
   {
    "name": "reseal",
    "ids": [
-    "d12b"
+    "e15"
    ],
    "pieces": [
     {
-     "clip": "work/final/c6-revoke.mp4",
-     "marks": "work/final/c6-revoke/marks.json",
-     "ss": 14.4,
-     "se": 25,
+     "clip": "work/final2/c6-revoke.mp4",
+     "marks": "work/final2/c6-revoke/marks.json",
+     "ss": 10.8,
+     "se": 19.1,
      "fit": true
     }
    ]
@@ -299,14 +278,14 @@
   {
    "name": "locked",
    "ids": [
-    "d13"
+    "e16"
    ],
    "pieces": [
     {
-     "clip": "work/final/c6-revoke.mp4",
-     "marks": "work/final/c6-revoke/marks.json",
-     "ss": 25.08,
-     "se": 33.3,
+     "clip": "work/final2/c6-revoke.mp4",
+     "marks": "work/final2/c6-revoke/marks.json",
+     "ss": 19.15,
+     "se": 25.3,
      "fit": true
     }
    ]
@@ -314,28 +293,28 @@
   {
    "name": "generic",
    "ids": [
-    "d14"
+    "e17"
    ],
    "pieces": [
     {
-     "clip": "work/final/c6-revoke.mp4",
-     "marks": "work/final/c6-revoke/marks.json",
-     "ss": 33.3,
-     "se": 47.1,
-     "speed": 14
+     "clip": "work/final2/c6-revoke.mp4",
+     "marks": "work/final2/c6-revoke/marks.json",
+     "ss": 25.3,
+     "se": 33.5,
+     "speed": 10
     },
     {
-     "clip": "work/final/c6-revoke.mp4",
-     "marks": "work/final/c6-revoke/marks.json",
-     "ss": 47.1,
-     "se": 50.1,
+     "clip": "work/final2/c6-revoke.mp4",
+     "marks": "work/final2/c6-revoke/marks.json",
+     "ss": 33.5,
+     "se": 37.6,
      "speed": 4
     },
     {
-     "clip": "work/final/c6-revoke.mp4",
-     "marks": "work/final/c6-revoke/marks.json",
-     "ss": 50.1,
-     "se": 54.5,
+     "clip": "work/final2/c6-revoke.mp4",
+     "marks": "work/final2/c6-revoke/marks.json",
+     "ss": 37.6,
+     "se": 42.3,
      "fit": true
     }
    ]
@@ -343,8 +322,7 @@
   {
    "name": "chain",
    "ids": [
-    "d15",
-    "d15b"
+    "e18"
    ],
    "pieces": [
     {
@@ -353,23 +331,23 @@
       "lines": [
        [
         0.2,
-        "<span class=\"c\">$ cast receipt</span> <span class=\"k\">0x14cd9d1a…bda0497c</span>  <span class=\"h\"># the grant</span>"
+        "<span class=\"c\">$ cast receipt</span> <span class=\"k\">0x842fb3b1…7304260</span>  <span class=\"h\"># the grant</span>"
        ],
        [
         0.6,
-        "  status      <span class=\"ok\">1 (success)</span>        block 70668572        gasUsed 114536"
+        "  status      <span class=\"ok\">1 (success)</span>        block 70693280        gasUsed 114548"
        ],
        [
         1.4,
-        "<span class=\"c\">$ cast receipt</span> <span class=\"k\">0xed2d3b8d…a66b6d8</span>  <span class=\"h\"># the revoke</span>"
+        "<span class=\"c\">$ cast receipt</span> <span class=\"k\">0x27009bf4…e7ae7c</span>  <span class=\"h\"># the revoke</span>"
        ],
        [
         1.8,
-        "  status      <span class=\"ok\">1 (success)</span>        block 70668906        gasUsed 65265"
+        "  status      <span class=\"ok\">1 (success)</span>        block 70693429        gasUsed 65277"
        ],
        [
         2.6,
-        "<span class=\"c\">$ cast call</span> 0xd6c895f5…d7012e6d <span class=\"k\">\"grantOf(uint256)(...)\"</span> 41"
+        "<span class=\"c\">$ cast call</span> 0xd6c895f5…d7012e6d <span class=\"k\">\"grantOf(uint256)(...)\"</span> 43"
        ],
        [
         3,
@@ -377,7 +355,7 @@
        ],
        [
         3.8,
-        "<span class=\"c\">$ cast call</span> 0xd6c895f5…d7012e6d <span class=\"k\">\"epochOf(address,bytes32)(uint64)\"</span> owner memory/trading-desk"
+        "<span class=\"c\">$ cast call</span> 0xd6c895f5…d7012e6d <span class=\"k\">\"epochOf(address,bytes32)(uint64)\"</span> owner memory/assistant"
        ],
        [
         4.2,
@@ -385,7 +363,7 @@
        ],
        [
         5,
-        "<span class=\"h\">read from https://testnet-rpc.monad.xyz at block 70670385, chain 10143</span>"
+        "<span class=\"h\">read from https://testnet-rpc.monad.xyz at block 70693751, chain 10143</span>"
        ]
       ],
       "roll": 4.4
@@ -397,43 +375,34 @@
   {
    "name": "sdk",
    "ids": [
-    "d16"
+    "e19"
    ],
    "pieces": [
     {
-     "clip": "work/final/c7-sdk.mp4",
-     "marks": "work/final/c7-sdk/marks.json",
-     "ss": 0,
-     "se": 4,
-     "fit": true
-    }
-   ]
-  },
-  {
-   "name": "run",
-   "ids": [
-    "d17",
-    "d17b"
-   ],
-   "pieces": [
-    {
-     "clip": "work/final/c7-sdk.mp4",
-     "marks": "work/final/c7-sdk/marks.json",
-     "ss": 4.04,
-     "se": 13.9,
-     "fit": true
+     "clip": "work/final2/c7-sdk.mp4",
+     "marks": "work/final2/c7-sdk/marks.json",
+     "ss": 3.99,
+     "se": 11.4,
+     "fit": true,
+     "zoom": {
+      "z": 1.8,
+      "fx": 0.54,
+      "fy": 0.15
+     }
     }
    ]
   },
   {
    "name": "cta",
    "ids": [
-    "d18"
+    "e20"
    ],
    "pieces": [
     {
      "scene": "cta",
-     "cues": {},
+     "cues": {
+      "line": "My AI's memory follows me to any app I allow, and one tap takes it back."
+     },
      "fit": true
     }
    ]

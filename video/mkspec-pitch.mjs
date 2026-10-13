@@ -2,29 +2,34 @@
 import fs from "node:fs";
 const tl = JSON.parse(fs.readFileSync("vo/out-pitch/timeline.json", "utf8")); const T = Object.fromEntries(tl.lines.map((l) => [l.id, l]));
 const LEAD = 0.12;
-const c = (n, ss, se, o = {}) => ({ clip: `work/final/${n}.mp4`, marks: `work/final/${n}/marks.json`, ss, se, ...o });
-const mech0 = T.p07.start - LEAD;
+const c = (n, ss, se, o = {}) => ({ clip: `work/final2/${n}.mp4`, marks: `work/final2/${n}/marks.json`, ss, se, ...o });
+const run = JSON.parse(fs.readFileSync("work/run.json", "utf8"));
+const chainLines = JSON.parse(fs.readFileSync("work/chain.json", "utf8"));
 const hi = JSON.parse(fs.readFileSync("work/src-openai.json", "utf8"));
 const src = { img: "../work/src-openai.png", w: 2200, h: 1520, crop: [80, 130, 1500, 700], maxH: 780, maxW: 1560, top: 90, label: "OpenAI Help Center, Memory in ChatGPT, read 13 October 2026",
-  hi: [[hi.list[0][0] - 52, hi.list[0][1] - 6, 760, hi.list[4][1] + 48 - hi.list[0][1] + 12, 2.2, 5.0], [hi.decides[0], hi.decides[1], hi.decides[2], hi.decides[3], 5.2]] };
+  hi: [[hi.list[0][0] - 52, hi.list[0][1] - 6, 760, hi.list[4][1] + 48 - hi.list[0][1] + 12, 1.2, 3.6], [hi.decides[0], hi.decides[1], hi.decides[2], hi.decides[3], 3.9]] };
+const mech0 = T.q10.start - LEAD;
+const QS = { z: 1.8, fx: 0.54, fy: 0.15 };
 const spec = {
   out: "satchel-pitch.mp4", timeline: "vo/out-pitch/timeline.json", audio: "vo/out-pitch/narration.wav", work: "work/compose-pitch", lead: LEAD, bg: "080c15",
-  labels: { "fern-read": "Read 2 of 2 memories", "fern-locked": "GRANT_REVOKED", "fern-read0": "Read 0 of 2 memories" },
-  errBoxes: ["fern-locked", "fern-read0"],
+  labels: { sealed: "Stored scrambled", allow: "Fern asks. You decide.", "fern-read": "Fern used both facts", revoked: "One tap: revoke", "fern-locked": "Fern can't open them", "fern-read0": "Fern can't open them", "qs-out": "The quickstart, run for real" },
+  errBoxes: ["revoked", "fern-locked", "fern-read0"],
   beats: [
-    { name: "read", ids: ["p01"], pieces: [c("c5-grant", 36.4, 41.7, { fit: true, only: ["fern-read"] })] },
-    { name: "none", ids: ["p02"], pieces: [c("c6-revoke", 29.8, 33.8, { fit: true, only: ["fern-locked"] })] },
-    { name: "tag", ids: ["p03"], pieces: [{ scene: "tag", cues: {}, fit: true }] },
-    { name: "pick", ids: ["p04"], pieces: [{ scene: "problem", cues: {}, fit: true }] },
-    { name: "source", ids: ["p05"], pieces: [{ scene: "source", cues: src, fit: true }] },
-    { name: "stuck", ids: ["p06"], pieces: [c("c3-fern", 0.5, 8.7, { fit: true })], caption: true },
-    { name: "mech", ids: ["p07", "p08", "p09"], pieces: [{ scene: "mech", cues: { t8: +(T.p08.start - mech0).toFixed(2), t9: +(T.p09.start - mech0).toFixed(2) }, fit: true }] },
-    { name: "monad", ids: ["p10"], pieces: [{ scene: "ledger", cues: {}, fit: true }] },
-    { name: "proof", ids: ["p11", "p12"], pieces: [{ scene: "proof", cues: { rows: JSON.parse(fs.readFileSync("work/proof-rows.json", "utf8")) }, fit: true }] },
-    { name: "sdk", ids: ["p13"], pieces: [c("c7-sdk", 1.5, 9.9, { fit: true, only: ["qs-out"] })] },
-    { name: "layers", ids: ["p14"], pieces: [{ scene: "layers", cues: {}, fit: true }] },
-    { name: "cta", ids: ["p15"], pieces: [{ scene: "cta", cues: {}, fit: true }] },
+    { name: "empty", ids: ["q01"], pieces: [{ scene: "problem", cues: { only: "A" }, fit: true }] },
+    { name: "source", ids: ["q02"], pieces: [{ scene: "source", cues: src, fit: true }] },
+    { name: "pick", ids: ["q03"], pieces: [{ scene: "problem", cues: { only: "B" }, fit: true }] },
+    { name: "third", ids: ["q04"], pieces: [{ scene: "title", cues: { html: "Your memory, in every app <em>you allow.</em>" }, fit: true }] },
+    { name: "pip", ids: ["q05"], pieces: [c("c2-tell", 0.8, 11.0, { fit: true })] },
+    { name: "scrambled", ids: ["q06"], pieces: [c("c2-tell", 32.0, 37.2, { fit: true })] },
+    { name: "fern", ids: ["q07"], pieces: [c("c3-fern", 1.1, 6.0, { fit: true })] },
+    { name: "grant", ids: ["q08"], pieces: [c("c3-fern", 6.0, 8.6, { fit: true }), c("c5-grant", 0, 7.8, { fit: true })] },
+    { name: "plan", ids: ["q09"], pieces: [c("c5-grant", 13.2, 21.7, { speed: 3 }), c("c5-grant", 21.7, 28.6, { speed: 4 }), c("c5-grant", 28.6, 32.8, { fit: true })] },
+    { name: "revoke", ids: ["q10"], pieces: [c("c6-revoke", 2.0, 5.7, { speed: 1.6 }), c("c6-revoke", 5.7, 10.8, { fit: true })] },
+    { name: "gone", ids: ["q11"], pieces: [{ scene: "mech", cues: { t8: 8.3, t9: 14.9, from: 26, run }, fit: true }] },
+    { name: "again", ids: ["q12"], pieces: [c("c6-revoke", 25.3, 33.5, { speed: 10 }), c("c6-revoke", 33.5, 37.6, { speed: 4 }), c("c6-revoke", 37.6, 42.3, { fit: true, skip: ["fern-read0"] })] },
+    { name: "ledger", ids: ["q13"], pieces: [{ scene: "ledger", cues: { run }, fit: true }] },
+    { name: "sdk", ids: ["q14"], pieces: [c("c7-sdk", 3.99, 11.4, { fit: true, zoom: QS })] },
+    { name: "cta", ids: ["q15"], pieces: [{ scene: "cta", cues: { line: "Your AI's memory follows you to any app you allow, and one tap takes it back." }, fit: true }] },
   ],
 };
 fs.writeFileSync("pitch.spec.json", JSON.stringify(spec, null, 1));
-console.log(JSON.stringify({ total: tl.total, mech0, t8: spec.beats[6].pieces[0].cues }));
