@@ -38,7 +38,7 @@ export interface StoredGrant {
   app: string;
   owner: Address;
   grant: Grant;
-  revoked?: { epoch: number; txHash: Hex; at: number };
+  revoked?: { epoch: number; txHash: Hex; at: number; resealed?: number };
 }
 
 const read = <T>(k: string): T | undefined => {
@@ -58,10 +58,11 @@ export const owner = {
 export const memories = {
   list: () => read<StoredMemory[]>(KEY.memories) ?? [],
   add: (m: StoredMemory) => write(KEY.memories, [...memories.list(), m]),
+  replace: (all: StoredMemory[]) => write(KEY.memories, all),
 };
 export const grants = {
   list: () => read<StoredGrant[]>(KEY.grants) ?? [],
   add: (g: StoredGrant) => write(KEY.grants, [...grants.list(), g]),
   markRevoked: (id: string, r: NonNullable<StoredGrant["revoked"]>) =>
-    write(KEY.grants, grants.list().map((g) => (g.grant.id === id ? { ...g, revoked: r } : g))),
+    write(KEY.grants, grants.list().map((g) => (g.grant.id === id ? { ...g, revoked: { ...g.revoked, ...r } } : g))),
 };

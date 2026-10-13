@@ -2,10 +2,11 @@
 
 import { useSyncExternalStore } from "react";
 import "./prompts";
-import { enrol, open, ns, parseSealed, type Satchel } from "satchel-sdk";
-import { toBytes, toHex } from "viem";
+import { enrol, open, parseSealed, type Satchel } from "satchel-sdk";
+import { toBytes } from "viem";
 import { credential, memories, owner } from "./demo-store";
 import { MEMORY_NS, NOTE_BUS_URL, REGISTRY } from "./config";
+import { EpochBehind, resealAll, sealFact } from "./memory";
 import { publishNotes } from "./note-bus";
 
 /** Pip's session. It lives in module memory: a client-side navigation keeps it, a reload closes it and the next action asks for the passkey again. */
@@ -69,15 +70,28 @@ export function closeVault(): void {
   emit();
 }
 
+/** Seals `text` under the memory namespace and stores the ciphertext (page storage, and the note bus when one is set). */
 export async function saveMemory(text: string) {
   const s = session ?? (await openVault());
-  const at = Date.now();
-  const sealed = await s.seal(ns(MEMORY_NS), { text, at });
-  const bytes = sealed.toBytes();
-  const stored = { id: `${at}-${toHex(bytes.slice(-4)).slice(2)}`, at, hex: toHex(bytes) };
-  memories.add(stored);
+  const out = await sealFact(s, text, memories);
   if (NOTE_BUS_URL) await publishNotes(memories.list(), NOTE_BUS_URL);
-  return { stored, epoch: sealed.epoch, size: bytes.length };
+  return out;
+}
+
+/** The revoke step that makes Fern forget: every stored memory is sealed again at the namespace's new epoch. */
+export async function resealMemories(minEpoch: number) {
+  const s = session ?? (await openVault());
+  for (let attempt = 0; ; attempt++) {
+    try {
+      const out = await resealAll(s, memories, minEpoch);
+      if (NOTE_BUS_URL) await publishNotes(memories.list(), NOTE_BUS_URL);
+      return out;
+    } catch (e) {
+      // the node behind the RPC can trail the receipt by a block or two; nothing was replaced, so waiting and retrying is safe
+      if (!(e instanceof EpochBehind) || attempt >= 4) throw e;
+      await new Promise((r) => setTimeout(r, 1500));
+    }
+  }
 }
 
 export const describeSealed = (hex: `0x${string}`) => {

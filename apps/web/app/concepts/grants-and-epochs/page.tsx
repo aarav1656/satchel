@@ -45,7 +45,7 @@ grantOf(grantId)                   view, owner, nsHash, epoch, keyHash, active`}
         A grant opens exactly one epoch. After revoke, a reader&apos;s grant still opens every record already sealed at its epoch, because it already had that key: no system can take back what an app has read. Records sealed from the new epoch on use a key the revoked app cannot derive, and <code>Reader.unseal</code> answers <Link href="/reference/errors/#grant-revoked"><code>GRANT_REVOKED</code></Link> without attempting decryption.
       </p>
       <Callout>
-        <p>Open <Link href="/fern/">Fern</Link> after revoking in <Link href="/pip/share/">Pip</Link> to see both halves: the old memory still reads, the new one is locked with the error code.</p>
+        <p>The demo goes one step further than the SDK requires. When <Link href="/pip/share/">Pip</Link> revokes, it seals every stored memory again at the new epoch and replaces the old ciphertext, so the next read by <Link href="/fern/">Fern</Link> comes back <code>GRANT_REVOKED</code> for all of them and Fern answers without them. Whatever Fern read before the revoke may still sit in Fern&apos;s own cache.</p>
       </Callout>
 
       <h2 id="revoke-all">Revoking one grant moves every reader</h2>

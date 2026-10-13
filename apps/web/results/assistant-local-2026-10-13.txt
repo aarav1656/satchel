@@ -1,0 +1,83 @@
+satchel assistant loop, 2026-10-13T10:07:05Z, origin http://satchel.localhost:5190, virtual authenticator ctap2/internal with PRF, pinned deepsurge tab, chat: stand-in
+registry: "address": "0xd6c895f5c9254dc6eaafc335fff0930fd7012e6d" chain 10143; driver exit status: 0
+(after the page showed the owner, outside the page) FUNDED owner=0xfe0929ADe2F0F84A6A612E4375635612a8354502 amount=0.1 MON tx=0x5464547e26cf2d850e33a579df98333cc6785536eac0dbdaae2fb8ddb959e71f block=70653861 owner_balance=0.1 deployer_balance=3.205913262
+
+--- navigate http://satchel.localhost:5190/icon.svg
+cleared http://satchel.localhost:5190
+--- navigate http://satchel.localhost:5190/
+wait ok: / shows both apps
+HOME h1="Your assistant's memory, sealed to your passkey." | You choose which apps read it, and revoke ends it. | pip: No vault on this device yet. | fern: No grant. Fern sees nothing. | link=none
+ASSERT / is the product, not the docs quickstart ok
+ASSERT a first visit shows no vault and no grant ok
+--- navigate http://satchel.localhost:5190/docs/
+wait ok: the docs quickstart lives at /docs
+--- navigate http://satchel.localhost:5190/pip/
+wait ok: Pip asks for a vault before it will chat
+ASSERT no chat box until the vault is open ok
+> REAL INPUT click "Create my vault" ok=true at=[199,661]
+wait ok: vault open, chat box and owner address shown
+OWNER address=0xfe0929ADe2F0F84A6A612E4375635612a8354502 balance=0 MON
+chat stand-in installed
+> REAL INPUT type "I'm vegetarian." ok=true
+> REAL INPUT click "Send" ok=true at=[620,450]
+wait ok: Pip answered and a memory was sealed
+> REAL INPUT type "I fly out of BLR." ok=true
+> REAL INPUT click "Send" ok=true at=[620,450]
+wait ok: second fact sealed
+PIP turns user: I'm vegetarian. || assistant: Kept: Vegetarian / sealed / Vegetarian / e1 113 B || user: I fly out of BLR. || assistant: Kept: Flies out of BLR (Bengaluru) / sealed / Flies out of BLR (Bengaluru) / e1 131 B
+MEMORIES e1 "Vegetarian" e1 113 B fp 00295e5f 0x53415431...930b29 ; e1 "Flies out of BLR (Bengaluru)" e1 131 B fp 00295e5f 0x53415431...41dd9e
+ASSERT both facts are in the panel, opened with the passkey ok
+ASSERT each row shows epoch, size, fingerprint and a SAT1 ciphertext ok
+STORAGE 2 rows, plaintext present: false
+ASSERT storage holds ciphertext only, no fact in clear ok
+ASSERT the transcript shows what was sealed ok
+CHAT bodies sent: 2
+ASSERT Pip hands the model only what it had unsealed so far ok
+> REAL INPUT click .top-nav a[href="/fern/"] ok=true at=[1182,28]
+wait ok: Fern before a grant
+ASSERT Fern cannot chat before it holds a grant ok
+> REAL INPUT click "Connect to your memory" ok=true at=[229,574]
+wait ok: Pip sharing shows the Allow card
+CONNECT app=Fern pub=0x046e6020a44ca7048952c2bb76bf029abbaf8279aee78f0d2c7f7dcda06aa556d4e01b9729f1cdb214735a37222a3f78c3ece92337cac3025f2aecbdf0708c4a67
+(outside the page) waited for /tmp/satchel-assistant-funded
+> REAL INPUT click "Check balance" ok=true at=[807,348]
+wait ok: owner funded => 0.1 MON
+> REAL INPUT click "Allow" ok=true at=[168,429]
+wait ok: grant confirmed => 0x7d7a9f7c95c1c8f938933fd01b884329e39ddf939907bfece9423b4388913488
+GRANT id=35 tx=0x7d7a9f7c95c1c8f938933fd01b884329e39ddf939907bfece9423b4388913488
+> REAL INPUT click "Return to Fern" ok=true at=[197,423]
+wait ok: Fern opens both memories through its grant
+> REAL INPUT type "Plan my weekend." ok=true
+> REAL INPUT click "Send" ok=true at=[620,450]
+wait ok: Fern answered
+FERN answer: Weekend plan built from: Vegetarian; Flies out of BLR (Bengaluru) / read / opened 2 of 2 memories
+ASSERT Fern read 2 of 2 memories ok
+ASSERT the plan uses the vegetarian and BLR facts ok
+ASSERT Fern handed the model the two memories it opened ok
+> REAL INPUT click .top-nav a[href="/pip/"] ok=true at=[1129,28]
+> REAL INPUT click .app-bar nav a[href="/pip/share/"] ok=true at=[1299,81]
+wait ok: Sharing lists Fern as active
+> REAL INPUT click "Revoke Fern" ok=true at=[191,514]
+wait ok: revoke confirmed and the memories sealed again
+REVOKE id=35 tx=0x7e688889235976f35b4e9fbb926238dda42123585eb4f694888fb714e8c73284 | Fern | memory/trading-desk | epoch 1 | revoked |  | Fern is revoked. Pip sealed 2 memories again at epoch 2, so Fern's grant opens none of them. What Fern read before the revoke may sit in its own cache; no system can take that back. |  | grant tx | 0x7d7a9f7c...913488 | revoke tx | 0x7e688889...c73284
+> REAL INPUT click .app-bar nav a[href="/pip/"] ok=true at=[1228,81]
+wait ok: Pip still opens both, now sealed at epoch 2
+PIP after revoke e2 "Vegetarian" ; e2 "Flies out of BLR (Bengaluru)"
+> REAL INPUT click .top-nav a[href="/fern/"] ok=true at=[1182,28]
+wait ok: Fern shows the revoked grant
+ASSERT every memory is locked as GRANT_REVOKED ok
+> REAL INPUT type "Plan my weekend." ok=true
+> REAL INPUT click "Send" ok=true at=[620,450]
+wait ok: Fern answered after the revoke
+FERN after revoke: I cannot see any memories of yours, so tell me what you like. / GRANT_REVOKED / opened 0 of 2 memories
+ASSERT Fern's read: 0 of 2 opened, GRANT_REVOKED ok
+ASSERT the answer after the revoke does not use the memories ok
+ASSERT Fern handed the model no memories after the revoke ok
+> REAL INPUT click "Ask Pip for a new grant" ok=true at=[415,570]
+wait ok: Pip offers Allow again
+> REAL INPUT click "Allow" ok=true at=[168,429]
+wait ok: regrant confirmed => 0x762006f91b3784e2b0520739c8bb97a558d217a5c4cbb732510e19065b07ec62
+REGRANT tx=0x762006f91b3784e2b0520739c8bb97a558d217a5c4cbb732510e19065b07ec62 ids=35:false,36:true
+> REAL INPUT click "Return to Fern" ok=true at=[197,423]
+wait ok: after the regrant Fern opens both again, at epoch 2
+FERN regrant rows e2 open ; e2 open

@@ -1,0 +1,16 @@
+independent on-chain read, viem against the Monad testnet RPC, not the SDK, owner 0xfe0929ADe2F0F84A6A612E4375635612a8354502
+registry=0xd6c895f5c9254dc6eaafc335fff0930fd7012e6d chain=10143 read_at_block=70654006 grant_block=70653911 revoke_block=70653949 regrant_block=70653991
+grant tx 0x7d7a9f7c95c1c8f938933fd01b884329e39ddf939907bfece9423b4388913488 status=success id=35
+revoke tx 0x7e688889235976f35b4e9fbb926238dda42123585eb4f694888fb714e8c73284 status=success
+regrant tx 0x762006f91b3784e2b0520739c8bb97a558d217a5c4cbb732510e19065b07ec62 status=success id=36
+PASS grant tx receipt status success, sent to the registry by the passkey-derived owner
+PASS revoke tx receipt status success, sent to the registry by the owner
+PASS grantOf.owner is the owner and grantOf.nsHash is keccak256(satchel/ns/memory/trading-desk)
+PASS grantOf.epoch is 1 and granteeKeyHash is keccak256 of Fern's public key
+PASS grantOf.active is false after the revoke
+PASS epochOf(owner, memory/trading-desk) is at least 2 after the revoke
+PASS revoke mined after grant
+PASS regrant tx receipt status success, sent to the registry by the owner
+PASS regrant mined after the revoke
+PASS regrant is a new grant id, active, at epoch 2, for Fern's key
+PASS the first grant stays inactive after the regrant

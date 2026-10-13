@@ -7,6 +7,7 @@ import { prfOf } from "../../../packages/sdk/test/fixtures.ts";
 import { MEMORY_NS } from "./config";
 import { fetchNotes, publishNotes } from "./note-bus";
 import { readMemories } from "./fern";
+import { resealAll, sealFact } from "./memory";
 
 setDefaultTimeout(120_000);
 
@@ -99,6 +100,36 @@ describe("cross-origin memory (ciphertext bus + grant reader)", () => {
       expect(neu.text).toBeUndefined();
     }
     expect(rows.every((r) => r.state !== "open" || !r.text.includes("MUST NOT LEAK"))).toBe(true);
+  });
+
+  test("revoke then reseal: Fern's grant opens nothing in the store, and a fresh grant reads it all again", async () => {
+    const pip = await owner("pip-reseal");
+    const fern = await createGrantee();
+    const n = trading();
+    let rows: { id: string; at: number; hex: `0x${string}` }[] = [];
+    const store = { list: () => rows, add: (m: (typeof rows)[number]) => void (rows = [...rows, m]), replace: (all: typeof rows) => void (rows = all) };
+    await sealFact(pip, "Vegetarian", store, 1);
+    await sealFact(pip, "Flies out of BLR (Bengaluru)", store, 2);
+    const grant = await pip.grant(n, fern.publicKey, { label: "Fern" });
+    const fetched = await fetchGrant({ txHash: grant.txHash, registry, ns: n });
+    const open = await readMemories(fern, [fetched], rows);
+    expect(open.map((r) => r.state)).toEqual(["open", "open"]);
+
+    const revoked = await pip.revoke(n, grant.id);
+    // without the reseal Fern's epoch-1 grant still opens the epoch-1 bytes, which is why the reseal exists
+    expect((await readMemories(fern, [fetched], rows)).map((r) => r.state)).toEqual(["open", "open"]);
+
+    const done = await resealAll(pip, store, revoked.epoch);
+    expect(done).toEqual({ count: 2, epoch: revoked.epoch });
+    const after = await readMemories(fern, [fetched], rows);
+    expect(after.map((r) => (r.state === "locked" ? r.code : r.state))).toEqual(["GRANT_REVOKED", "GRANT_REVOKED"]);
+    expect(after.every((r) => r.epoch === revoked.epoch)).toBe(true);
+    expect((await pip.unsealJson<{ text: string }>(n, toBytes(rows[0]!.hex))).text).toBe("Vegetarian");
+
+    const again = await pip.regrant(n, fern.publicKey, { label: "Fern" });
+    const fresh = await fetchGrant({ txHash: again.txHash, registry, ns: n });
+    const back = await readMemories(fern, [fresh], rows);
+    expect(back.map((r) => (r.state === "open" ? r.text : r.code))).toEqual(["Vegetarian", "Flies out of BLR (Bengaluru)"]);
   });
 
   test("second client same PRF decrypts owner note from bus without grant or Pip localStorage", async () => {

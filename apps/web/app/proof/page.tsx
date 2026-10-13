@@ -35,7 +35,7 @@ export default function Page() {
       <section>
         <h2 id="novelty">A second app reads your memory without the passkey</h2>
         <p>
-          One person&apos;s AI memory, written by one app and read by another. No account, no signer and no wallet address appears on the screen: <Link href="/pip/">Pip</Link> holds the passkey, <Link href="/fern/">Fern</Link> holds its own key and rebuilds its grant from a transaction hash. Revoking moves the folder to a new epoch and Fern keeps what it read and nothing newer.
+          One person&apos;s AI memory, written by one app and read by another. No account, no signer and no wallet address appears on the screen: <Link href="/pip/">Pip</Link> holds the passkey, <Link href="/fern/">Fern</Link> holds its own key and rebuilds its grant from a transaction hash. Revoking moves the folder to a new epoch, Pip seals its memories again there, and Fern's next read is GRANT_REVOKED.
         </p>
         <div className="btn-row">
           <Link href="/fern/" className="btn">
