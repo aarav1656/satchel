@@ -1,0 +1,9 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>#b{position:absolute;border:3px solid var(--accent);border-radius:12px;box-shadow:0 0 0 6px oklch(85% .16 165 / .16)}#b.err{border-color:var(--err);box-shadow:0 0 0 6px oklch(71% .19 22 / .16)}
+#l{position:absolute;padding:8px 16px;border-radius:10px;background:var(--accent);color:var(--accent-ink);font:700 24px/1.2 "Instrument";white-space:nowrap}#l.err{background:var(--err);color:oklch(15% .03 22)}</style>
+<div id="b"></div><div id="l"></div><script src="engine.js"></script><script>
+const [x,y,w,h]=cue("box",[0,0,10,10]),pad=8;const b=$("#b");b.style.cssText+=`left:${x-pad}px;top:${y-pad}px;width:${w+2*pad}px;height:${h+2*pad}px`;
+const l=$("#l");l.textContent=cue("label","");if(!cue("label",""))l.style.display="none";
+if(cue("err"))b.classList.add("err"),l.classList.add("err");
+const above=y>90;l.style.left=Math.max(12,x-pad)+"px";l.style[above?"bottom":"top"]=above?(1080-y+pad+12)+"px":(y+h+pad+12)+"px";
+window.render=()=>{}</script>

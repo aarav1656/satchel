@@ -1,0 +1,109 @@
+[
+ {
+  "id": "d01",
+  "text": "I want my assistant to remember that I am vegetarian, without any company holding that fact for me."
+ },
+ {
+  "id": "d02",
+  "text": "So the memory gets a key that only my passkey can make. One touch, and the vault is open."
+ },
+ {
+  "id": "d03",
+  "text": "Now I tell Pip two things that should last. I'm vegetarian. I fly out of B L R.",
+  "cap": "Now I tell Pip two things that should last. I'm vegetarian. I fly out of BLR."
+ },
+ {
+  "id": "d04",
+  "text": "The model picks out each fact with a tool call. Then the browser seals it, at epoch one."
+ },
+ {
+  "id": "d05b",
+  "text": "The second fact goes the same way. Three things have to hold: the key is mine, an app's access is a grant, and a revoke really ends it."
+ },
+ {
+  "id": "d05",
+  "text": "What gets stored is ciphertext. No fact in the clear, anywhere outside this tab."
+ },
+ {
+  "id": "d06",
+  "text": "Fern is a second assistant, from a different app, with its own key. It sees nothing yet."
+ },
+ {
+  "id": "d07",
+  "text": "Connect asks Pip for access, and Pip asks me. A grant is a transaction, so the owner needs gas, and the page says exactly how much is missing."
+ },
+ {
+  "id": "d08",
+  "text": "I send a little M O N to that address, then allow.",
+  "cap": "I send a little MON to that address, then allow."
+ },
+ {
+  "id": "d09",
+  "text": "One transaction on Monad records a wrapped key for Fern. That hash is real, and Fern rebuilds the grant from it alone."
+ },
+ {
+  "id": "d09b",
+  "text": "Only two things live on chain: the grant, and the epoch number.",
+  "gap": 0.35
+ },
+ {
+  "id": "d10b",
+  "text": "Fern never touched my passkey. A key of its own and the grant are all it has."
+ },
+ {
+  "id": "d10",
+  "text": "Fern opens both memories with its own key. Now I ask it to plan my weekend."
+ },
+ {
+  "id": "d11",
+  "text": "It plans around vegetarian food and a flight out of Bengaluru. Two of two memories read."
+ },
+ {
+  "id": "d11b",
+  "text": "It never asks what I eat or where I fly from."
+ },
+ {
+  "id": "d12",
+  "text": "Now I change my mind. Revoke is one more transaction. The folder moves to epoch two, and the browser seals every memory again under the new key."
+ },
+ {
+  "id": "d12b",
+  "text": "That reseal is why the old grant is dead. The key Fern holds belongs to epoch one, and nothing is sealed there any more."
+ },
+ {
+  "id": "d13",
+  "text": "Fern still holds its old grant. I ask again, and every memory comes back grant revoked.",
+  "cap": "Fern still holds its old grant. I ask again, and every memory comes back GRANT_REVOKED."
+ },
+ {
+  "id": "d14",
+  "text": "The plan comes back generic, with none of my facts. The registry did that, not a promise from Fern."
+ },
+ {
+  "id": "d15",
+  "text": "Straight from the chain: the grant and the revoke both succeeded, and the folder's epoch went from one to two.",
+  "cap": "Straight from the chain: the grant and the revoke both succeeded, and the folder's epoch went from one to two."
+ },
+ {
+  "id": "d15b",
+  "text": "Two transactions, and nothing in between that I have to trust."
+ },
+ {
+  "id": "d16",
+  "text": "Developers get the same thing with npm install satchel S D K.",
+  "cap": "Developers get the same thing with npm install satchel-sdk."
+ },
+ {
+  "id": "d17",
+  "text": "One passkey prompt, a sealed record, a value that comes back. The code on the page is the code that runs."
+ },
+ {
+  "id": "d17b",
+  "text": "Seal, grant, revoke. Three calls against the same registry."
+ },
+ {
+  "id": "d18",
+  "text": "Pip, Fern and the S D K are live now at satchel dash keys dot ver sell dot app.",
+  "cap": "Pip, Fern and the SDK are live at satchel-keys.vercel.app."
+ }
+]

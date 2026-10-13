@@ -1,0 +1,12 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+body{background:var(--canvas);background-image:linear-gradient(oklch(100% 0 0/.035) 1px,transparent 1px),linear-gradient(90deg,oklch(100% 0 0/.035) 1px,transparent 1px);background-size:64px 64px}
+#m{position:absolute;left:0;right:0;top:150px;display:flex;justify-content:center;color:var(--ink);opacity:0}
+#w{position:absolute;left:0;right:0;top:400px;text-align:center;font:600 150px/1 "Bricolage";letter-spacing:-.05em;color:var(--ink);opacity:0}
+#t{position:absolute;left:0;right:0;top:600px;text-align:center;font:500 52px/1.2 "Bricolage";letter-spacing:-.025em;color:var(--steel);opacity:0}
+#t em{font-style:normal;color:var(--accent)}
+</style>
+<div id="m"><svg viewBox="150 180 760 440" fill="none" style="width:300px"><g stroke="currentColor" stroke-width="28" stroke-linecap="round"><path d="M 314 400 C 450 400, 480 226, 640 226"/><path d="M 314 400 L 640 400"/><path d="M 314 400 C 450 400, 480 574, 640 574"/></g><circle cx="250" cy="400" r="64" fill="currentColor"/><g fill="currentColor"><rect x="640" y="198" width="150" height="56" rx="14"/><rect x="640" y="372" width="150" height="56" rx="14"/><rect x="640" y="546" width="150" height="56" rx="14"/></g><path d="M 790 400 L 898 400" stroke="var(--accent)" stroke-width="28" stroke-linecap="round"/><circle cx="936" cy="400" r="30" fill="var(--canvas)" stroke="currentColor" stroke-width="20"/></svg></div><div id="w">satchel</div><div id="t">Your assistant's memory, sealed to <em>your passkey</em>.</div>
+<script src="engine.js"></script><script>
+window.render=(t)=>{const a=eo(seg(t,0,.5)),b=eo(seg(t,.3,.8)),c=eo(seg(t,.7,1.3));$("#m").style.opacity=a;$("#w").style.opacity=b;$("#w").style.transform="translateY("+(1-b)*18+"px)";$("#t").style.opacity=c;$("#t").style.transform="translateY("+(1-c)*14+"px)"};
+</script>

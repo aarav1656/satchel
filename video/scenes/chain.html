@@ -1,0 +1,16 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+body{background:var(--canvas)}
+#term{position:absolute;left:150px;top:100px;width:1620px;height:640px;background:var(--code);border:1px solid var(--hair);border-radius:18px;padding:40px 52px;font:500 29px/1.55 "GMono";color:var(--text);box-shadow:inset 0 1px 0 oklch(100% 0 0/.07)}
+.l{opacity:0;white-space:pre}.c{color:var(--steel)}.ok{color:var(--accent)}.k{color:var(--ink)}.h{color:var(--stone)}
+#roll{position:absolute;left:150px;top:770px;width:1620px;display:flex;align-items:center;gap:30px;font:600 46px "Bricolage";color:var(--ink);opacity:0;letter-spacing:-.02em}
+#roll .ep{padding:6px 26px;border-radius:999px;border:2px solid var(--hair);font:600 40px "GMono";transition:none}
+#roll .e2{border-color:var(--accent);color:var(--accent)}#roll i{font-style:normal;color:var(--stone)}
+</style>
+<div id="term"></div><div id="roll"><span>folder epoch on chain</span><span class="ep">1</span><i>&rarr;</i><span class="ep e2">2</span></div>
+<script src="engine.js"></script><script>
+const L=cue("lines",[]);const term=$("#term");
+L.forEach((x,i)=>{const d=document.createElement("div");d.className="l";d.id="l"+i;d.innerHTML=x[1];term.append(d)});
+window.render=(t)=>{L.forEach((x,i)=>{const e=$("#l"+i);e.style.opacity=eo(seg(t,x[0],x[0]+.25))});
+ $("#roll").style.opacity=eo(seg(t,cue("roll",5),cue("roll",5)+.4))};
+</script>

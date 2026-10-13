@@ -1,0 +1,73 @@
+[
+ {
+  "id": "p01",
+  "text": "A minute ago, this assistant read both of my memories."
+ },
+ {
+  "id": "p02",
+  "text": "Now it reads none. I did not ask it to forget. I revoked one key."
+ },
+ {
+  "id": "p03",
+  "text": "That is satchel. Your assistant's memory, sealed to your passkey."
+ },
+ {
+  "id": "p04",
+  "text": "Every assistant today makes you pick. Start each chat knowing nothing about you, or keep a file on you that the vendor holds."
+ },
+ {
+  "id": "p05",
+  "text": "ChatGPT's own help page lists what its memory draws on: past chats, saved memories, files, even Gmail. And ChatGPT decides which of it is relevant."
+ },
+ {
+  "id": "p06",
+  "text": "And that memory is stuck there. The next app you try starts from zero."
+ },
+ {
+  "id": "p06b",
+  "text": "Any team adding memory to an assistant meets this same choice. Satchel is the third option, and it ships as a package."
+ },
+ {
+  "id": "p07",
+  "text": "Satchel turns it around. Pip is the assistant. It seals each fact on your device, under a key only your passkey can make. Storage holds ciphertext."
+ },
+ {
+  "id": "p08",
+  "text": "Fern, a second app, reads only through a grant. The grant is a wrapped key, recorded in a registry contract on Monad."
+ },
+ {
+  "id": "p09",
+  "text": "Revoke moves the folder to the next epoch. Pip seals every memory again. The key Fern holds opens nothing, and its next read fails with grant revoked.",
+  "cap": "Revoke moves the folder to the next epoch. Pip seals every memory again. The key Fern holds opens nothing, and its next read fails with GRANT_REVOKED."
+ },
+ {
+  "id": "p10",
+  "text": "Why Monad? Grants and epochs have to sit where every app can read them and no app can rewrite them. A grant costs about one hundredth of a MON, and the revoke less.",
+  "cap": "Why Monad? Grants and epochs have to sit where every app can read them and no app can rewrite them. A grant costs about 0.012 MON, and the revoke less."
+ },
+ {
+  "id": "p11",
+  "text": "The registry has nineteen tests and two invariants. A mutation run breaks it six ways, and goes red six times.",
+  "cap": "The registry has 19 tests and 2 invariants. A mutation run breaks it six ways, and goes red six times."
+ },
+ {
+  "id": "p12",
+  "text": "The S D K has eighty-nine tests. A fresh project installs it from the tarball and runs the whole flow against the live registry.",
+  "cap": "The SDK has 89 tests. A fresh project installs it from the tarball and runs the whole flow against the live registry."
+ },
+ {
+  "id": "p13",
+  "text": "Developers get all of it in one install: npm install satchel S D K. Seal, grant, revoke.",
+  "cap": "Developers get all of it in one install: npm install satchel-sdk. Seal, grant, revoke."
+ },
+ {
+  "id": "p14",
+  "text": "We built every layer ourselves: the contract, the S D K, and the two apps that use them. Your memory should follow you between apps, and end when you say so.",
+  "cap": "We built every layer ourselves: the contract, the SDK, and the two apps that use them. Your memory should follow you between apps, and end when you say so."
+ },
+ {
+  "id": "p15",
+  "text": "Try Pip and Fern now at satchel dash keys dot ver sell dot app.",
+  "cap": "Try Pip and Fern now at satchel-keys.vercel.app."
+ }
+]

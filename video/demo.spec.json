@@ -1,0 +1,442 @@
+{
+ "out": "satchel-demo.mp4",
+ "timeline": "vo/out-demo/timeline.json",
+ "audio": "vo/out-demo/narration.wav",
+ "work": "work/compose-demo",
+ "lead": 0.12,
+ "bg": "080c15",
+ "labels": {
+  "owner": "Owner address, derived from the passkey",
+  "sealed": "Sealed at epoch 1, ciphertext only",
+  "allow": "Fern asks to read this folder",
+  "balance0": "The owner needs gas to grant",
+  "balance1": "Funded",
+  "grant-tx": "Grant transaction on Monad",
+  "fern-open": "Opened with Fern's own key",
+  "fern-read": "Read 2 of 2 memories",
+  "revoked": "Revoked, memories sealed again at epoch 2",
+  "epoch2": "Same memories, sealed at epoch 2",
+  "fern-locked": "GRANT_REVOKED",
+  "fern-read0": "Read 0 of 2 memories",
+  "qs-out": "The quickstart, run for real"
+ },
+ "errBoxes": [
+  "revoked",
+  "fern-locked",
+  "fern-read0"
+ ],
+ "beats": [
+  {
+   "name": "goal",
+   "ids": [
+    "d01"
+   ],
+   "pieces": [
+    {
+     "still": "work/final/c1-vault.mp4",
+     "at": 1,
+     "fit": true,
+     "push": {
+      "z": 1.06,
+      "fx": 0.4,
+      "fy": 0.45
+     }
+    }
+   ]
+  },
+  {
+   "name": "vault",
+   "ids": [
+    "d02"
+   ],
+   "pieces": [
+    {
+     "clip": "work/final/c1-vault.mp4",
+     "marks": "work/final/c1-vault/marks.json",
+     "ss": 1.2,
+     "se": 6.4,
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "tell",
+   "ids": [
+    "d03"
+   ],
+   "pieces": [
+    {
+     "clip": "work/final/c2-tell.mp4",
+     "marks": "work/final/c2-tell/marks.json",
+     "ss": 0.8,
+     "se": 9.6,
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "seal",
+   "ids": [
+    "d04"
+   ],
+   "pieces": [
+    {
+     "clip": "work/final/c2-tell.mp4",
+     "marks": "work/final/c2-tell/marks.json",
+     "ss": 9.6,
+     "se": 15.2,
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "second",
+   "ids": [
+    "d05b"
+   ],
+   "pieces": [
+    {
+     "clip": "work/final/c2-tell.mp4",
+     "marks": "work/final/c2-tell/marks.json",
+     "ss": 15.2,
+     "se": 34.1,
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "cipher",
+   "ids": [
+    "d05"
+   ],
+   "pieces": [
+    {
+     "clip": "work/final/c2-tell.mp4",
+     "marks": "work/final/c2-tell/marks.json",
+     "ss": 34.1,
+     "se": 39.5,
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "fern",
+   "ids": [
+    "d06"
+   ],
+   "pieces": [
+    {
+     "clip": "work/final/c3-fern.mp4",
+     "marks": "work/final/c3-fern/marks.json",
+     "ss": 1.1,
+     "se": 6,
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "connect",
+   "ids": [
+    "d07"
+   ],
+   "pieces": [
+    {
+     "clip": "work/final/c3-fern.mp4",
+     "marks": "work/final/c3-fern/marks.json",
+     "ss": 6,
+     "se": 12.5,
+     "speed": 1.3
+    },
+    {
+     "clip": "work/final/c4-fund.mp4",
+     "marks": "work/final/c4-fund/marks.json",
+     "ss": 0,
+     "se": 3.5,
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "fund",
+   "ids": [
+    "d08"
+   ],
+   "pieces": [
+    {
+     "clip": "work/final/c4-fund.mp4",
+     "marks": "work/final/c4-fund/marks.json",
+     "ss": 3.5,
+     "se": 12.69,
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "grant",
+   "ids": [
+    "d09"
+   ],
+   "pieces": [
+    {
+     "clip": "work/final/c5-grant.mp4",
+     "marks": "work/final/c5-grant/marks.json",
+     "ss": 0,
+     "se": 9.8,
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "split",
+   "ids": [
+    "d09b"
+   ],
+   "pieces": [
+    {
+     "scene": "split",
+     "cues": {},
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "fern-open",
+   "ids": [
+    "d10b"
+   ],
+   "pieces": [
+    {
+     "clip": "work/final/c5-grant.mp4",
+     "marks": "work/final/c5-grant/marks.json",
+     "ss": 9.89,
+     "se": 15,
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "ask",
+   "ids": [
+    "d10"
+   ],
+   "pieces": [
+    {
+     "clip": "work/final/c5-grant.mp4",
+     "marks": "work/final/c5-grant/marks.json",
+     "ss": 15,
+     "se": 21,
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "plan",
+   "ids": [
+    "d11",
+    "d11b"
+   ],
+   "pieces": [
+    {
+     "clip": "work/final/c5-grant.mp4",
+     "marks": "work/final/c5-grant/marks.json",
+     "ss": 21,
+     "se": 30.65,
+     "speed": 8
+    },
+    {
+     "clip": "work/final/c5-grant.mp4",
+     "marks": "work/final/c5-grant/marks.json",
+     "ss": 30.65,
+     "se": 37.3,
+     "speed": 8
+    },
+    {
+     "clip": "work/final/c5-grant.mp4",
+     "marks": "work/final/c5-grant/marks.json",
+     "ss": 37.3,
+     "se": 41.7,
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "revoke",
+   "ids": [
+    "d12"
+   ],
+   "pieces": [
+    {
+     "clip": "work/final/c6-revoke.mp4",
+     "marks": "work/final/c6-revoke/marks.json",
+     "ss": 2,
+     "se": 8.5,
+     "speed": 3
+    },
+    {
+     "clip": "work/final/c6-revoke.mp4",
+     "marks": "work/final/c6-revoke/marks.json",
+     "ss": 8.5,
+     "se": 14.4,
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "reseal",
+   "ids": [
+    "d12b"
+   ],
+   "pieces": [
+    {
+     "clip": "work/final/c6-revoke.mp4",
+     "marks": "work/final/c6-revoke/marks.json",
+     "ss": 14.4,
+     "se": 25,
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "locked",
+   "ids": [
+    "d13"
+   ],
+   "pieces": [
+    {
+     "clip": "work/final/c6-revoke.mp4",
+     "marks": "work/final/c6-revoke/marks.json",
+     "ss": 25.08,
+     "se": 33.3,
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "generic",
+   "ids": [
+    "d14"
+   ],
+   "pieces": [
+    {
+     "clip": "work/final/c6-revoke.mp4",
+     "marks": "work/final/c6-revoke/marks.json",
+     "ss": 33.3,
+     "se": 47.1,
+     "speed": 14
+    },
+    {
+     "clip": "work/final/c6-revoke.mp4",
+     "marks": "work/final/c6-revoke/marks.json",
+     "ss": 47.1,
+     "se": 50.1,
+     "speed": 4
+    },
+    {
+     "clip": "work/final/c6-revoke.mp4",
+     "marks": "work/final/c6-revoke/marks.json",
+     "ss": 50.1,
+     "se": 54.5,
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "chain",
+   "ids": [
+    "d15",
+    "d15b"
+   ],
+   "pieces": [
+    {
+     "scene": "chain",
+     "cues": {
+      "lines": [
+       [
+        0.2,
+        "<span class=\"c\">$ cast receipt</span> <span class=\"k\">0x14cd9d1a…bda0497c</span>  <span class=\"h\"># the grant</span>"
+       ],
+       [
+        0.6,
+        "  status      <span class=\"ok\">1 (success)</span>        block 70668572        gasUsed 114536"
+       ],
+       [
+        1.4,
+        "<span class=\"c\">$ cast receipt</span> <span class=\"k\">0xed2d3b8d…a66b6d8</span>  <span class=\"h\"># the revoke</span>"
+       ],
+       [
+        1.8,
+        "  status      <span class=\"ok\">1 (success)</span>        block 70668906        gasUsed 65265"
+       ],
+       [
+        2.6,
+        "<span class=\"c\">$ cast call</span> 0xd6c895f5…d7012e6d <span class=\"k\">\"grantOf(uint256)(...)\"</span> 41"
+       ],
+       [
+        3,
+        "  epoch 1     active <span class=\"k\">false</span>"
+       ],
+       [
+        3.8,
+        "<span class=\"c\">$ cast call</span> 0xd6c895f5…d7012e6d <span class=\"k\">\"epochOf(address,bytes32)(uint64)\"</span> owner memory/trading-desk"
+       ],
+       [
+        4.2,
+        "  <span class=\"ok\">2</span>"
+       ],
+       [
+        5,
+        "<span class=\"h\">read from https://testnet-rpc.monad.xyz at block 70670385, chain 10143</span>"
+       ]
+      ],
+      "roll": 4.4
+     },
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "sdk",
+   "ids": [
+    "d16"
+   ],
+   "pieces": [
+    {
+     "clip": "work/final/c7-sdk.mp4",
+     "marks": "work/final/c7-sdk/marks.json",
+     "ss": 0,
+     "se": 4,
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "run",
+   "ids": [
+    "d17",
+    "d17b"
+   ],
+   "pieces": [
+    {
+     "clip": "work/final/c7-sdk.mp4",
+     "marks": "work/final/c7-sdk/marks.json",
+     "ss": 4.04,
+     "se": 13.9,
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "cta",
+   "ids": [
+    "d18"
+   ],
+   "pieces": [
+    {
+     "scene": "cta",
+     "cues": {},
+     "fit": true
+    }
+   ]
+  }
+ ]
+}

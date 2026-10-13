@@ -1,0 +1,475 @@
+[
+ {
+  "eval": "(async()=>{localStorage.clear();sessionStorage.clear();await Promise.all(['fern','satchel'].map(n=>new Promise(r=>{const q=indexedDB.deleteDatabase(n);q.onsuccess=q.onerror=q.onblocked=()=>r()})));return 'cleared'})()"
+ },
+ {
+  "goto": "http://localhost:5291/pip/",
+  "load": 5000
+ },
+ {
+  "rec": "c1-vault"
+ },
+ {
+  "wait": 1800
+ },
+ {
+  "mark": "vault-click"
+ },
+ {
+  "click": "Create my vault",
+  "until": "document.body.innerText.includes('Passkey prompts since')"
+ },
+ {
+  "waitFor": "!!document.getElementById('pip-chat-input') && !!document.querySelector('[data-testid=\"owner-address\"]')",
+  "timeout": 60000
+ },
+ {
+  "mark": "vault-open"
+ },
+ {
+  "eval": "document.querySelector('[data-testid=\"owner-address\"]').innerText.trim()",
+  "as": "owner"
+ },
+ {
+  "wait": 1500
+ },
+ {
+  "boxSel": "[data-testid=\"owner-address\"]",
+  "name": "owner",
+  "hold": 3,
+  "soft": true
+ },
+ {
+  "wait": 1800
+ },
+ {
+  "rec": false
+ },
+ {
+  "rec": "c2-tell"
+ },
+ {
+  "wait": 800
+ },
+ {
+  "mark": "pip1-type"
+ },
+ {
+  "typeInto": "#pip-chat-input",
+  "text": "I'm vegetarian."
+ },
+ {
+  "click": "Send",
+  "exact": true,
+  "until": "[...document.querySelectorAll('[data-testid=\"turn\"]')].length >= 1"
+ },
+ {
+  "mark": "pip1-sent"
+ },
+ {
+  "waitFor": "[...document.querySelectorAll('[data-testid=\"turn\"]')].filter(t=>t.closest('[data-testid=\"pip-chat\"]')&&t.dataset.role==='assistant').length >= 1 && !document.querySelector('[data-testid=\"thinking\"]')",
+  "timeout": 120000
+ },
+ {
+  "mark": "pip1-reply"
+ },
+ {
+  "waitFor": "[...document.querySelectorAll('[data-testid=\"memory-row\"]')].length >= 1",
+  "timeout": 60000
+ },
+ {
+  "mark": "sealed1"
+ },
+ {
+  "wait": 1200
+ },
+ {
+  "mark": "pip2-type"
+ },
+ {
+  "typeInto": "#pip-chat-input",
+  "text": "I fly out of BLR."
+ },
+ {
+  "click": "Send",
+  "exact": true,
+  "until": "[...document.querySelectorAll('[data-testid=\"turn\"]')].length >= 3"
+ },
+ {
+  "mark": "pip2-sent"
+ },
+ {
+  "waitFor": "[...document.querySelectorAll('[data-testid=\"turn\"]')].filter(t=>t.closest('[data-testid=\"pip-chat\"]')&&t.dataset.role==='assistant').length >= 2 && !document.querySelector('[data-testid=\"thinking\"]')",
+  "timeout": 120000
+ },
+ {
+  "mark": "pip2-reply"
+ },
+ {
+  "waitFor": "[...document.querySelectorAll('[data-testid=\"memory-row\"]')].length >= 2",
+  "timeout": 60000
+ },
+ {
+  "mark": "sealed2"
+ },
+ {
+  "wait": 1200
+ },
+ {
+  "boxSel": "[data-testid=\"memory-list\"]",
+  "name": "sealed",
+  "hold": 4,
+  "soft": true
+ },
+ {
+  "wait": 4200
+ },
+ {
+  "rec": false
+ },
+ {
+  "rec": "c3-fern"
+ },
+ {
+  "wait": 500
+ },
+ {
+  "clickSel": ".top-nav a[href=\"/fern/\"]"
+ },
+ {
+  "waitFor": "!!document.querySelector('[data-testid=\"fern-empty\"]')",
+  "timeout": 20000
+ },
+ {
+  "wait": 2200
+ },
+ {
+  "click": "Connect to your memory",
+  "until": "!!document.querySelector('[data-testid=\"allow-card\"]')"
+ },
+ {
+  "waitFor": "!!document.querySelector('[data-testid=\"allow-card\"]')",
+  "timeout": 20000
+ },
+ {
+  "wait": 2800
+ },
+ {
+  "boxSel": "[data-testid=\"allow-card\"]",
+  "name": "allow",
+  "hold": 3,
+  "soft": true
+ },
+ {
+  "rec": false
+ },
+ {
+  "rec": "c4-fund"
+ },
+ {
+  "wait": 600
+ },
+ {
+  "boxSel": "[data-testid=\"owner-balance\"]",
+  "name": "balance0",
+  "hold": 3,
+  "soft": true
+ },
+ {
+  "mark": "fund-start"
+ },
+ {
+  "sh": "bun scripts/fund-owner.ts ${owner} satchel-video-demo",
+  "cwd": "../apps/web",
+  "as": "fundline",
+  "timeout": 120000
+ },
+ {
+  "mark": "fund-done"
+ },
+ {
+  "click": "Check balance"
+ },
+ {
+  "waitFor": "/0\\.[0-9]+ MON/.test(document.querySelector('[data-testid=\"owner-balance\"]').innerText)",
+  "timeout": 30000
+ },
+ {
+  "boxSel": "[data-testid=\"owner-balance\"]",
+  "name": "balance1",
+  "hold": 2.5,
+  "soft": true
+ },
+ {
+  "wait": 2600
+ },
+ {
+  "rec": false
+ },
+ {
+  "rec": "c5-grant"
+ },
+ {
+  "wait": 400
+ },
+ {
+  "mark": "allow-click"
+ },
+ {
+  "click": "Allow",
+  "exact": true,
+  "until": "document.body.innerText.includes(\"Waiting\") || !!document.querySelector('[data-testid=\"granted\"]') || [...document.querySelectorAll(\"button\")].some(b=>b.disabled)"
+ },
+ {
+  "waitFor": "!!document.querySelector('[data-testid=\"granted\"]') && !!document.querySelector('[data-testid=\"grant-tx\"]').dataset.hash",
+  "timeout": 150000
+ },
+ {
+  "mark": "granted"
+ },
+ {
+  "eval": "document.querySelector('[data-testid=\"grant-tx\"]').dataset.hash",
+  "as": "grantTx"
+ },
+ {
+  "wait": 800
+ },
+ {
+  "boxSel": "[data-testid=\"grant-tx\"]",
+  "name": "grant-tx",
+  "hold": 3.5,
+  "soft": true
+ },
+ {
+  "wait": 3600
+ },
+ {
+  "mark": "return-click"
+ },
+ {
+  "click": "Return to Fern"
+ },
+ {
+  "waitFor": "[...document.querySelectorAll('[data-testid=\"fern-row\"]')].length === 2 && [...document.querySelectorAll('[data-testid=\"fern-row\"]')].every(r=>r.dataset.state==='open') && !!document.getElementById('fern-chat-input')",
+  "timeout": 60000
+ },
+ {
+  "wait": 1400
+ },
+ {
+  "boxSel": "[data-testid=\"fern-memories\"]",
+  "name": "fern-open",
+  "hold": 3,
+  "soft": true
+ },
+ {
+  "wait": 2800
+ },
+ {
+  "mark": "fern1-type"
+ },
+ {
+  "typeInto": "#fern-chat-input",
+  "text": "Plan my weekend in two sentences."
+ },
+ {
+  "click": "Send",
+  "exact": true,
+  "until": "[...document.querySelectorAll('[data-testid=\"turn\"]')].length >= 1"
+ },
+ {
+  "mark": "fern1-sent"
+ },
+ {
+  "waitFor": "[...document.querySelectorAll('[data-testid=\"turn\"]')].filter(t=>t.closest('[data-testid=\"fern-chat\"]')&&t.dataset.role==='assistant').length >= 1 && !document.querySelector('[data-testid=\"thinking\"]')",
+  "timeout": 120000
+ },
+ {
+  "mark": "fern1-reply"
+ },
+ {
+  "wait": 900
+ },
+ {
+  "boxSel": "[data-testid=\"turn-read\"]",
+  "name": "fern-read",
+  "hold": 3,
+  "soft": true
+ },
+ {
+  "wait": 3400
+ },
+ {
+  "rec": false
+ },
+ {
+  "rec": "c6-revoke"
+ },
+ {
+  "wait": 400
+ },
+ {
+  "clickSel": ".top-nav a[href=\"/pip/\"]"
+ },
+ {
+  "clickSel": ".app-bar nav a[href=\"/pip/share/\"]"
+ },
+ {
+  "waitFor": "[...document.querySelectorAll('[data-testid=\"grant-row\"]')].length === 1 && [...document.querySelectorAll('[data-testid=\"grant-row\"]')][0].dataset.active === 'true'",
+  "timeout": 30000
+ },
+ {
+  "wait": 1800
+ },
+ {
+  "mark": "revoke-click"
+ },
+ {
+  "click": "Revoke Fern"
+ },
+ {
+  "waitFor": "!!document.querySelector('[data-testid=\"revoke-tx\"]') && !!document.querySelector('[data-testid=\"revoke-tx\"]').dataset.hash && [...document.querySelectorAll('[data-testid=\"grant-row\"]')][0].innerText.includes('sealed 2 memories again at epoch 2')",
+  "timeout": 180000
+ },
+ {
+  "mark": "revoked"
+ },
+ {
+  "eval": "document.querySelector('[data-testid=\"revoke-tx\"]').dataset.hash",
+  "as": "revokeTx"
+ },
+ {
+  "wait": 800
+ },
+ {
+  "boxSel": "[data-testid=\"grant-row\"]",
+  "name": "revoked",
+  "hold": 3.5,
+  "soft": true
+ },
+ {
+  "wait": 3600
+ },
+ {
+  "mark": "to-pip"
+ },
+ {
+  "clickSel": ".app-bar nav a[href=\"/pip/\"]"
+ },
+ {
+  "waitFor": "[...document.querySelectorAll('[data-testid=\"memory-row\"]')].length === 2 && [...document.querySelectorAll('[data-testid=\"memory-row\"]')].every(r=>r.dataset.epoch==='2')",
+  "timeout": 40000
+ },
+ {
+  "wait": 1200
+ },
+ {
+  "boxSel": "[data-testid=\"memory-list\"]",
+  "name": "epoch2",
+  "hold": 3,
+  "soft": true
+ },
+ {
+  "wait": 3200
+ },
+ {
+  "mark": "to-fern"
+ },
+ {
+  "clickSel": ".top-nav a[href=\"/fern/\"]"
+ },
+ {
+  "waitFor": "[...document.querySelectorAll('[data-testid=\"fern-row\"]')].length === 2 && [...document.querySelectorAll('[data-testid=\"fern-row\"]')].every(r=>r.dataset.state==='locked')",
+  "timeout": 40000
+ },
+ {
+  "wait": 1200
+ },
+ {
+  "boxSel": "[data-testid=\"fern-memories\"]",
+  "name": "fern-locked",
+  "hold": 3.5,
+  "soft": true
+ },
+ {
+  "wait": 3000
+ },
+ {
+  "mark": "fern1-type"
+ },
+ {
+  "typeInto": "#fern-chat-input",
+  "text": "Plan my weekend in two sentences."
+ },
+ {
+  "click": "Send",
+  "exact": true,
+  "until": "[...document.querySelectorAll('[data-testid=\"turn\"]')].length >= 1"
+ },
+ {
+  "mark": "fern1-sent"
+ },
+ {
+  "waitFor": "[...document.querySelectorAll('[data-testid=\"turn\"]')].filter(t=>t.closest('[data-testid=\"fern-chat\"]')&&t.dataset.role==='assistant').length >= 1 && !document.querySelector('[data-testid=\"thinking\"]')",
+  "timeout": 120000
+ },
+ {
+  "mark": "fern1-reply"
+ },
+ {
+  "wait": 900
+ },
+ {
+  "boxSel": "[data-testid=\"turn-read\"]",
+  "name": "fern-read0",
+  "hold": 3.5,
+  "soft": true
+ },
+ {
+  "wait": 3800
+ },
+ {
+  "rec": false
+ },
+ {
+  "goto": "http://localhost:5291/docs/",
+  "load": 4000
+ },
+ {
+  "rec": "c7-sdk"
+ },
+ {
+  "wait": 1200
+ },
+ {
+  "eval": "(document.querySelector('[data-snippet=\"quickstart\"]')||document.body).scrollIntoView({block:'start'})||'scrolled'"
+ },
+ {
+  "wait": 2800
+ },
+ {
+  "mark": "qs-click"
+ },
+ {
+  "clickSel": "[data-testid=\"quickstart-create\"], [data-testid=\"quickstart-run\"]"
+ },
+ {
+  "waitFor": "/unsealed/.test((document.querySelector('[data-testid=\"quickstart-output\"]')||{innerText:''}).innerText)",
+  "timeout": 60000
+ },
+ {
+  "wait": 800
+ },
+ {
+  "boxSel": "[data-testid=\"quickstart-output\"]",
+  "name": "qs-out",
+  "hold": 3.5,
+  "soft": true
+ },
+ {
+  "wait": 4000
+ },
+ {
+  "rec": false
+ }
+]

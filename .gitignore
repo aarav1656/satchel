@@ -15,3 +15,5 @@ devflow/.state/
 devflow/node_modules/
 mitm_mcp_traffic.db
 .DS_Store
+video/work/
+video/vo/out-*/

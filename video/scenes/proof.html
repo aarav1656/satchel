@@ -1,0 +1,13 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+body{background:var(--canvas);background-image:linear-gradient(oklch(100% 0 0/.035) 1px,transparent 1px),linear-gradient(90deg,oklch(100% 0 0/.035) 1px,transparent 1px);background-size:64px 64px}
+#w{position:absolute;left:130px;top:90px;width:1660px}
+.r{display:grid;grid-template-columns:440px 1fr 440px;align-items:center;gap:30px;padding:34px 44px;margin-bottom:22px;border:1px solid var(--hair);border-radius:14px;background:var(--surface);opacity:0}
+.r .n{font:600 92px/1 "Bricolage";letter-spacing:-.04em;color:var(--ink)}.r .n small{font:600 34px "Bricolage";color:var(--steel);margin-left:12px;letter-spacing:-.01em}
+.r .t{font:500 33px/1.3 "Instrument";color:var(--text)}.r .m{font:500 24px/1.5 "GMono";color:var(--steel);text-align:right}.r .m b{color:var(--accent);font-weight:600}
+</style>
+<div id="w"></div>
+<script src="engine.js"></script><script>
+const R=cue("rows",[]);R.forEach((x,i)=>{const d=document.createElement("div");d.className="r";d.id="r"+i;d.innerHTML=`<div class="n">${x[0]}<small>${x[1]}</small></div><div class="t">${x[2]}</div><div class="m">${x[3]}</div>`;$("#w").append(d)});
+window.render=(t)=>{R.forEach((x,i)=>{const e=$("#r"+i),v=eo(seg(t,x[4],x[4]+.4));e.style.opacity=v;e.style.transform=`translateY(${(1-v)*14}px)`})};
+</script>

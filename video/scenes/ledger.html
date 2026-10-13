@@ -1,0 +1,16 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+body{background:var(--canvas);background-image:linear-gradient(oklch(100% 0 0/.035) 1px,transparent 1px),linear-gradient(90deg,oklch(100% 0 0/.035) 1px,transparent 1px);background-size:64px 64px}
+.c{position:absolute;top:130px;width:780px;height:560px;border:1px solid var(--hair);border-radius:18px;background:var(--surface);padding:40px 44px;box-shadow:inset 0 1px 0 oklch(100% 0 0/.07);opacity:0}
+#g{left:150px}#r{left:990px}
+.k{font:600 30px "Bricolage";color:var(--steel);letter-spacing:-.01em}.n{margin-top:20px;font:600 120px/1 "Bricolage";letter-spacing:-.04em;color:var(--ink)}.n small{font:600 44px "Bricolage";color:var(--steel);letter-spacing:-.02em;margin-left:14px}
+.d{margin-top:26px;font:500 23px/1.7 "GMono";color:var(--steel)}.d b{color:var(--accent);font-weight:600}
+#v{position:absolute;left:150px;top:740px;width:1620px;padding:22px 32px;border:1px solid var(--hair);border-radius:14px;background:var(--code);font:500 25px/1.5 "GMono";color:var(--text);opacity:0}
+#v b{color:var(--accent);font-weight:600}#v i{font-style:normal;color:var(--steel)}
+</style>
+<div class="c" id="g"><div class="k">Grant</div><div class="n">0.0117<small>MON</small></div><div class="d">114,536 gas at 102 gwei<br>block <b>70668572</b> &middot; status <b>1</b><br>5.0 s from click to receipt</div></div>
+<div class="c" id="r"><div class="k">Revoke, and the epoch moves</div><div class="n">0.0067<small>MON</small></div><div class="d">65,265 gas at 102 gwei<br>block <b>70668906</b> &middot; status <b>1</b><br>5.3 s from click to receipt, resealed</div></div>
+<div id="v"><i>any app, no key needed:</i> grantOf(41) &rarr; epoch <b>1</b>, active <b>false</b> &nbsp;&middot;&nbsp; epochOf(owner, memory/trading-desk) &rarr; <b>2</b></div>
+<script src="engine.js"></script><script>
+window.render=(t)=>{$("#g").style.opacity=eo(seg(t,.3,.7));$("#r").style.opacity=eo(seg(t,2.6,3.0));$("#v").style.opacity=eo(seg(t,5.2,5.6))};
+</script>

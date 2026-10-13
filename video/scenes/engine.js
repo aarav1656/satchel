@@ -1,0 +1,10 @@
+window.__ready = false;
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+window.seg = (t, a, b) => clamp((t - a) / (b - a));
+window.eo = (x) => 1 - Math.pow(1 - x, 3);
+window.eio = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+window.lerp = (a, b, x) => a + (b - a) * x;
+window.$ = (s) => document.querySelector(s);
+window.CUES = JSON.parse(decodeURIComponent((location.hash || "#%7B%7D").slice(1)));
+window.cue = (k, d) => (CUES[k] ?? d);
+document.fonts.ready.then(() => Promise.all(["500 20px Bricolage", "600 20px Instrument", "500 20px GMono"].map((f) => document.fonts.load(f)))).then(() => { window.__ready = true; });

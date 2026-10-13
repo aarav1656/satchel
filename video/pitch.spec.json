@@ -1,0 +1,261 @@
+{
+ "out": "satchel-pitch.mp4",
+ "timeline": "vo/out-pitch/timeline.json",
+ "audio": "vo/out-pitch/narration.wav",
+ "work": "work/compose-pitch",
+ "lead": 0.12,
+ "bg": "080c15",
+ "labels": {
+  "fern-read": "Read 2 of 2 memories",
+  "fern-locked": "GRANT_REVOKED",
+  "fern-read0": "Read 0 of 2 memories"
+ },
+ "errBoxes": [
+  "fern-locked",
+  "fern-read0"
+ ],
+ "beats": [
+  {
+   "name": "read",
+   "ids": [
+    "p01"
+   ],
+   "pieces": [
+    {
+     "clip": "work/final/c5-grant.mp4",
+     "marks": "work/final/c5-grant/marks.json",
+     "ss": 36.4,
+     "se": 41.7,
+     "fit": true,
+     "only": [
+      "fern-read"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "none",
+   "ids": [
+    "p02"
+   ],
+   "pieces": [
+    {
+     "clip": "work/final/c6-revoke.mp4",
+     "marks": "work/final/c6-revoke/marks.json",
+     "ss": 29.8,
+     "se": 33.8,
+     "fit": true,
+     "only": [
+      "fern-locked"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "tag",
+   "ids": [
+    "p03"
+   ],
+   "pieces": [
+    {
+     "scene": "tag",
+     "cues": {},
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "pick",
+   "ids": [
+    "p04"
+   ],
+   "pieces": [
+    {
+     "scene": "problem",
+     "cues": {},
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "source",
+   "ids": [
+    "p05"
+   ],
+   "pieces": [
+    {
+     "scene": "source",
+     "cues": {
+      "img": "../work/src-openai.png",
+      "w": 2200,
+      "h": 1520,
+      "crop": [
+       80,
+       130,
+       1500,
+       700
+      ],
+      "maxH": 780,
+      "maxW": 1560,
+      "top": 90,
+      "label": "OpenAI Help Center, Memory in ChatGPT, read 13 October 2026",
+      "hi": [
+       [
+        120,
+        262,
+        760,
+        252,
+        2.2,
+        5
+       ],
+       [
+        120,
+        548,
+        1344,
+        144,
+        5.2
+       ]
+      ]
+     },
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "stuck",
+   "ids": [
+    "p06"
+   ],
+   "pieces": [
+    {
+     "clip": "work/final/c3-fern.mp4",
+     "marks": "work/final/c3-fern/marks.json",
+     "ss": 0.5,
+     "se": 8.7,
+     "fit": true
+    }
+   ],
+   "caption": true
+  },
+  {
+   "name": "mech",
+   "ids": [
+    "p07",
+    "p08",
+    "p09"
+   ],
+   "pieces": [
+    {
+     "scene": "mech",
+     "cues": {
+      "t8": 8.34,
+      "t9": 14.92
+     },
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "monad",
+   "ids": [
+    "p10"
+   ],
+   "pieces": [
+    {
+     "scene": "ledger",
+     "cues": {},
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "proof",
+   "ids": [
+    "p11",
+    "p12"
+   ],
+   "pieces": [
+    {
+     "scene": "proof",
+     "cues": {
+      "rows": [
+       [
+        "19",
+        "tests",
+        "SatchelRegistry: unit and fuzz tests, plus 2 invariants",
+        "forge test<br>run 13 Oct 2026",
+        0.4
+       ],
+       [
+        "6 of 6",
+        "mutants",
+        "Break the contract six ways: the tests go red each time",
+        "mutation run<br>killed 6 of 6",
+        3.2
+       ],
+       [
+        "89",
+        "tests",
+        "satchel-sdk, six of them property tests",
+        "bun test, 89 pass 0 fail<br>run 13 Oct 2026",
+        6.6
+       ],
+       [
+        "6",
+        "steps",
+        "A fresh project installs the tarball and runs the whole flow against the live registry",
+        "devflow/run.sh<br>DEVFLOW PASS 6 steps",
+        9.4
+       ]
+      ]
+     },
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "sdk",
+   "ids": [
+    "p13"
+   ],
+   "pieces": [
+    {
+     "clip": "work/final/c7-sdk.mp4",
+     "marks": "work/final/c7-sdk/marks.json",
+     "ss": 1.5,
+     "se": 9.9,
+     "fit": true,
+     "only": [
+      "qs-out"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "layers",
+   "ids": [
+    "p14"
+   ],
+   "pieces": [
+    {
+     "scene": "layers",
+     "cues": {},
+     "fit": true
+    }
+   ]
+  },
+  {
+   "name": "cta",
+   "ids": [
+    "p15"
+   ],
+   "pieces": [
+    {
+     "scene": "cta",
+     "cues": {},
+     "fit": true
+    }
+   ]
+  }
+ ]
+}

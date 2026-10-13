@@ -1,0 +1,76 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+body{background:var(--canvas);background-image:linear-gradient(oklch(100% 0 0/.035) 1px,transparent 1px),linear-gradient(90deg,oklch(100% 0 0/.035) 1px,transparent 1px);background-size:64px 64px;--env-back:oklch(30% .03 258);--env-flap:oklch(36% .035 258);--env-paper:oklch(94% .01 250)}
+.app{position:absolute;top:96px;width:700px;height:570px;border:1px solid var(--hair);border-radius:18px;background:var(--surface);box-shadow:inset 0 1px 0 oklch(100% 0 0/.07);padding:34px 36px}
+#pip{left:96px}#fern{left:1124px}
+.hd{display:flex;align-items:baseline;gap:18px}.hd h2{font:600 56px/1 "Bricolage";letter-spacing:-.03em;color:var(--ink)}.hd span{font:500 22px "Instrument";color:var(--steel)}
+.chip{margin-top:16px;display:inline-block;padding:8px 16px;border-radius:999px;border:1px solid var(--hair);font:500 20px "GMono";color:var(--steel)}
+.chip b{color:var(--accent);font-weight:600}
+.tile{position:absolute;left:36px;width:628px;height:112px;border-radius:14px;border:1px solid var(--hair);background:var(--soft);display:flex;align-items:center;gap:22px;padding:0 24px;opacity:0}
+.tile svg{width:104px;flex:none}
+.tx{flex:1;min-width:0;overflow:hidden}.t1{font:600 32px/1.1 "Bricolage";color:var(--ink);letter-spacing:-.02em;white-space:nowrap}.t2{margin-top:6px;font:500 20px "GMono";color:var(--steel);white-space:nowrap}
+.ep{font:600 24px "GMono";color:var(--steel);padding:6px 14px;border-radius:999px;border:1px solid var(--hair)}
+#store{position:absolute;left:36px;bottom:30px;font:500 22px "GMono";color:var(--stone);opacity:0}
+#reg{position:absolute;left:736px;top:700px;width:448px;border:1px solid var(--hair);border-radius:14px;background:var(--code);padding:22px 26px;font:500 21px/1.6 "GMono";color:var(--text);opacity:0}
+#reg .h{font:600 22px "Instrument";color:var(--steel);margin-bottom:6px;letter-spacing:.02em}
+#reg .r{opacity:0}#reg .g{color:var(--accent)}#reg .x{color:var(--err)}
+#wire{position:absolute;left:0;top:0}
+</style>
+<div class="app" id="pip"><div class="hd"><h2>Pip</h2><span>an assistant</span></div><div class="chip">passkey <b>fp 4d24</b> &middot; memory/trading-desk &middot; <b id="fe">epoch 1</b></div>
+ <div class="tile" id="p0" style="top:168px"></div><div class="tile" id="p1" style="top:300px"></div><div id="store">storage holds ciphertext only</div></div>
+<div class="app" id="fern"><div class="hd"><h2>Fern</h2><span>a second app, its own key</span></div><div class="chip" id="fk">fern key ba705948 &middot; <b id="fgs">no grant</b></div>
+ <div class="tile" id="f0" style="top:168px"></div><div class="tile" id="f1" style="top:300px"></div></div>
+<svg id="wire" width="1920" height="1080"></svg>
+<div id="reg"><div class="h">SatchelRegistry on Monad</div><div class="r" id="r0">Granted &middot; <span class="g">grant 41 &middot; epoch 1</span></div><div class="r" id="r1">block 70668572 &middot; status 1</div><div class="r" id="r2">Revoked &middot; <span class="x">epoch 2</span></div><div class="r" id="r3">block 70668906 &middot; status 1</div></div>
+<script src="engine.js"></script><script>
+const T8=cue("t8",8),T9=cue("t9",15);
+const FACTS=["Vegetarian","Flies out of BLR"];
+const mix=(a,b,x)=>a+(b-a)*x;
+function env(open,tone){ // tone: n neutral, a accent, e error
+ const apex=mix(64,-4,open), flapOp=1, sealOp=Math.max(0,1-open*2.2);
+ const flap=tone==="a"?"oklch(52% .09 165)":tone==="e"?"oklch(42% .1 22)":"var(--env-flap)";
+ const body=tone==="a"?"oklch(38% .06 165)":tone==="e"?"oklch(34% .08 22)":"var(--env-back)";
+ const ly=mix(34,-2,open);
+ return `<svg viewBox="0 -10 120 100"><rect x="4" y="24" width="112" height="62" rx="9" fill="${body}"/><rect x="18" y="${ly}" width="84" height="54" rx="5" fill="var(--env-paper)" opacity="${open>0.05?1:0}"/><rect x="28" y="${ly+12}" width="50" height="5" rx="2.5" fill="oklch(70% .02 255)" opacity="${open>0.4?1:0}"/><rect x="28" y="${ly+24}" width="34" height="5" rx="2.5" fill="oklch(78% .02 255)" opacity="${open>0.4?1:0}"/><path d="M4 24 L60 ${apex} L116 24 Z" fill="${flap}"/><circle cx="60" cy="${apex-6}" r="11" fill="var(--accent)" opacity="${sealOp}"/><path d="M4 86 L50 52 M116 86 L70 52" stroke="oklch(100% 0 0/.07)" stroke-width="3" opacity="${1-open}"/></svg>`;
+}
+const hex=(seed)=>{let s=seed*9301+49297,o="";for(let i=0;i<4;i++){s=(s*233280+11)%2147483647;o+=(s%256).toString(16).padStart(2,"0")}return "0x53415431…"+o};
+function setTile(el,{a,open,tone,main,sub,ep,epErr,mono}){el.style.opacity=a;el.style.transform=`translateY(${(1-a)*12}px)`;el.style.borderColor=tone==="a"?"var(--accent-line)":tone==="e"?"oklch(71% .19 22 / .5)":"var(--hair)";el.style.background=tone==="a"?"var(--accent-wash)":tone==="e"?"var(--err-wash)":"var(--soft)";
+ el.innerHTML=env(open,tone)+`<div class="tx"><div class="t1" style="${tone==="e"?"color:var(--err);font-family:GMono;font-size:27px":mono?"font-family:GMono;font-size:25px;font-weight:500;letter-spacing:0":""}">${main}</div><div class="t2">${sub}</div></div><div class="ep" style="${epErr?"text-decoration:line-through;color:var(--err);border-color:oklch(71% .19 22 / .4)":""}">${ep}</div>`}
+const path=(x1,y1,x2,y2)=>`M${x1} ${y1} C ${x1+140} ${y1}, ${x2-140} ${y2}, ${x2} ${y2}`;
+const X1=796,Y1=300,X2=1124,Y2=300;
+window.render=(t)=>{
+ $("#pip").style.opacity=eo(seg(t,0,.4));$("#fern").style.opacity=eo(seg(t,.15,.55));
+ const rev=seg(t,T9+3.2,T9+4.4), epoch=t>T9+1.8?2:1; // roll, then reseal
+ $("#fe").textContent="epoch "+epoch;
+ FACTS.forEach((f,i)=>{
+  const a=eo(seg(t,.5+i*.35,.9+i*.35)), seal=eo(seg(t,4.1+i*.9,4.7+i*.9));
+  const tick=Math.floor(t*14), resealing=t>T9+3.2&&t<T9+4.4;
+  const open=1-seal;
+  const showCipher=seal>0.5;
+  const bytes=resealing?hex(i*7+tick):hex(i+1+(rev>0.5?40:0));
+  setTile($("#p"+i),{a,open,tone:"n",main:showCipher?bytes:f,mono:showCipher,sub:showCipher?"sealed &middot; "+(i?"131":"113")+" B":"opened by the passkey",ep:"e"+(rev>0.5?2:1)});
+ });
+ $("#store").style.opacity=eo(seg(t,6.6,7.0));
+ // fern tiles
+ const g=eo(seg(t,T8+3.6,T8+4.3)), cut=eo(seg(t,T9+5.4,T9+6.0));
+ FACTS.forEach((f,i)=>{
+  const a=eo(seg(t,.7+i*.3,1.1+i*.3));
+  let open=g*(1-cut), tone=cut>0.5?"e":(g>0.5?"a":"n");
+  let main=cut>0.5?"GRANT_REVOKED":(g>0.5?f:"locked, no grant"), sub=cut>0.5?"read 0 of 2 memories":(g>0.5?"opened with its own key":"Fern holds nothing yet");
+  setTile($("#f"+i),{a,open,tone,main,sub,ep:cut>0.5?"grant e1":(g>0.5?"grant e1":"&mdash;"),epErr:cut>0.5});
+ });
+ $("#fgs").style.color=cut>0.5?"var(--err)":"var(--accent)";$("#fgs").textContent=cut>0.5?"grant revoked":(g>0.5?"grant 41 active":"no grant");
+ // wire
+ const drawn=eo(seg(t,T8+2.4,T8+3.4)), pathD=path(X1,Y1,X2,Y2);
+ let w=`<g fill="none" stroke-linecap="round">`;
+ w+=`<path d="${pathD}" stroke="oklch(45% .03 258)" stroke-width="3" stroke-dasharray="8 12" opacity="${1-drawn*.9}"/>`;
+ w+=`<circle cx="${X1}" cy="${Y1}" r="9" fill="var(--canvas)" stroke="var(--steel)" stroke-width="4"/><circle cx="${X2}" cy="${Y2}" r="9" fill="var(--canvas)" stroke="var(--steel)" stroke-width="4"/>`;
+ if(drawn>0&&cut<0.01){const len=420;w+=`<path d="${pathD}" stroke="var(--accent)" stroke-width="5" pathLength="1" stroke-dasharray="${drawn} 1"/>`;
+  for(let k=0;k<3;k++){const pp=(t*0.7+k/3)%1; if(drawn>.98){const x=mix(X1,X2,pp), y=Y1+(Y2-Y1)*pp; w+=`<circle cx="${x}" cy="${y}" r="6" fill="var(--accent)" opacity=".85"/>`}}}
+ if(cut>=0.01){const gap=cut*70; w+=`<path d="M${X1} ${Y1} L${X1+ (X2-X1)/2-gap} ${Y1}" stroke="var(--err)" stroke-width="5"/><path d="M${X1+(X2-X1)/2+gap} ${Y1} L${X2} ${Y2}" stroke="var(--err)" stroke-width="5"/><path d="M${X1+(X2-X1)/2-gap} ${Y1-18} v36 M${X1+(X2-X1)/2+gap} ${Y1-18} v36" stroke="var(--err)" stroke-width="6"/>`}
+ w+=`</g>`; $("#wire").innerHTML=w;
+ // registry ledger
+ $("#reg").style.opacity=eo(seg(t,T8+2.8,T8+3.2));
+ [[T8+3.3,"r0"],[T8+3.7,"r1"],[T9+1.8,"r2"],[T9+2.2,"r3"]].forEach(([s,id])=>{$("#"+id).style.opacity=eo(seg(t,s,s+.3))});
+};
+</script>

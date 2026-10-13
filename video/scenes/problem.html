@@ -1,0 +1,22 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+body{background:var(--canvas);background-image:linear-gradient(oklch(100% 0 0/.035) 1px,transparent 1px),linear-gradient(90deg,oklch(100% 0 0/.035) 1px,transparent 1px);background-size:64px 64px}
+.door{position:absolute;top:110px;width:800px;height:700px;border:1px solid var(--hair);border-radius:18px;background:var(--surface);padding:40px 44px;box-shadow:inset 0 1px 0 oklch(100% 0 0/.07)}
+#A{left:120px}#B{left:1000px}
+h2{font:600 46px/1.05 "Bricolage";letter-spacing:-.03em;color:var(--ink)}.sub{margin-top:8px;font:500 22px "Instrument";color:var(--steel)}
+.msg{margin-top:22px;padding:16px 22px;border-radius:14px;font:500 27px/1.3 "Instrument";max-width:600px;opacity:0}
+.you{background:var(--raised);margin-left:auto;color:var(--ink)}.bot{background:var(--soft);border:1px solid var(--hair)}
+.row{display:flex;align-items:center;gap:16px;margin-top:16px;padding:16px 20px;border:1px solid var(--hair);border-radius:12px;background:var(--soft);font:500 24px "GMono";color:var(--text);opacity:0}
+.row i{width:12px;height:12px;border-radius:50%;background:var(--warn);flex:none}.row u{margin-left:auto;text-decoration:none;color:var(--stone);font-size:19px}
+.stamp{position:absolute;left:44px;bottom:34px;font:600 30px "Bricolage";letter-spacing:-.02em;color:var(--err);opacity:0}
+.stamp.b{color:var(--warn)}
+</style>
+<div class="door" id="A"><h2>Start empty</h2><div class="sub">every new chat</div>
+ <div class="msg bot" id="a1">What do you eat? Where do you fly from?</div><div class="msg you" id="a2">I told you last week.</div><div class="msg bot" id="a3">What do you eat? Where do you fly from?</div><div class="stamp" id="sa">zero memory</div></div>
+<div class="door" id="B"><h2>Keep a file on you</h2><div class="sub">held by the vendor</div>
+ <div class="row" id="b1"><i></i>vegetarian<u>their server</u></div><div class="row" id="b2"><i></i>flies out of BLR<u>their server</u></div><div class="row" id="b3"><i></i>works nights, hates mornings<u>their server</u></div><div class="row" id="b4"><i></i>gmail: flight receipts<u>their server</u></div><div class="stamp b" id="sb">their file, their rules</div></div>
+<script src="engine.js"></script><script>
+const p=(id,s,d=.35)=>{const e=$("#"+id),v=eo(seg(t_,s,s+d));e.style.opacity=v;e.style.transform=`translateY(${(1-v)*12}px)`};let t_=0;
+window.render=(t)=>{t_=t;$("#A").style.opacity=eo(seg(t,0,.35));$("#B").style.opacity=eo(seg(t,.2,.55));
+ p("a1",.6);p("a2",1.6);p("a3",2.6);p("sa",3.4);p("b1",1.0);p("b2",1.7);p("b3",2.4);p("b4",3.1);p("sb",4.0)};
+</script>

@@ -1,0 +1,13 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+body{background:var(--canvas);background-image:linear-gradient(oklch(100% 0 0/.035) 1px,transparent 1px),linear-gradient(90deg,oklch(100% 0 0/.035) 1px,transparent 1px);background-size:64px 64px}
+#w{position:absolute;left:260px;top:150px;width:1400px}
+.l{display:flex;align-items:center;gap:30px;padding:26px 36px;margin-bottom:18px;border:1px solid var(--hair);border-radius:14px;background:var(--surface);opacity:0}
+.l b{font:600 44px "Bricolage";letter-spacing:-.025em;color:var(--ink);min-width:480px}.l span{font:500 25px "GMono";color:var(--steel)}.l i{width:14px;height:14px;border-radius:50%;background:var(--accent);flex:none}
+</style>
+<div id="w"></div>
+<script src="engine.js"></script><script>
+const R=[["SatchelRegistry","Solidity, on Monad"],["satchel-sdk","TypeScript, on npm"],["Pip and Fern","two apps on the SDK"],["devflow","tarball to live registry"]];
+R.forEach((x,i)=>{const d=document.createElement("div");d.className="l";d.id="l"+i;d.innerHTML=`<i></i><b>${x[0]}</b><span>${x[1]}</span>`;$("#w").append(d)});
+window.render=(t)=>{R.forEach((x,i)=>{const e=$("#l"+i),v=eo(seg(t,.3+i*.5,.7+i*.5));e.style.opacity=v;e.style.transform=`translateX(${(1-v)*-30}px)`})};
+</script>
