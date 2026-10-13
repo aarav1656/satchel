@@ -58,14 +58,21 @@ const RECEIPTS = [
 const EXPLORER = monadTestnet.blockExplorers.default.url;
 const short = (h: string) => `${h.slice(0, 10)}…${h.slice(-6)}`;
 
-function Envelope({ open, bad }: { open: boolean; bad?: boolean }) {
+/** One memory as an envelope: shut with a seal on the flap, or open with the letter standing out of it. The ciphertext is printed on the front. */
+function Envelope({ text, cipher, epoch, slot, open, bad }: { text: string; cipher: string; epoch: number; slot: string; open: boolean; bad?: boolean }) {
   return (
-    <span className="env" data-open={open} data-bad={bad ? "true" : "false"} aria-hidden="true">
+    <span className="env" data-open={open} data-bad={bad ? "true" : "false"}>
       <span className="env-back" />
-      <span className="env-letter" />
+      <span className="env-letter">
+        <span className="env-letter-text">{text}</span>
+      </span>
       <span className="env-front" />
+      <span className="env-cipher" key={cipher}>
+        {cipher}
+      </span>
+      <span className="env-slot">{slot}</span>
       <span className="env-flap" />
-      <span className="env-seal" />
+      <span className="env-seal">e{epoch}</span>
     </span>
   );
 }
@@ -179,27 +186,22 @@ export default function Page() {
           <div className="stage-grid">
             <article className="app-panel" data-testid="home-pip">
               <header>
-                <span className="app-dot" aria-hidden="true" />
-                <h2>Pip</h2>
-                <span className="muted small">holds the passkey</span>
+                <div className="app-panel-top">
+                  <span className="app-panel-id">
+                    <span className="app-dot" aria-hidden="true" />
+                    <h2>Pip</h2>
+                  </span>
+                  <Epoch label="epoch" values={[1, 2]} className="epoch-roll-pip" />
+                </div>
+                <p className="panel-role">holds the passkey</p>
               </header>
-              <div className="panel-meta">
-                <span>folder</span>
-                <Epoch label="epoch" values={[1, 2]} className="epoch-roll-pip" />
-              </div>
-              <ul className="tiles" aria-label="Pip&apos;s sample memories">
+              <ul className="tiles" aria-label="Pip's sample memories">
                 {FACTS.map((f) => (
-                  <li key={f.plain} className="tile" data-lock="own" data-bad="false">
-                    <Envelope open={false} />
-                    <span className="tile-main">
-                      <span className="tile-plain">{f.plain}</span>
-                      <span className="tile-note">{revoked ? f.resealed : f.cipher}</span>
-                    </span>
-                    <span className="tile-epoch">e{epoch}</span>
+                  <li key={f.plain} className="tile">
+                    <Envelope text={f.plain} cipher={revoked ? f.resealed : f.cipher} epoch={epoch} slot={`e${epoch}`} open />
                   </li>
                 ))}
               </ul>
-              <p className="app-panel-status" data-testid="home-pip-status">{pip}</p>
               <div className="btn-row">
                 <Link href="/pip/" className="btn">
                   Open Pip
@@ -220,34 +222,22 @@ export default function Page() {
 
             <article className="app-panel" data-testid="home-fern">
               <header>
-                <span className="app-dot app-dot-open" aria-hidden="true" />
-                <h2>Fern</h2>
-                <span className="muted small">reads through a grant</span>
+                <div className="app-panel-top">
+                  <span className="app-panel-id">
+                    <span className="app-dot app-dot-open" aria-hidden="true" />
+                    <h2>Fern</h2>
+                  </span>
+                  <span className="epoch epoch-dead">{view === "none" ? "no grant" : "grant e1"}</span>
+                </div>
+                <p className="panel-role">reads through a grant</p>
               </header>
-              <div className="panel-meta">
-                <span>its grant</span>
-                <span className="epoch epoch-dead">{view === "none" ? "none" : "epoch 1"}</span>
-              </div>
               <ul className="tiles" aria-label="What Fern can open">
                 {FACTS.map((f) => (
-                  <li key={f.plain} className="tile" data-lock={open ? "false" : "true"} data-bad={revoked ? "true" : "false"}>
-                    <Envelope open={open} bad={revoked} />
-                    <span className="tile-main">
-                      <span className="tile-stack">
-                        <span className="tile-plain">{f.plain}</span>
-                        <span className="tile-cipher">{revoked ? f.resealed : f.cipher}</span>
-                      </span>
-                      <span className="tile-stack">
-                        <span className="tile-note tile-note-lock">{view === "none" ? "sealed, no key" : "sealed, not read yet"}</span>
-                        <span className="tile-note tile-note-open">opened with its key</span>
-                        <span className="tile-note tile-note-bad">GRANT_REVOKED</span>
-                      </span>
-                    </span>
-                    <span className="tile-epoch">e{epoch}</span>
+                  <li key={f.plain} className="tile">
+                    <Envelope text={f.plain} cipher={revoked ? f.resealed : f.cipher} epoch={epoch} slot={revoked ? "GRANT_REVOKED" : open ? `e${epoch}` : view === "none" ? "no key" : "not read yet"} open={open} bad={revoked} />
                   </li>
                 ))}
               </ul>
-              <p className="app-panel-status" data-testid="home-fern-status">{fern}</p>
               <div className="btn-row">
                 <Link href="/fern/" className="btn btn-secondary">
                   Open Fern
@@ -259,9 +249,19 @@ export default function Page() {
           <p className="stage-log" key={step}>
             {LOG[step].map((l) => (
               <span key={l.text}>
-                <span className={l.who === "fern" ? "log-who log-who-fern" : "log-who"}>{l.who}</span> <span className={l.bad ? "log-bad" : undefined}>{l.text}</span>
+                <span className={l.who === "fern" ? "log-who log-who-fern" : "log-who"}>{l.who}</span>
+                <span className={l.bad ? "log-bad" : undefined}>{l.text}</span>
               </span>
             ))}
+          </p>
+          <p className="stage-real">
+            <span>read from this browser</span>
+            <span>
+              <b>pip</b> <span data-testid="home-pip-status">{pip}</span>
+            </span>
+            <span>
+              <b>fern</b> <span data-testid="home-fern-status">{fern}</span>
+            </span>
           </p>
         </section>
       </div>
