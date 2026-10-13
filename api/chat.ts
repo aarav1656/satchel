@@ -45,7 +45,7 @@ export async function POST(request: Request): Promise<Response> {
       providerOptions: { openrouter: { models: MODELS } },
       system: withMemories(input.app === "pip" ? PIP_SYSTEM : FERN_SYSTEM, input.memories),
       messages: input.messages,
-      maxOutputTokens: 500,
+      maxOutputTokens: 2000,
       ...(input.app === "pip" ? { tools: { remember }, stopWhen: stepCountIs(3) } : {}),
     });
     return json({ reply: result.text.trim(), remembered, model: result.response.modelId });
