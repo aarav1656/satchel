@@ -8,7 +8,7 @@ export interface NavGroup {
 }
 
 export const DOCS_NAV: NavGroup[] = [
-  { title: "Start", items: [{ href: "/", label: "Quickstart" }] },
+  { title: "Start", items: [{ href: "/docs/", label: "Quickstart" }] },
   {
     title: "Concepts",
     items: [
@@ -35,8 +35,8 @@ export const DOCS_NAV: NavGroup[] = [
 ];
 
 export const TOP_NAV: NavItem[] = [
-  { href: "/", label: "Docs" },
   { href: "/pip/", label: "Pip" },
   { href: "/fern/", label: "Fern" },
+  { href: "/docs/", label: "Docs" },
   { href: "/proof/", label: "Proof" },
 ];

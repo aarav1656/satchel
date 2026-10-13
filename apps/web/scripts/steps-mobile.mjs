@@ -1,7 +1,7 @@
 // 390x844 layout check, DOM reads only: where the h1 and the first code block sit, and whether the page scrolls sideways.
 const ORIGIN = process.env.ORIGIN ?? "http://satchel.localhost:5190";
 const METRICS = `(()=>{const y=e=>e?Math.round(e.getBoundingClientRect().top+scrollY):null;const h=document.querySelector('h1');const c=document.querySelector('.codeblock');const t=document.querySelector('.sidebar-toggle');const d=document.documentElement;return 'path='+location.pathname+' viewport='+innerWidth+'x'+innerHeight+' h1.y='+y(h)+' h1="'+(h?.innerText??'')+'" firstCode.y='+y(c)+' firstCodeInViewport='+(c?y(c)<innerHeight:'n/a')+' h1InViewport='+(h?y(h)<innerHeight:false)+' toggle='+(t&&getComputedStyle(t).display!=='none'?'shown':'none')+' scrollWidth='+d.scrollWidth+' clientWidth='+d.clientWidth+' overflowX='+(d.scrollWidth>d.clientWidth)})()`;
-const routes = ["/", "/reference/api/", "/proof/", "/concepts/grants-and-epochs/", "/guides/two-apps/", "/reference/errors/", "/pip/", "/fern/"];
+const routes = ["/", "/docs/", "/reference/api/", "/proof/", "/concepts/grants-and-epochs/", "/guides/two-apps/", "/reference/errors/", "/pip/", "/fern/"];
 const steps = [];
 for (const r of routes) {
   steps.push({ navigate: `${ORIGIN}${r}`, fresh: true });

@@ -1,6 +1,7 @@
 // bun scripts/check-built.mjs  (runs as `postbuild`): reads the static export in out/ and fails on drift between what the site
 // shows and what the code does.
-//  1. The quickstart text on / is the QUICKSTART constant, the text shipped in the client bundle that the Run button executes is
+//  0. / is the product: it links to both apps and carries no docs quickstart (that lives on /docs).
+//  1. The quickstart text on /docs is the QUICKSTART constant, the text shipped in the client bundle that the Run button executes is
 //     the same constant, and QuickstartRun.tsx runs that constant rather than a copy.
 //  2. Every function the docs name in code is a real export or member of satchel-sdk, or is on a short list of other libraries' names.
 //  3. The error table and the error entries list the same codes and the same "Thrown by" names, and match the SDK's ErrorCode.
@@ -17,12 +18,20 @@ const text = (html) => decode(html.replace(/<!--.*?-->/g, "").replace(/<[^>]+>/g
 const page = (route) => fs.readFileSync(path.join(out, route, "index.html"), "utf8");
 if (!fs.existsSync(path.join(out, "index.html"))) throw new Error("no export in out/: run bun run build");
 
+// 0. the landing page is the product
+{
+  const landing = page("");
+  for (const href of ["/pip/", "/fern/", "/docs/"]) if (!landing.includes(`href="${href}"`)) fail(`/ does not link to ${href}`);
+  if (landing.includes('data-snippet="quickstart"')) fail("/ still carries the docs quickstart, which belongs on /docs");
+  if (!/sealed to your passkey/.test(text(landing))) fail("/ does not say what the product is (\"sealed to your passkey\")");
+}
+
 // 1. quickstart
 const { QUICKSTART, quickstartFor, INSTALL, NODE_QUICKSTART } = await import("../lib/snippets.ts");
-const home = page("");
+const home = page("docs");
 const block = home.match(/data-snippet="quickstart">[\s\S]*?<pre><code>([\s\S]*?)<\/code><\/pre>/);
-if (!block) fail("the quickstart code block (data-snippet=quickstart) is missing from /");
-else if (text(block[1]) !== QUICKSTART) fail(`the quickstart shown on / differs from lib/snippets.ts QUICKSTART:\n--- page\n${text(block[1])}\n--- source\n${QUICKSTART}`);
+if (!block) fail("the quickstart code block (data-snippet=quickstart) is missing from /docs");
+else if (text(block[1]) !== QUICKSTART) fail(`the quickstart shown on /docs differs from lib/snippets.ts QUICKSTART:\n--- page\n${text(block[1])}\n--- source\n${QUICKSTART}`);
 const run = fs.readFileSync(path.join(web, "components", "QuickstartRun.tsx"), "utf8");
 if (!/import \{ quickstartFor \} from "@\/lib\/snippets";/.test(run) || !/runSnippet\(quickstartFor\(mode\),/.test(run)) fail("QuickstartRun.tsx does not run the quickstart from lib/snippets.ts");
 const diff = QUICKSTART.split("\n").map((l, i) => (l === quickstartFor("open").split("\n")[i] ? null : i)).filter((i) => i !== null);
@@ -54,15 +63,15 @@ else if (shipped !== QUICKSTART) fail("the QUICKSTART string in the client bundl
   if (/\.tgz/.test(INSTALL)) fail(`INSTALL must be the registry line, not a tarball URL: ${INSTALL}`);
   const tarball = `satchel-sdk-${version}.tgz`;
   if (!fs.existsSync(path.join(out, tarball))) fail(`out/${tarball} is missing, so the compatibility tarball would 404`);
-  const shown = page("").match(/data-snippet="install">[\s\S]*?<pre><code>([\s\S]*?)<\/code><\/pre>/);
-  if (!shown || text(shown[1]) !== INSTALL) fail("the install line shown on / is not INSTALL");
-  const homeHtml = page("");
+  const shown = home.match(/data-snippet="install">[\s\S]*?<pre><code>([\s\S]*?)<\/code><\/pre>/);
+  if (!shown || text(shown[1]) !== INSTALL) fail("the install line shown on /docs is not INSTALL");
+  const homeHtml = home;
   for (const m of homeHtml.matchAll(/href="(\/satchel-sdk-[^"]*\.tgz)"/g)) {
     const target = m[1].replace(/^\//, "");
     if (!fs.existsSync(path.join(out, target))) fail(`fallback link ${m[1]} would 404, out/${target} is missing`);
   }
-  const node = page("").match(/data-snippet="node-quickstart">[\s\S]*?<pre><code>([\s\S]*?)<\/code><\/pre>/);
-  if (!node || text(node[1]) !== NODE_QUICKSTART) fail("the Node quickstart shown on / is not NODE_QUICKSTART");
+  const node = home.match(/data-snippet="node-quickstart">[\s\S]*?<pre><code>([\s\S]*?)<\/code><\/pre>/);
+  if (!node || text(node[1]) !== NODE_QUICKSTART) fail("the Node quickstart shown on /docs is not NODE_QUICKSTART");
 }
 
 // 2. names
@@ -129,4 +138,4 @@ if (failures.length) {
   console.error(`check-built FAIL (${failures.length}):\n- ${failures.join("\n- ")}`);
   process.exit(1);
 }
-console.log(`check-built ok: quickstart on / === QUICKSTART === the shipped Run source (${QUICKSTART.split("\n").length} lines); ${codeNames} function names in docs code checked against ${known.size} real names; ${rows.length} error table rows agree with ${details.length} entries and ${codes.length} ErrorCodes`);
+console.log(`check-built ok: quickstart on /docs === QUICKSTART === the shipped Run source (${QUICKSTART.split("\n").length} lines); ${codeNames} function names in docs code checked against ${known.size} real names; ${rows.length} error table rows agree with ${details.length} entries and ${codes.length} ErrorCodes`);

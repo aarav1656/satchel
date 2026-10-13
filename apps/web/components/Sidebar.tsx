@@ -36,7 +36,8 @@ export function Sidebar() {
 
 export function TopNav() {
   const path = norm(usePathname());
-  const section = (href: string) => (href === "/" ? !path.startsWith("/pip/") && !path.startsWith("/fern/") && !path.startsWith("/proof/") : path.startsWith(norm(href)));
+  const DOCS = ["/docs/", "/concepts/", "/guides/", "/reference/"];
+  const section = (href: string) => (href === "/docs/" ? DOCS.some((d) => path.startsWith(d)) : path.startsWith(norm(href)));
   return (
     <nav className="top-nav" aria-label="Site">
       {TOP_NAV.map((i) => (

@@ -10,7 +10,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: { default: "satchel", template: "%s · satchel" },
-  description: "One passkey, many namespaced keys. Seal data per app, grant a second app a revocable read, and cut it off with an epoch bump on Monad.",
+  description: "Your assistant's memory, sealed to your passkey. You choose which apps read it, and revoke ends it. Two AI apps, one passkey, grants on Monad.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
