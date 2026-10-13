@@ -1,0 +1,25 @@
+--- navigate https://satchel-keys.vercel.app/icon.svg
+cleared
+--- navigate https://satchel-keys.vercel.app/
+wait ok: landing at 390 wide
+HOME viewport=390x844 h1.y=89 pip.y=307 fern.y=704 link=72px tall, 358px wide
+ASSERT no sideways scroll on / ok
+ASSERT the apps stack with the grant line in the gap between them ok
+ASSERT the Open Pip button is within two screens of the top ok
+ASSERT the top nav fits on one row ok
+--- navigate https://satchel-keys.vercel.app/pip/
+wait ok: Pip before a vault
+ASSERT no sideways scroll on /pip/ before a vault ok
+> REAL INPUT click "Create my vault" ok=true at=[119,422]
+wait ok: vault open
+chat stand-in installed
+> REAL INPUT type "I'm vegetarian and I fly out of BLR." ok=true
+> REAL INPUT click "Send" ok=true at=[315,422]
+wait ok: two facts sealed
+ASSERT no sideways scroll on /pip/ with memories ok
+ASSERT chat box and memory rows sit inside 390px ok
+PIP geometry input={"x":37,"y":402.09375,"width":231.65625,"height":40,"top":402.09375,"right":268.65625,"bottom":442.09375,"left":37} send=76px wide, memory row ciphertext="0x53415431...9489bb"
+ASSERT the chat input is 16px so iOS does not zoom on focus ok
+> REAL INPUT click .top-nav a[href="/fern/"] ok=true at=[240,28]
+wait ok: Fern gate
+ASSERT no sideways scroll on /fern/ and the gate sits inside 390px ok

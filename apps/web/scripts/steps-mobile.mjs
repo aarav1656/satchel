@@ -8,7 +8,7 @@ for (const r of routes) {
   steps.push({ eval: METRICS, label: `metrics ${r}` });
   steps.push({ assert: `document.documentElement.scrollWidth <= document.documentElement.clientWidth`, label: `no horizontal overflow on ${r}` });
 }
-steps.push({ navigate: `${ORIGIN}/`, fresh: true });
+steps.push({ navigate: `${ORIGIN}/docs/`, fresh: true });
 steps.push({ assert: `getComputedStyle(document.querySelector('.sidebar-groups')).display === 'none'`, label: "docs menu is collapsed until opened" });
 steps.push({ click_sel: ".sidebar-toggle" });
 steps.push({ assert: `getComputedStyle(document.querySelector('.sidebar-groups')).display !== 'none' && document.querySelector('.sidebar-toggle').getAttribute('aria-expanded') === 'true'`, label: "toggle opens the menu" });
