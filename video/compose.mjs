@@ -79,9 +79,11 @@ spec.beats.forEach((b, bi) => {
       vf += `,scale=${FW}:${FH}:flags=lanczos,setsar=1,pad=1920:1080:${FX}:0:color=0x${spec.bg ?? "0b1017"},fps=${FPS},format=yuv420p`;
       ff(["-ss", String(p.ss), "-to", String(p.se), "-i", R(p.clip), "-vf", vf, "-an", "-c:v", "libx264", "-crf", "16", "-preset", "fast", f]);
       if (p.marks) {
-        const m = JSON.parse(fs.readFileSync(R(p.marks), "utf8")); const [cw, ch, dsf] = m.css; const k = 1920 / cw;
+        const m = JSON.parse(fs.readFileSync(R(p.marks), "utf8"));
         for (const bx of m.boxes ?? []) if (bx.t >= p.ss && bx.t < p.se && (!p.only || p.only.includes(bx.name)) && !(p.skip ?? []).includes(bx.name)) {
+          const k = 1920 / bx.iw; // the page's own viewport width when the box was measured (tab zoom included)
           let [x, y, w, h] = [bx.x * k, bx.y * k, bx.w * k, bx.h * k];
+          if (bx.panel) { const [px, py, pw, ph] = bx.panel; if (bx.x < px - 4 || bx.y < py - 4 || bx.x + bx.w > px + pw + 4 || bx.y + bx.h > py + ph + 4 || bx.y < 0 || bx.y + bx.h > bx.ih + 4 || bx.x < 0 || bx.x + bx.w > bx.iw + 4) throw new Error(`box ${bx.name} falls outside its panel or the viewport: ${JSON.stringify([bx.x, bx.y, bx.w, bx.h])} panel ${JSON.stringify(bx.panel)}`); }
           if (p.zoom) { const z = p.zoom.z; const x0 = (1920 - 1920 / z) * p.zoom.fx, y0 = (1080 - 1080 / z) * p.zoom.fy; x = (x - x0) * z; y = (y - y0) * z; w *= z; h *= z; }
           x = x * KZ + FX; y *= KZ; w *= KZ; h *= KZ;
           // clip the rectangle to the frame and cap very tall targets so the outline stays a callout, not a frame

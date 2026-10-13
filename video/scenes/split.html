@@ -11,12 +11,12 @@ h2{font:600 56px/1 "Bricolage";letter-spacing:-.03em;color:var(--ink)}
 #cap{display:none;position:absolute;left:0;right:0;top:880px;text-align:center;font:600 40px "Bricolage";color:var(--ink);opacity:0;letter-spacing:-.02em}
 #cap em{font-style:normal;color:var(--accent)}
 </style>
-<div class="col" id="L"><h2>On Monad</h2><div class="sub">SatchelRegistry, readable by every app</div>
-<div class="it" id="a1"><i class="dot"></i><div><b>The grant</b><br><span>a wrapped key for one app</span></div></div>
-<div class="it" id="a2"><i class="dot"></i><div><b>The epoch</b><br><span>1, then 2 after a revoke</span></div></div></div>
+<div class="col" id="L"><h2>On Monad</h2><div class="sub">a public record every app can read</div>
+<div class="it" id="a1"><i class="dot"></i><div><b>The permission slip</b><br><span>a grant, for one app</span></div></div>
+<div class="it" id="a2"><i class="dot"></i><div><b>The lock's version</b><br><span>1, then 2 after a revoke</span></div></div></div>
 <div class="col" id="R"><h2>In the browser</h2><div class="sub">your device, your passkey</div>
-<div class="it" id="b1"><i class="dot lock"></i><div><b>Sealed memories</b><br><span>0x53415431…  ciphertext only</span></div></div>
-<div class="it" id="b2"><i class="dot lock"></i><div><b>Every key</b><br><span>derived from the passkey</span></div></div></div>
+<div class="it" id="b1"><i class="dot lock"></i><div><b>Scrambled memories</b><br><span>unreadable without my passkey</span></div></div>
+<div class="it" id="b2"><i class="dot lock"></i><div><b>Every key</b><br><span>made from my passkey</span></div></div></div>
 <div id="cap"><em>Two</em> things on chain. Nothing readable.</div>
 <script src="engine.js"></script><script>
 window.render=(t)=>{t+=cue("from",0);

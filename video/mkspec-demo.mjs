@@ -1,33 +1,35 @@
-// node mkspec-demo.mjs : write demo.spec.json (the cut of the demo clips onto the narration timeline).
+// node mkspec-demo.mjs : write demo.spec.json. Cut points come from the marks each clip recorded, so a re-record needs no edits here.
 import fs from "node:fs";
-const c = (n, ss, se, o = {}) => ({ clip: `work/final2/${n}.mp4`, marks: `work/final2/${n}/marks.json`, ss, se, ...o });
+const D = "work/final3";
+const marks = {}; const box = {};
+for (const n of ["c1-vault", "c2-tell", "c3-fern", "c4-fund", "c5-grant", "c6-revoke", "c7-sdk"]) { const m = JSON.parse(fs.readFileSync(`${D}/${n}/marks.json`, "utf8")); marks[n] = m.marks; box[n] = Object.fromEntries(m.boxes.map((b) => [b.name, b.t])); marks[n]._dur = m.duration; }
+const c = (n, ss, se, o = {}) => ({ clip: `${D}/${n}.mp4`, marks: `${D}/${n}/marks.json`, ss: +ss.toFixed(2), se: +Math.min(se, marks[n]._dur).toFixed(2), ...o });
 const chain = JSON.parse(fs.readFileSync("work/chain.json", "utf8"));
-const run = JSON.parse(fs.readFileSync("work/run.json", "utf8"));
-const QS = { z: 1.8, fx: 0.54, fy: 0.15 };
+const m1 = marks["c1-vault"], m2 = marks["c2-tell"], m3 = marks["c3-fern"], m4 = marks["c4-fund"], m5 = marks["c5-grant"], m6 = marks["c6-revoke"], m7 = marks["c7-sdk"];
+const QS = { z: 2.0, fx: 0.52, fy: 0.06 };
+const REV = { z: 1.5, fx: 0, fy: 0.5 };
 const spec = {
   out: "satchel-demo.mp4", timeline: "vo/out-demo/timeline.json", audio: "vo/out-demo/narration.wav", work: "work/compose-demo", lead: 0.12, bg: "080c15",
-  labels: { owner: "Vault open", sealed: "Stored scrambled", allow: "Fern asks. I decide.", balance0: "Small network fee", balance1: "Funded", "grant-tx": "The grant, on Monad", "fern-open": "Opened with Fern's own key", "fern-read": "Used both facts", revoked: "One tap: revoke", epoch2: "Locked again, new key", "fern-locked": "Fern is locked out", "fern-read0": "None of my facts", "qs-out": "The quickstart, run for real" },
+  labels: { "vault-btn": "Passkey: one touch", owner: "Vault open", sealed: "Stored scrambled", allow: "Fern asks. I decide.", balance0: "A tiny network fee", balance1: "Fee added", "grant-tx": "The grant, on Monad", "fern-open": "Opened with Fern's own key", "fern-read": "Fern used both facts", revoked: "One tap: revoke", "fern-locked": "Locked again", "fern-read0": "Fern can't open them", "qs-out": "The quickstart, run for real" },
   errBoxes: ["revoked", "fern-locked", "fern-read0"],
   beats: [
     { name: "title", ids: ["e01"], pieces: [{ scene: "title", cues: { html: "Every new AI app asks who you are. <em>Again.</em>" }, fit: true }] },
-    { name: "goal", ids: ["e02"], pieces: [{ still: "work/final2/c1-vault.mp4", at: 1.0, fit: true, push: { z: 1.06, fx: 0.4, fy: 0.45 } }] },
-    { name: "vault", ids: ["e03"], pieces: [c("c1-vault", 1.2, 6.5, { fit: true })] },
-    { name: "tell", ids: ["e04"], pieces: [c("c2-tell", 0.8, 11.0, { fit: true })] },
-    { name: "second", ids: ["e05"], pieces: [c("c2-tell", 11.0, 32.0, { fit: true })] },
-    { name: "scrambled", ids: ["e06"], pieces: [c("c2-tell", 32.0, 37.2, { fit: true })] },
+    { name: "goal", ids: ["e02"], pieces: [{ still: `${D}/c1-vault.mp4`, at: 1.0, fit: true, push: { z: 1.06, fx: 0.4, fy: 0.45 } }] },
+    { name: "vault", ids: ["e03"], pieces: [c("c1-vault", box["c1-vault"]["vault-btn"] - 0.3, m1["vault-open"] + 3.0, { fit: true })] },
+    { name: "tell", ids: ["e04"], pieces: [c("c2-tell", m2["pip1-type"], m2["sealed1"] + 1.5, { fit: true })] },
+    { name: "second", ids: ["e05"], pieces: [c("c2-tell", m2["pip2-type"], m2["sealed2"], { fit: true })] },
+    { name: "scrambled", ids: ["e06"], pieces: [c("c2-tell", m2["sealed2"], m2._dur, { fit: true })] },
     { name: "fern", ids: ["e07"], pieces: [c("c3-fern", 1.1, 6.0, { fit: true })] },
-    { name: "connect", ids: ["e08"], pieces: [c("c3-fern", 6.0, 8.6, { fit: true })] },
-    { name: "fund", ids: ["e09"], pieces: [c("c4-fund", 0.5, 7.0, { fit: true })] },
-    { name: "grant", ids: ["e10"], pieces: [c("c5-grant", 0, 7.8, { fit: true })] },
+    { name: "connect", ids: ["e08"], pieces: [c("c3-fern", 6.0, m3._dur, { speed: 1.2 }), c("c4-fund", 0.5, m4._dur, { fit: true })] },
+    { name: "grant", ids: ["e10"], pieces: [c("c5-grant", 0, m5["granted"] + 3.3, { fit: true })] },
     { name: "split", ids: ["e11"], pieces: [{ scene: "split", cues: { from: 3 }, fit: true }] },
-    { name: "fern-open", ids: ["e12"], pieces: [c("c5-grant", 7.94, 13.2, { fit: true })] },
-    { name: "plan", ids: ["e13"], pieces: [c("c5-grant", 13.2, 21.7, { speed: 3 }), c("c5-grant", 21.7, 28.6, { speed: 4 }), c("c5-grant", 28.6, 32.8, { fit: true })] },
-    { name: "revoke", ids: ["e14"], pieces: [c("c6-revoke", 2.0, 5.7, { speed: 1.6 }), c("c6-revoke", 5.7, 10.8, { fit: true })] },
-    { name: "reseal", ids: ["e15"], pieces: [c("c6-revoke", 10.8, 19.1, { fit: true })] },
-    { name: "locked", ids: ["e16"], pieces: [c("c6-revoke", 19.15, 25.3, { fit: true })] },
-    { name: "generic", ids: ["e17"], pieces: [c("c6-revoke", 25.3, 33.5, { speed: 10 }), c("c6-revoke", 33.5, 37.6, { speed: 4 }), c("c6-revoke", 37.6, 42.3, { fit: true })] },
+    { name: "fern-open", ids: ["e12"], pieces: [c("c5-grant", m5["return-click"], m5["fern1-type"] - 0.5, { fit: true })] },
+    { name: "plan", ids: ["e13"], pieces: [c("c5-grant", m5["fern1-type"] - 0.5, m5["fern1-sent"], { speed: 9 }), c("c5-grant", m5["fern1-sent"], m5["fern1-reply"] - 0.2, { speed: 9 }), c("c5-grant", m5["fern1-reply"] - 0.2, m5._dur, { fit: true })] },
+    { name: "revoke", ids: ["e14", "e15"], pieces: [c("c6-revoke", m6["revoke-click"] - 1.2, Math.min(m6["revoked"] + 3.8, m6["to-pip"] + 0.3), { fit: true, zoom: REV })] },
+    { name: "ask-again", ids: ["e16"], pieces: [c("c6-revoke", m6["to-fern"] - 0.4, m6["fern1-type"] + 0.6, { fit: true })] },
+    { name: "generic", ids: ["e17"], pieces: [c("c6-revoke", m6["fern1-type"] + 0.6, m6["fern1-sent"], { speed: 14 }), c("c6-revoke", m6["fern1-sent"], m6["fern1-reply"] - 0.2, { speed: 12 }), c("c6-revoke", m6["fern1-reply"] - 0.2, m6._dur, { fit: true })] },
     { name: "chain", ids: ["e18"], pieces: [{ scene: "chain", cues: { lines: chain.lines, roll: chain.roll }, fit: true }] },
-    { name: "sdk", ids: ["e19"], pieces: [c("c7-sdk", 3.99, 11.4, { fit: true, zoom: QS })] },
+    { name: "sdk", ids: ["e19"], pieces: [c("c7-sdk", m7["qs-click"], m7._dur, { fit: true, zoom: QS })] },
     { name: "cta", ids: ["e20"], pieces: [{ scene: "cta", cues: { line: "My AI's memory follows me to any app I allow, and one tap takes it back." }, fit: true }] },
   ],
 };

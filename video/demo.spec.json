@@ -6,18 +6,18 @@
  "lead": 0.12,
  "bg": "080c15",
  "labels": {
+  "vault-btn": "Passkey: one touch",
   "owner": "Vault open",
   "sealed": "Stored scrambled",
   "allow": "Fern asks. I decide.",
-  "balance0": "Small network fee",
-  "balance1": "Funded",
+  "balance0": "A tiny network fee",
+  "balance1": "Fee added",
   "grant-tx": "The grant, on Monad",
   "fern-open": "Opened with Fern's own key",
-  "fern-read": "Used both facts",
+  "fern-read": "Fern used both facts",
   "revoked": "One tap: revoke",
-  "epoch2": "Locked again, new key",
-  "fern-locked": "Fern is locked out",
-  "fern-read0": "None of my facts",
+  "fern-locked": "Locked again",
+  "fern-read0": "Fern can't open them",
   "qs-out": "The quickstart, run for real"
  },
  "errBoxes": [
@@ -48,7 +48,7 @@
    ],
    "pieces": [
     {
-     "still": "work/final2/c1-vault.mp4",
+     "still": "work/final3/c1-vault.mp4",
      "at": 1,
      "fit": true,
      "push": {
@@ -66,10 +66,10 @@
    ],
    "pieces": [
     {
-     "clip": "work/final2/c1-vault.mp4",
-     "marks": "work/final2/c1-vault/marks.json",
-     "ss": 1.2,
-     "se": 6.5,
+     "clip": "work/final3/c1-vault.mp4",
+     "marks": "work/final3/c1-vault/marks.json",
+     "ss": 1.94,
+     "se": 6.62,
      "fit": true
     }
    ]
@@ -81,10 +81,10 @@
    ],
    "pieces": [
     {
-     "clip": "work/final2/c2-tell.mp4",
-     "marks": "work/final2/c2-tell/marks.json",
-     "ss": 0.8,
-     "se": 11,
+     "clip": "work/final3/c2-tell.mp4",
+     "marks": "work/final3/c2-tell/marks.json",
+     "ss": 0.79,
+     "se": 12.16,
      "fit": true
     }
    ]
@@ -96,10 +96,10 @@
    ],
    "pieces": [
     {
-     "clip": "work/final2/c2-tell.mp4",
-     "marks": "work/final2/c2-tell/marks.json",
-     "ss": 11,
-     "se": 32,
+     "clip": "work/final3/c2-tell.mp4",
+     "marks": "work/final3/c2-tell/marks.json",
+     "ss": 11.87,
+     "se": 22.38,
      "fit": true
     }
    ]
@@ -111,10 +111,10 @@
    ],
    "pieces": [
     {
-     "clip": "work/final2/c2-tell.mp4",
-     "marks": "work/final2/c2-tell/marks.json",
-     "ss": 32,
-     "se": 37.2,
+     "clip": "work/final3/c2-tell.mp4",
+     "marks": "work/final3/c2-tell/marks.json",
+     "ss": 22.38,
+     "se": 28.24,
      "fit": true
     }
    ]
@@ -126,8 +126,8 @@
    ],
    "pieces": [
     {
-     "clip": "work/final2/c3-fern.mp4",
-     "marks": "work/final2/c3-fern/marks.json",
+     "clip": "work/final3/c3-fern.mp4",
+     "marks": "work/final3/c3-fern/marks.json",
      "ss": 1.1,
      "se": 6,
      "fit": true
@@ -141,25 +141,17 @@
    ],
    "pieces": [
     {
-     "clip": "work/final2/c3-fern.mp4",
-     "marks": "work/final2/c3-fern/marks.json",
+     "clip": "work/final3/c3-fern.mp4",
+     "marks": "work/final3/c3-fern/marks.json",
      "ss": 6,
-     "se": 8.6,
-     "fit": true
-    }
-   ]
-  },
-  {
-   "name": "fund",
-   "ids": [
-    "e09"
-   ],
-   "pieces": [
+     "se": 8.33,
+     "speed": 1.2
+    },
     {
-     "clip": "work/final2/c4-fund.mp4",
-     "marks": "work/final2/c4-fund/marks.json",
+     "clip": "work/final3/c4-fund.mp4",
+     "marks": "work/final3/c4-fund/marks.json",
      "ss": 0.5,
-     "se": 7,
+     "se": 7.8,
      "fit": true
     }
    ]
@@ -171,10 +163,10 @@
    ],
    "pieces": [
     {
-     "clip": "work/final2/c5-grant.mp4",
-     "marks": "work/final2/c5-grant/marks.json",
+     "clip": "work/final3/c5-grant.mp4",
+     "marks": "work/final3/c5-grant/marks.json",
      "ss": 0,
-     "se": 7.8,
+     "se": 6.87,
      "fit": true
     }
    ]
@@ -201,10 +193,10 @@
    ],
    "pieces": [
     {
-     "clip": "work/final2/c5-grant.mp4",
-     "marks": "work/final2/c5-grant/marks.json",
-     "ss": 7.94,
-     "se": 13.2,
+     "clip": "work/final3/c5-grant.mp4",
+     "marks": "work/final3/c5-grant/marks.json",
+     "ss": 8.43,
+     "se": 14.49,
      "fit": true
     }
    ]
@@ -216,24 +208,24 @@
    ],
    "pieces": [
     {
-     "clip": "work/final2/c5-grant.mp4",
-     "marks": "work/final2/c5-grant/marks.json",
-     "ss": 13.2,
-     "se": 21.7,
-     "speed": 3
+     "clip": "work/final3/c5-grant.mp4",
+     "marks": "work/final3/c5-grant/marks.json",
+     "ss": 14.49,
+     "se": 23.19,
+     "speed": 9
     },
     {
-     "clip": "work/final2/c5-grant.mp4",
-     "marks": "work/final2/c5-grant/marks.json",
-     "ss": 21.7,
-     "se": 28.6,
-     "speed": 4
+     "clip": "work/final3/c5-grant.mp4",
+     "marks": "work/final3/c5-grant/marks.json",
+     "ss": 23.19,
+     "se": 29.84,
+     "speed": 9
     },
     {
-     "clip": "work/final2/c5-grant.mp4",
-     "marks": "work/final2/c5-grant/marks.json",
-     "ss": 28.6,
-     "se": 32.8,
+     "clip": "work/final3/c5-grant.mp4",
+     "marks": "work/final3/c5-grant/marks.json",
+     "ss": 29.84,
+     "se": 34.81,
      "fit": true
     }
    ]
@@ -241,51 +233,35 @@
   {
    "name": "revoke",
    "ids": [
-    "e14"
-   ],
-   "pieces": [
-    {
-     "clip": "work/final2/c6-revoke.mp4",
-     "marks": "work/final2/c6-revoke/marks.json",
-     "ss": 2,
-     "se": 5.7,
-     "speed": 1.6
-    },
-    {
-     "clip": "work/final2/c6-revoke.mp4",
-     "marks": "work/final2/c6-revoke/marks.json",
-     "ss": 5.7,
-     "se": 10.8,
-     "fit": true
-    }
-   ]
-  },
-  {
-   "name": "reseal",
-   "ids": [
+    "e14",
     "e15"
    ],
    "pieces": [
     {
-     "clip": "work/final2/c6-revoke.mp4",
-     "marks": "work/final2/c6-revoke/marks.json",
-     "ss": 10.8,
-     "se": 19.1,
-     "fit": true
+     "clip": "work/final3/c6-revoke.mp4",
+     "marks": "work/final3/c6-revoke/marks.json",
+     "ss": 4.18,
+     "se": 12.76,
+     "fit": true,
+     "zoom": {
+      "z": 1.5,
+      "fx": 0,
+      "fy": 0.5
+     }
     }
    ]
   },
   {
-   "name": "locked",
+   "name": "ask-again",
    "ids": [
     "e16"
    ],
    "pieces": [
     {
-     "clip": "work/final2/c6-revoke.mp4",
-     "marks": "work/final2/c6-revoke/marks.json",
-     "ss": 19.15,
-     "se": 25.3,
+     "clip": "work/final3/c6-revoke.mp4",
+     "marks": "work/final3/c6-revoke/marks.json",
+     "ss": 20.02,
+     "se": 28.61,
      "fit": true
     }
    ]
@@ -297,24 +273,24 @@
    ],
    "pieces": [
     {
-     "clip": "work/final2/c6-revoke.mp4",
-     "marks": "work/final2/c6-revoke/marks.json",
-     "ss": 25.3,
-     "se": 33.5,
-     "speed": 10
+     "clip": "work/final3/c6-revoke.mp4",
+     "marks": "work/final3/c6-revoke/marks.json",
+     "ss": 28.61,
+     "se": 35.99,
+     "speed": 14
     },
     {
-     "clip": "work/final2/c6-revoke.mp4",
-     "marks": "work/final2/c6-revoke/marks.json",
-     "ss": 33.5,
-     "se": 37.6,
-     "speed": 4
+     "clip": "work/final3/c6-revoke.mp4",
+     "marks": "work/final3/c6-revoke/marks.json",
+     "ss": 35.99,
+     "se": 41.44,
+     "speed": 12
     },
     {
-     "clip": "work/final2/c6-revoke.mp4",
-     "marks": "work/final2/c6-revoke/marks.json",
-     "ss": 37.6,
-     "se": 42.3,
+     "clip": "work/final3/c6-revoke.mp4",
+     "marks": "work/final3/c6-revoke/marks.json",
+     "ss": 41.44,
+     "se": 46.8,
      "fit": true
     }
    ]
@@ -331,42 +307,26 @@
       "lines": [
        [
         0.2,
-        "<span class=\"c\">$ cast receipt</span> <span class=\"k\">0x842fb3b1…7304260</span>  <span class=\"h\"># the grant</span>"
+        "<span class=\"c\">grant 45</span>    block <span class=\"k\">70720310</span>   <span class=\"ok\">confirmed</span>"
        ],
        [
-        0.6,
-        "  status      <span class=\"ok\">1 (success)</span>        block 70693280        gasUsed 114548"
-       ],
-       [
-        1.4,
-        "<span class=\"c\">$ cast receipt</span> <span class=\"k\">0x27009bf4…e7ae7c</span>  <span class=\"h\"># the revoke</span>"
+        0.8,
+        "<span class=\"c\">revoke</span>      block <span class=\"k\">70720456</span>   <span class=\"ok\">confirmed</span>"
        ],
        [
         1.8,
-        "  status      <span class=\"ok\">1 (success)</span>        block 70693429        gasUsed 65277"
+        "<span class=\"c\">Fern's permission (grant 45)</span>   <span class=\"k\">cancelled</span>"
        ],
        [
-        2.6,
-        "<span class=\"c\">$ cast call</span> 0xd6c895f5…d7012e6d <span class=\"k\">\"grantOf(uint256)(...)\"</span> 43"
+        2.8,
+        "<span class=\"c\">the lock's version</span>   <span class=\"ok\">2</span>"
        ],
        [
-        3,
-        "  epoch 1     active <span class=\"k\">false</span>"
-       ],
-       [
-        3.8,
-        "<span class=\"c\">$ cast call</span> 0xd6c895f5…d7012e6d <span class=\"k\">\"epochOf(address,bytes32)(uint64)\"</span> owner memory/assistant"
-       ],
-       [
-        4.2,
-        "  <span class=\"ok\">2</span>"
-       ],
-       [
-        5,
-        "<span class=\"h\">read from https://testnet-rpc.monad.xyz at block 70693751, chain 10143</span>"
+        4,
+        "<span class=\"h\">read back from the public Monad network at block 70720947</span>"
        ]
       ],
-      "roll": 4.4
+      "roll": 3.4
      },
      "fit": true
     }
@@ -379,15 +339,15 @@
    ],
    "pieces": [
     {
-     "clip": "work/final2/c7-sdk.mp4",
-     "marks": "work/final2/c7-sdk/marks.json",
-     "ss": 3.99,
-     "se": 11.4,
+     "clip": "work/final3/c7-sdk.mp4",
+     "marks": "work/final3/c7-sdk/marks.json",
+     "ss": 4.01,
+     "se": 11.02,
      "fit": true,
      "zoom": {
-      "z": 1.8,
-      "fx": 0.54,
-      "fy": 0.15
+      "z": 2,
+      "fx": 0.52,
+      "fy": 0.06
      }
     }
    ]

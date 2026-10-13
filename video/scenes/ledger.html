@@ -12,8 +12,8 @@ body{background:var(--canvas);background-image:linear-gradient(oklch(100% 0 0/.0
 <div class="c" id="r"></div>
 <div id="v"></div>
 <script src="engine.js"></script><script>
-const R=cue("run");$("#g").innerHTML=`<div class="k">Grant</div><div class="n">${R.gcost}<small>MON</small></div><div class="d">${R.ggas} gas at ${R.gwei} gwei<br>block <b>${R.gblock}</b> &middot; status <b>1</b><br>${R.gsec} s from click to receipt</div>`;
-$("#r").innerHTML=`<div class="k">Revoke, and the lock changes</div><div class="n">${R.rcost}<small>MON</small></div><div class="d">${R.rgas} gas at ${R.gwei} gwei<br>block <b>${R.rblock}</b> &middot; status <b>1</b><br>${R.rsec} s from click to receipt, locked again</div>`;
-$("#v").innerHTML=`<i>any app, no key needed:</i> grantOf(${R.gid}) &rarr; epoch <b>1</b>, active <b>false</b> &nbsp;&middot;&nbsp; epochOf(owner, memory/assistant) &rarr; <b>2</b>`;
+const R=cue("run");$("#g").innerHTML=`<div class="k">Allow Fern</div><div class="n">${R.gsec}<small>seconds</small></div><div class="d">public record on Monad<br>block <b>${R.gblock}</b><br>confirmed</div>`;
+$("#r").innerHTML=`<div class="k">Revoke Fern</div><div class="n">${R.rsec}<small>seconds</small></div><div class="d">public record on Monad<br>block <b>${R.rblock}</b><br>confirmed, every memory locked again</div>`;
+$("#v").innerHTML=`<i>anyone can read it back:</i> Fern's permission is <b>cancelled</b> &nbsp;&middot;&nbsp; the lock is on version <b>2</b>`;
 window.render=(t)=>{$("#g").style.opacity=eo(seg(t,.2,.6));$("#r").style.opacity=eo(seg(t,1.4,1.8));$("#v").style.opacity=eo(seg(t,2.8,3.2))};
 </script>

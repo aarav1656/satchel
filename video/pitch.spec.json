@@ -12,7 +12,8 @@
   "revoked": "One tap: revoke",
   "fern-locked": "Fern can't open them",
   "fern-read0": "Fern can't open them",
-  "qs-out": "The quickstart, run for real"
+  "qs-out": "The quickstart, run for real",
+  "grant-tx": "The grant, on Monad"
  },
  "errBoxes": [
   "revoked",
@@ -53,10 +54,10 @@
        1500,
        700
       ],
-      "maxH": 780,
-      "maxW": 1560,
-      "top": 90,
-      "label": "OpenAI Help Center, Memory in ChatGPT, read 13 October 2026",
+      "maxH": 700,
+      "maxW": 1500,
+      "top": 70,
+      "label": "Source: OpenAI Help Center, Memory in ChatGPT, read 13 October 2026",
       "hi": [
        [
         120,
@@ -116,10 +117,10 @@
    ],
    "pieces": [
     {
-     "clip": "work/final2/c2-tell.mp4",
-     "marks": "work/final2/c2-tell/marks.json",
-     "ss": 0.8,
-     "se": 11,
+     "clip": "work/final3/c2-tell.mp4",
+     "marks": "work/final3/c2-tell/marks.json",
+     "ss": 0.79,
+     "se": 12.16,
      "fit": true
     }
    ]
@@ -131,10 +132,10 @@
    ],
    "pieces": [
     {
-     "clip": "work/final2/c2-tell.mp4",
-     "marks": "work/final2/c2-tell/marks.json",
-     "ss": 32,
-     "se": 37.2,
+     "clip": "work/final3/c2-tell.mp4",
+     "marks": "work/final3/c2-tell/marks.json",
+     "ss": 22.38,
+     "se": 28.24,
      "fit": true
     }
    ]
@@ -146,8 +147,8 @@
    ],
    "pieces": [
     {
-     "clip": "work/final2/c3-fern.mp4",
-     "marks": "work/final2/c3-fern/marks.json",
+     "clip": "work/final3/c3-fern.mp4",
+     "marks": "work/final3/c3-fern/marks.json",
      "ss": 1.1,
      "se": 6,
      "fit": true
@@ -161,17 +162,17 @@
    ],
    "pieces": [
     {
-     "clip": "work/final2/c3-fern.mp4",
-     "marks": "work/final2/c3-fern/marks.json",
+     "clip": "work/final3/c3-fern.mp4",
+     "marks": "work/final3/c3-fern/marks.json",
      "ss": 6,
-     "se": 8.6,
+     "se": 8.33,
      "fit": true
     },
     {
-     "clip": "work/final2/c5-grant.mp4",
-     "marks": "work/final2/c5-grant/marks.json",
+     "clip": "work/final3/c5-grant.mp4",
+     "marks": "work/final3/c5-grant/marks.json",
      "ss": 0,
-     "se": 7.8,
+     "se": 6.87,
      "fit": true
     }
    ]
@@ -183,24 +184,24 @@
    ],
    "pieces": [
     {
-     "clip": "work/final2/c5-grant.mp4",
-     "marks": "work/final2/c5-grant/marks.json",
-     "ss": 13.2,
-     "se": 21.7,
-     "speed": 3
+     "clip": "work/final3/c5-grant.mp4",
+     "marks": "work/final3/c5-grant/marks.json",
+     "ss": 14.49,
+     "se": 23.19,
+     "speed": 9
     },
     {
-     "clip": "work/final2/c5-grant.mp4",
-     "marks": "work/final2/c5-grant/marks.json",
-     "ss": 21.7,
-     "se": 28.6,
-     "speed": 4
+     "clip": "work/final3/c5-grant.mp4",
+     "marks": "work/final3/c5-grant/marks.json",
+     "ss": 23.19,
+     "se": 29.84,
+     "speed": 9
     },
     {
-     "clip": "work/final2/c5-grant.mp4",
-     "marks": "work/final2/c5-grant/marks.json",
-     "ss": 28.6,
-     "se": 32.8,
+     "clip": "work/final3/c5-grant.mp4",
+     "marks": "work/final3/c5-grant/marks.json",
+     "ss": 29.84,
+     "se": 34.81,
      "fit": true
     }
    ]
@@ -212,18 +213,16 @@
    ],
    "pieces": [
     {
-     "clip": "work/final2/c6-revoke.mp4",
-     "marks": "work/final2/c6-revoke/marks.json",
-     "ss": 2,
-     "se": 5.7,
-     "speed": 1.6
-    },
-    {
-     "clip": "work/final2/c6-revoke.mp4",
-     "marks": "work/final2/c6-revoke/marks.json",
-     "ss": 5.7,
-     "se": 10.8,
-     "fit": true
+     "clip": "work/final3/c6-revoke.mp4",
+     "marks": "work/final3/c6-revoke/marks.json",
+     "ss": 4.18,
+     "se": 12.76,
+     "fit": true,
+     "zoom": {
+      "z": 1.5,
+      "fx": 0,
+      "fy": 0.5
+     }
     }
    ]
   },
@@ -240,17 +239,17 @@
       "t9": 14.9,
       "from": 26,
       "run": {
-       "gid": 43,
-       "gblock": 70693280,
-       "rblock": 70693429,
-       "ggas": "114,548",
+       "gid": 45,
+       "gblock": 70720310,
+       "rblock": 70720456,
+       "ggas": "114,536",
        "rgas": "65,277",
        "gwei": 102,
        "gcost": "0.0117",
        "rcost": "0.0067",
-       "gsec": "3.1",
+       "gsec": "3.2",
        "rsec": "3.6",
-       "readblock": 70693751
+       "readblock": 70720947
       }
      },
      "fit": true
@@ -264,28 +263,25 @@
    ],
    "pieces": [
     {
-     "clip": "work/final2/c6-revoke.mp4",
-     "marks": "work/final2/c6-revoke/marks.json",
-     "ss": 25.3,
-     "se": 33.5,
-     "speed": 10
+     "clip": "work/final3/c6-revoke.mp4",
+     "marks": "work/final3/c6-revoke/marks.json",
+     "ss": 28.61,
+     "se": 35.99,
+     "speed": 14
     },
     {
-     "clip": "work/final2/c6-revoke.mp4",
-     "marks": "work/final2/c6-revoke/marks.json",
-     "ss": 33.5,
-     "se": 37.6,
-     "speed": 4
+     "clip": "work/final3/c6-revoke.mp4",
+     "marks": "work/final3/c6-revoke/marks.json",
+     "ss": 35.99,
+     "se": 41.44,
+     "speed": 12
     },
     {
-     "clip": "work/final2/c6-revoke.mp4",
-     "marks": "work/final2/c6-revoke/marks.json",
-     "ss": 37.6,
-     "se": 42.3,
-     "fit": true,
-     "skip": [
-      "fern-read0"
-     ]
+     "clip": "work/final3/c6-revoke.mp4",
+     "marks": "work/final3/c6-revoke/marks.json",
+     "ss": 41.44,
+     "se": 46.8,
+     "fit": true
     }
    ]
   },
@@ -299,17 +295,17 @@
      "scene": "ledger",
      "cues": {
       "run": {
-       "gid": 43,
-       "gblock": 70693280,
-       "rblock": 70693429,
-       "ggas": "114,548",
+       "gid": 45,
+       "gblock": 70720310,
+       "rblock": 70720456,
+       "ggas": "114,536",
        "rgas": "65,277",
        "gwei": 102,
        "gcost": "0.0117",
        "rcost": "0.0067",
-       "gsec": "3.1",
+       "gsec": "3.2",
        "rsec": "3.6",
-       "readblock": 70693751
+       "readblock": 70720947
       }
      },
      "fit": true
@@ -323,15 +319,15 @@
    ],
    "pieces": [
     {
-     "clip": "work/final2/c7-sdk.mp4",
-     "marks": "work/final2/c7-sdk/marks.json",
-     "ss": 3.99,
-     "se": 11.4,
+     "clip": "work/final3/c7-sdk.mp4",
+     "marks": "work/final3/c7-sdk/marks.json",
+     "ss": 4.01,
+     "se": 11.02,
      "fit": true,
      "zoom": {
-      "z": 1.8,
-      "fx": 0.54,
-      "fy": 0.15
+      "z": 2,
+      "fx": 0.52,
+      "fy": 0.06
      }
     }
    ]

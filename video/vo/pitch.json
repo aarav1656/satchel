@@ -1,64 +1,17 @@
 [
- {
-  "id": "q01",
-  "text": "You told ChatGPT you're vegetarian. Open any other AI app, and it has no idea."
- },
- {
-  "id": "q02",
-  "text": "And the memory ChatGPT does keep lives on OpenAI's side. Its own help page says ChatGPT decides what to use."
- },
- {
-  "id": "q03",
-  "text": "So today you pick one: start from zero in every app, or let one company keep a file on you."
- },
- {
-  "id": "q04",
-  "text": "Satchel is the third option. The memory of your assistant goes where you go, and only the apps you allow can read it."
- },
- {
-  "id": "q05",
-  "text": "Meet Pip, an AI assistant. Tell it you're vegetarian. Pip locks that fact with your passkey, the fingerprint or face unlock your phone already uses."
- },
- {
-  "id": "q06",
-  "text": "What gets stored is scrambled. Without your passkey, it is noise."
- },
- {
-  "id": "q07",
-  "text": "Now try Fern, a different AI app, built by someone else. It knows nothing about you."
- },
- {
-  "id": "q08",
-  "text": "So you give Fern a grant: a permission slip, written to Monad, that any app can check and no app can fake."
- },
- {
-  "id": "q09",
-  "text": "Ask Fern to plan your weekend. Vegetarian food, a flight out of Bangalore. You never told Fern a thing."
- },
- {
-  "id": "q10",
-  "text": "Now change your mind. One tap. Pip locks every memory again, with a brand new key."
- },
- {
-  "id": "q11",
-  "text": "Fern's old permission slip fits the old lock. That lock is gone."
- },
- {
-  "id": "q12",
-  "text": "Ask Fern again. Generic answer, none of your facts. Fern didn't promise to forget. It simply can't open them any more."
- },
- {
-  "id": "q13",
-  "text": "Both taps are real Monad transactions, a few seconds each, read straight back from the chain."
- },
- {
-  "id": "q14",
-  "text": "Any app can add this. One package: npm install satchel S D K. Lock, grant, revoke.",
-  "cap": "Any app can add this. One package: npm install satchel-sdk. Lock, grant, revoke."
- },
- {
-  "id": "q15",
-  "text": "Your AI's memory follows you to any app you allow, and one tap takes it back. Try it at satchel dash keys dot ver sell dot app.",
-  "cap": "Your AI's memory follows you to any app you allow, and one tap takes it back. Try it at satchel-keys.vercel.app."
- }
+ {"id":"q01","text":"You told ChatGPT you're vegetarian. Open any other AI app, and it has no idea."},
+ {"id":"q02","text":"And the memory ChatGPT does keep lives on OpenAI's side. Its own help page says ChatGPT decides what to use."},
+ {"id":"q03","text":"So today you pick one: start from zero in every app, or let one company keep a file on you."},
+ {"id":"q04","text":"Satchel is the third option. The memory of your assistant goes where you go, and only the apps you allow can read it."},
+ {"id":"q05","text":"Meet Pip, an AI assistant. Tell it you're vegetarian. Pip locks that fact with your passkey, the fingerprint or face unlock your phone already uses."},
+ {"id":"q06","text":"What gets stored is scrambled. Without your passkey, it is noise."},
+ {"id":"q07","text":"Now try Fern, a different AI app, built by someone else. It knows nothing about you."},
+ {"id":"q08","text":"So you give Fern a grant: a permission slip, posted on Monad, a public record that any app can check and no app can fake."},
+ {"id":"q09","text":"Ask Fern to plan your weekend. Vegetarian food, a flight out of Bangalore. You never told Fern a thing."},
+ {"id":"q10","text":"Now change your mind. Tap ree-voke Fern. Pip relocks every memory under a brand new lock.","cap":"Now change your mind. Tap Revoke Fern. Pip relocks every memory under a brand new lock."},
+ {"id":"q11","text":"Fern's permission slip opened the old lock. That lock is gone."},
+ {"id":"q12","text":"Ask Fern again. Generic answer, none of your facts. Fern didn't promise to forget. It simply can't open them any more."},
+ {"id":"q13","text":"Both taps are real, public records on Monad, each done in seconds."},
+ {"id":"q14","text":"Any app can add this with one install: lock, grant, take back."},
+ {"id":"q15","text":"Your AI's memory follows you to any app you allow, and one tap takes it back. Try it at satchel dash keys dot ver cell dot app.","cap":"Your AI's memory follows you to any app you allow, and one tap takes it back. Try it at satchel-keys.vercel.app."}
 ]

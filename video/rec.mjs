@@ -158,7 +158,10 @@ try {
     }
     if (s.boxText || s.boxSel) {
       const finder = s.boxSel ? `document.querySelector(${JSON.stringify(s.boxSel)})` : `(()=>{const t=${JSON.stringify(s.boxText)};let best=null;for(const e of document.querySelectorAll('body *')){if(!e.offsetParent&&e.tagName!=='BODY')continue;if(e.innerText&&e.innerText.includes(t)){if(!best||best.contains(e))best=e}}return best})()`;
-      const r = await ev(`(()=>{const el=${finder};if(!el)return null;const r=el.getBoundingClientRect();return JSON.stringify({x:r.x,y:r.y,w:r.width,h:r.height})})()`);
+      // settle first: scroll the target into view and let the chat log finish scrolling, then measure in the page's own viewport
+      await ev(`(()=>{const el=${finder};if(el)el.scrollIntoView({block:"nearest",behavior:"instant"});return 1})()`);
+      await sleep(450);
+      const r = await ev(`(()=>{const el=${finder};if(!el)return null;const r=el.getBoundingClientRect();const p=el.closest('.card,.chat,.panel,section,main')||document.body;const q=p.getBoundingClientRect();return JSON.stringify({x:r.x,y:r.y,w:r.width,h:r.height,iw:innerWidth,ih:innerHeight,panel:[q.x,q.y,q.width,q.height]})})()`);
       if (r && clip) { clip.boxes.push({ t: Date.now() / 1000, name: s.name ?? "box", hold: s.hold ?? 2.5, ...JSON.parse(r) }); log.push({ box: s.name }); }
       else if (!s.soft) throw new Error("no box target: " + (s.boxText ?? s.boxSel)); else console.error("MISSING BOX " + (s.name ?? s.boxSel));
     }

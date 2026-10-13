@@ -13,6 +13,12 @@
   "wait": 1800
  },
  {
+  "boxText": "Create my vault",
+  "name": "vault-btn",
+  "hold": 2.6,
+  "soft": true
+ },
+ {
   "mark": "vault-click"
  },
  {
@@ -34,7 +40,7 @@
   "wait": 1500
  },
  {
-  "boxSel": "[data-testid=\"owner-address\"]",
+  "boxSel": ".chat",
   "name": "owner",
   "hold": 3,
   "soft": true

@@ -1,85 +1,21 @@
 [
- {
-  "id": "e01",
-  "text": "Every AI app I try asks me the same things. What I eat. Where I fly from."
- },
- {
-  "id": "e02",
-  "text": "I want to say it once, and have it follow me, without any company holding it for me."
- },
- {
-  "id": "e03",
-  "text": "This is Pip, an AI assistant. One touch of my passkey, the fingerprint or face unlock my phone already uses, and my memory vault is open."
- },
- {
-  "id": "e04",
-  "text": "I tell Pip I'm vegetarian. Pip picks out the fact and locks it right here in the browser, with a key only my passkey can make."
- },
- {
-  "id": "e05",
-  "text": "Then: I fly out of B L R. Same thing.",
-  "cap": "Then: I fly out of BLR. Same thing."
- },
- {
-  "id": "e06",
-  "text": "What gets stored is scrambled. No fact is readable anywhere outside this tab."
- },
- {
-  "id": "e07",
-  "text": "Now Fern, a different AI app with its own key. It sees nothing about me."
- },
- {
-  "id": "e08",
-  "text": "Fern asks for access, and Pip asks me."
- },
- {
-  "id": "e09",
-  "text": "Saying yes is a transaction on Monad, so it needs a small network fee. I top up from the faucet."
- },
- {
-  "id": "e10",
-  "text": "Allow. That writes a grant to Monad: a permission slip any app can check and no app can fake."
- },
- {
-  "id": "e11",
-  "text": "Only the permission slip goes on chain. The memories themselves stay locked in my browser."
- },
- {
-  "id": "e12",
-  "text": "Fern opens both memories with its own key. It never touched my passkey."
- },
- {
-  "id": "e13",
-  "text": "I ask it to plan my weekend. Vegetarian food, a flight out of Bangalore. It never asks me a thing."
- },
- {
-  "id": "e14",
-  "text": "Now I change my mind. One tap, one more transaction."
- },
- {
-  "id": "e15",
-  "text": "Pip locks every memory again, with a brand new key. Fern's permission slip only fits the old one."
- },
- {
-  "id": "e16",
-  "text": "Fern still holds its slip. I go back and ask again. Every memory is locked."
- },
- {
-  "id": "e17",
-  "text": "The plan comes back generic. Fern didn't promise to forget. It can't open my memories any more."
- },
- {
-  "id": "e18",
-  "text": "Straight from the chain: both transactions succeeded, and the version number of the lock went from one to two. Nothing in between that I have to trust."
- },
- {
-  "id": "e19",
-  "text": "For developers, it's one package: npm install satchel S D K. Lock, grant, revoke. The code on the page is the code that runs.",
-  "cap": "For developers, it's one package: npm install satchel-sdk. Lock, grant, revoke. The code on the page is the code that runs."
- },
- {
-  "id": "e20",
-  "text": "My AI's memory follows me to any app I allow, and one tap takes it back. Pip, Fern and the S D K are live at satchel dash keys dot ver sell dot app.",
-  "cap": "My AI's memory follows me to any app I allow, and one tap takes it back. Pip, Fern and the SDK are live at satchel-keys.vercel.app."
- }
+ {"id":"e01","text":"Every AI app I try asks me the same things. What I eat. Where I fly from."},
+ {"id":"e02","text":"Satchel is one memory that all my AI apps share. I say it once, I pick which apps may read it, and one tap takes it back."},
+ {"id":"e03","text":"Pip is the first app. One touch of my passkey, the fingerprint or face unlock my phone already uses, opens my memory."},
+ {"id":"e04","text":"I tell Pip I'm vegetarian. Pip saves it in my browser, locked so only apps I allow can open it."},
+ {"id":"e05","text":"Then: I fly out of B L R. Same thing.","cap":"Then: I fly out of BLR. Same thing."},
+ {"id":"e06","text":"What gets stored is scrambled. No app reads it without my yes."},
+ {"id":"e07","text":"Now Fern, a different AI app. It sees nothing about me."},
+ {"id":"e08","text":"Fern asks for access, and Pip asks me. Saying yes costs a tiny network fee, so I add a little."},
+ {"id":"e10","text":"Allow. That writes a grant to Monad, a public network anyone can check: a permission slip any app can check and no app can fake."},
+ {"id":"e11","text":"Only the permission slip goes on the public record. The memories themselves stay locked in my browser."},
+ {"id":"e12","text":"Fern opens both memories with its own key. It never touched my passkey."},
+ {"id":"e13","text":"I ask it to plan my weekend. Vegetarian food, a flight out of B L R. It never asks me a thing.","cap":"I ask it to plan my weekend. Vegetarian food, a flight out of BLR. It never asks me a thing."},
+ {"id":"e14","text":"Now I change my mind. I tap ree-voke Fern.","cap":"Now I change my mind. I tap Revoke Fern."},
+ {"id":"e15","text":"Pip relocks every memory with a new lock. Fern's permission is cancelled."},
+ {"id":"e16","text":"I go back to Fern and ask again."},
+ {"id":"e17","text":"Every memory is locked. The plan comes back generic. Fern didn't promise to forget. It can't open my memories any more."},
+ {"id":"e18","text":"Straight from the blockchain: Fern's permission reads cancelled, and the lock is on version two."},
+ {"id":"e19","text":"For developers it's one install: lock, grant, take back. The code on the page is the code that runs."},
+ {"id":"e20","text":"My AI's memory follows me to any app I allow, and one tap takes it back. Try satchel at satchel dash keys dot ver cell dot app.","cap":"My AI's memory follows me to any app I allow, and one tap takes it back. Try satchel at satchel-keys.vercel.app."}
 ]
