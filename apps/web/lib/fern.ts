@@ -75,7 +75,8 @@ export async function loadSealedNotes(): Promise<StoredMemory[]> {
 }
 
 /** Read every sealed memory through the grant that matches its epoch; a record newer than every grant comes back as the SDK's GRANT_REVOKED, and with no grant at all as NO_GRANT. */
-export async function readMemories(fern: Fern, mine: FetchedGrant[], sealed: StoredMemory[]): Promise<Row[]> {
+/** `everGranted` is whether Fern has held any grant, active or revoked: a revoked Fern is not a Fern that was never allowed in. */
+export async function readMemories(fern: Fern, mine: FetchedGrant[], sealed: StoredMemory[], everGranted = mine.length > 0): Promise<Row[]> {
   const rows: Row[] = [];
   for (const m of sealed) {
     const bytes = toBytes(m.hex);
@@ -85,9 +86,9 @@ export async function readMemories(fern: Fern, mine: FetchedGrant[], sealed: Sto
     if (!pick) {
       // No grant at all is not a revoke: Fern was never allowed in.
       rows.push(
-        mine.length === 0
+        !everGranted
           ? { ...base, state: "locked", code: "NO_GRANT", message: "Fern has no grant yet. Pip has to allow it first." }
-          : { ...base, state: "locked", code: "GRANT_REVOKED", message: `No grant covers epoch ${head.epoch}.` },
+          : { ...base, state: "locked", code: "GRANT_REVOKED", message: "Pip revoked Fern. This memory was locked again." },
       );
       continue;
     }

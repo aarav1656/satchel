@@ -58,7 +58,7 @@ export function FernApp() {
     const latestChain = onChain[onChain.length - 1];
     if (latestGrant && latestChain) setChain({ active: latestChain.active, epoch: await epochOf(latestChain.owner, latestGrant.nsHash) });
     else setChain(undefined);
-    const next = await readMemories(fern, grants.filter((_, i) => status[i]), await loadSealedNotes());
+    const next = await readMemories(fern, grants.filter((_, i) => status[i]), await loadSealedNotes(), grants.length > 0);
     setRows(next);
     return next;
   }, [fern]);
