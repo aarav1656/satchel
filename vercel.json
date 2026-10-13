@@ -1,5 +1,6 @@
 {
-  "installCommand": "cd apps/web && bun install --frozen-lockfile",
+  "installCommand": "bun install --frozen-lockfile && cd apps/web && bun install --frozen-lockfile",
   "buildCommand": "cd apps/web && bun run build",
-  "outputDirectory": "apps/web/out"
+  "outputDirectory": "apps/web/out",
+  "functions": { "api/chat.ts": { "maxDuration": 30 } }
 }
