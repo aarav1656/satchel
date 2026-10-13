@@ -1,9 +1,11 @@
+import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { generateText, stepCountIs, tool } from "ai";
 import { z } from "zod";
 import { FERN_SYSTEM, LIMITS, originAllowed, parseChat, PIP_SYSTEM, rateLimited, withMemories } from "./_chat-input.js";
 
-/** Through Vercel AI Gateway. On Vercel the project's OIDC token authenticates it, so no provider key exists in this repo. */
-const MODEL = "anthropic/claude-haiku-4.5";
+/** OpenRouter's free tier: OpenRouter tries each model in order and answers from the first one that is up. All support tool calls. */
+const MODELS = ["google/gemma-4-31b-it:free", "nvidia/nemotron-3-super-120b-a12b:free", "thinkingmachines/inkling:free"];
+const openrouter = createOpenAICompatible({ name: "openrouter", baseURL: "https://openrouter.ai/api/v1", apiKey: process.env.OPENROUTER_API_KEY });
 
 const json = (body: unknown, status = 200) => Response.json(body, { status, headers: { "cache-control": "no-store" } });
 
@@ -36,21 +38,23 @@ export async function POST(request: Request): Promise<Response> {
     },
   });
 
+  if (!process.env.OPENROUTER_API_KEY) return json({ error: "not_configured", message: "OPENROUTER_API_KEY is not set on this deployment." }, 503);
   try {
     const result = await generateText({
-      model: MODEL,
+      model: openrouter(MODELS[0]!),
+      providerOptions: { openrouter: { models: MODELS } },
       system: withMemories(input.app === "pip" ? PIP_SYSTEM : FERN_SYSTEM, input.memories),
       messages: input.messages,
       maxOutputTokens: 500,
       ...(input.app === "pip" ? { tools: { remember }, stopWhen: stepCountIs(3) } : {}),
     });
-    return json({ reply: result.text.trim(), remembered, model: MODEL });
+    return json({ reply: result.text.trim(), remembered, model: result.response.modelId });
   } catch (e) {
-    // AI Gateway and provider errors both carry the HTTP status they got (402 or 403 when the team has no credits).
+    // OpenRouter errors carry the HTTP status they got (429 when every free model is rate limited).
     const status = typeof (e as { statusCode?: unknown })?.statusCode === "number" ? (e as { statusCode: number }).statusCode : undefined;
     if (status !== undefined) {
       const message = e instanceof Error ? e.message.slice(0, 300) : "rejected";
-      console.error(`ai gateway ${status}: ${message}`);
+      console.error(`openrouter ${status}: ${message}`);
       return json({ error: "gateway_rejected", status, message }, 502);
     }
     console.error(`chat failed: ${e instanceof Error ? e.message.slice(0, 300) : "unknown"}`);

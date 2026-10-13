@@ -4,6 +4,7 @@
   "type": "module",
   "description": "Vercel project root: the one chat function in api/ and its dependencies. The site itself is apps/web.",
   "dependencies": {
+    "@ai-sdk/openai-compatible": "^2.0.81",
     "ai": "^6.0.0",
     "zod": "^4.0.0"
   }
