@@ -1,91 +1,74 @@
 # DESIGN.md · satchel
 
-Binding for every UI change in `apps/web` and every file in `brand/`. System: `mintlify` (slug in `~/.config/design-md/designs/mintlify.md`), chosen 2026-10-02 in `gtm/satchel/DESIGN.md` section 5. The product is read by developers, so the chrome is docs chrome: a three column layout (sidebar, prose, table of contents), Inter for prose, Geist Mono for code, one green.
+Binding for every UI change in `apps/web` and every file in `brand/`. System: **Hallmark catalog theme Midnight** (atmospheric genre, dark paper band, cool hue 258, one seal-green accent), macrostructure **Map / Diagram**: the home page is one spatial diagram of Pip, the grant and Fern, and the docs share its tokens. Tokens live in `apps/web/app/theme.css`; components read variables and hold no colour, size or font literal.
 
-Source of the full token set: the frontmatter of the mintlify file. This file lists what satchel uses and what it changes.
+## The argument the design carries
+
+Sealed against open, the grant as a visible line between two apps, and the revoke as a moment you can see.
+
+- **Sealed** is a closed envelope with a green wax seal and the first and last bytes of its ciphertext in Geist Mono (`0x53415431…14e125`, `SAT1` is the header every sealed record starts with).
+- **Open** is the same envelope with the flap folded back and a letter rising out of it, the plaintext in the display face, the tile washed in the seal green.
+- **The grant** is a line from Pip's passkey port to Fern's port. Dashed grey while there is no grant, solid green once Pip allows it, with small pulses running toward Fern while it reads.
+- **The revoke** is three things at once: the line is cut at both ends and capped in red, the folder epoch on Pip rolls from 1 to 2 and every envelope re-seals under new bytes, and Fern's tiles turn red and read `GRANT_REVOKED`, its own grant epoch struck through.
+- The home stage is a four step explainer: the steps on the left drive the stage on the right, and a device with no grant plays the loop on its own. A device that holds a real grant rests on the step that matches it. The status lines under each app and the `data-state` of the line come from this browser's own storage; the memories in the stage are labelled as samples.
+- Below it, the registry's recorded grant, revoke and regrant for the same two apps, as a vertical ledger: a green dot per grant, a red one for the revoke, block and transaction link on every row.
 
 ## Tokens
 
-All tokens live in `apps/web/app/theme.css` as CSS variables. Components read variables and never hold a literal colour, size or font.
-
 | Role | Variable | Value |
 |---|---|---|
-| canvas | `--canvas` | `#ffffff` |
-| surface | `--surface` | `#f7f7f7` |
-| soft surface | `--surface-soft` | `#fafafa` |
-| code surface | `--code` | `#1c1c1e` |
-| hairline | `--hairline` | `#e5e5e5` |
-| soft hairline | `--hairline-soft` | `#ededed` |
-| dark hairline | `--hairline-dark` | `#1f1f1f` |
-| ink | `--ink` | `#0a0a0a` |
-| charcoal | `--charcoal` | `#1c1c1e` |
-| steel | `--steel` | `#5a5a5c` |
-| stone | `--stone` | `#888888` |
-| on dark | `--on-dark` / `--on-dark-muted` | `#ffffff` / `#b3b3b3` |
-| accent (only) | `--accent` | `#00d4a4`, fills and rules only. Text sitting on it is `#0a0a0a` |
-| accent deep | `--accent-deep` | `#00b48a`, hover for fills |
-| error | `--error` | `#d45656` |
-| warn | `--warn` | `#c37d0d` |
-| radius | `--r-xs` / `--r-sm` / `--r-md` / `--r-lg` / `--r-full` | 4 / 6 / 8 / 12 / 9999 px, buttons use full |
-| spacing | `--s-1` to `--s-9` | 4, 8, 12, 16, 20, 24, 32, 40, 64 px |
-| fonts | `--font-sans`, `--font-mono` | Inter (variable, weights 400 500 600), Geist Mono (400 500), loaded by the `@fontsource-variable` packages so the faces are served from the site itself; fallback `ui-sans-serif, system-ui` and `ui-monospace, Menlo` |
+| canvas | `--canvas` | `oklch(15.5% 0.022 258)` |
+| soft surface | `--surface-soft` | `oklch(17.8% 0.023 258)` |
+| surface | `--surface` | `oklch(20% 0.025 258)` |
+| raised surface | `--surface-raised` | `oklch(24.5% 0.028 258)` |
+| code surface | `--code` | `oklch(12.5% 0.02 258)` |
+| hairlines | `--hairline` / `--hairline-soft` / `--hairline-dark` | `oklch(31%)` / `oklch(25.5%)` / `oklch(27.5%)` at chroma 0.03, hue 258 |
+| top edge | `--edge` | white at 7%, an inset 1px highlight on every raised surface |
+| ink (headings) | `--ink` | `oklch(96% 0.006 250)` |
+| text (body) | `--text` | `oklch(86% 0.012 255)` |
+| muted | `--steel` / `--stone` | `oklch(73% 0.02 256)` / `oklch(62% 0.022 256)` |
+| accent (the seal) | `--accent` | `oklch(85% 0.16 165)`, fills, rules and small marks. Text sitting on it is `--accent-ink`. Accent text appears only in small mono marks: the cable chip, the log lead and the active step number |
+| accent states | `--accent-deep`, `--accent-soft`, `--accent-wash`, `--accent-line` | hover fill, code strings, 11% wash, 45% rule |
+| error | `--error`, `--error-soft`, `--error-wash`, `--error-line` | `oklch(71% 0.19 22)` and its washes. Red means revoked or failed and nothing else |
+| warn | `--warn` | `oklch(81% 0.14 82)` |
+| envelope | `--env-back`, `--env-front`, `--env-flap`, `--env-paper`, `--env-ink` | the five parts of the drawn envelope |
+| radius | `--r-xs` to `--r-xl`, `--r-full` | 4 / 6 / 8 / 12 / 18 / 9999 px. Buttons and nav pills are full, cards 12, the stage 18 |
+| spacing | `--s-1` to `--s-10` | 4, 8, 12, 16, 20, 24, 32, 40, 64, 96 px |
+| fonts | `--font-display`, `--font-sans`, `--font-mono` | Bricolage Grotesque Variable, Instrument Sans Variable, Geist Mono Variable. The first two are shipped from `apps/web/app/fonts/` (latin subset, SIL OFL), Geist Mono from the `@fontsource-variable` package. No Inter anywhere |
 
-Type scale: body 16/1.5, small 14/1.5, caption 13/1.4, code 14/1.5, inline code 13/1.3 weight 500, h1 36/1.2 weight 600 letter-spacing -0.5px, h2 28/1.25, h3 22/1.3, h4 18/1.4.
+Type scale: home h1 `clamp(40px, 5.4vw, 72px)` at 0.98 line height and -0.04em tracking, weight 600, balanced to two lines. Docs h1 40, h2 28, h3 22, h4 18, all Bricolage 600 at -0.02em. Body 16/1.55 Instrument Sans in `--text`. Small 14, mono 13, mono micro 11 to 12. Numbers are tabular everywhere.
 
-Motion: 120 ms ease-out for state, 160 ms linear for the rail fill, 280 ms ease-in-out for the cut. Every motion has a `prefers-reduced-motion` branch that jumps to the end state. No ease-in, no transition on `all`, no `scale(0)`.
+Motion: 120 ms ease-out for state, 160 ms linear for the rail fill, 280 ms ease-in-out for the cut, 360 ms for the flap and the epoch roll, 520 ms for the cable draw, `--t-dwell` 4200 ms per step of the loop. Only transform and opacity move. Every motion has a `prefers-reduced-motion` branch that jumps to the end state and stops the loop. No transition on `all`, no `scale(0)`.
 
 ## Components bound from the system
 
-- Primary button: ink fill, white text, full radius, `10px 20px`, 14px weight 500. Pressed: charcoal.
-- Secondary button: transparent, 1px hairline border, full radius.
-- Accent button (dark surfaces only): `--accent` fill, ink text.
-- Card: canvas, 1px hairline, 12px radius, 24px padding. No shadow.
-- Code block: `--code` fill, on-dark text, 8px radius, a header row with the file name and a copy button. No tabs, no framework switcher.
-- Inline code: surface fill, 1px hairline, 4px radius, Geist Mono 13 weight 500.
-- Property row (the API reference): 1px soft hairline under each row, name in mono, type in a surface badge, description in steel.
-- Sidebar item: steel text, 6px radius; active item surface fill and ink text. Section header: 11px uppercase 0.5px tracking.
-- Text input: 40px, 8px radius, 1px hairline; focus is a 2px accent border.
-
-## What changes from the source system, and why
-
-- No sky-gradient hero, no cloud art, no testimonial orange. The first screen of the site is the quickstart: a developer scores whether the interface is clean and the docs are clear, not the landing page.
-- The green is never text. `#00d4a4` on white fails contrast, so links are ink with an underline, and green appears only as the key rail, the equal-fingerprint rule and the accent button on dark.
-- Dark appears only in code blocks, the derivation view and the storage scan, where it reads as a terminal.
-- Heading sizes drop from 72 and 56 px to 36 px. A docs page whose first line is a wrapping headline is not a quickstart.
-- The sky and dark hero bands, pricing cards, logo wall and promo banner components are not used. There is no marketing page.
-- Fonts ship as Inter and Geist Mono under their open licences. No other company's marks or binaries ship.
-
-## The noun: the key rail
-
-One passkey on the left, many namespaces to the right, the grants on them at the far end. One SVG per rail, every label real DOM text so a judge or a test can read each fingerprint.
-
-- Left: one filled ink circle, 14 px, labelled `passkey` and the first 8 characters of the credential id. It is the only node that costs a prompt.
-- From it, one hairline per namespace fans right to a chip in Geist Mono: `memory/assistant  e2  4f9a1c07`, namespace, epoch, fingerprint. A new namespace draws a new line out of the same circle in 160 ms linear; no node is added on the left.
-- At the right end of a namespace line sit grantee nodes: an open circle labelled with the app name, joined by an accent line.
-- Revoke is a motion with a result: the accent line to the app is cut with a 6 px gap in 280 ms ease-in-out, the chip epoch ticks from `e1` to `e2`, and every record sealed after the cut is drawn as a lock sitting in the gap. The picture says: this app's reads end here, earlier ones still open.
-- On `/proof` the rail renders twice for the cross-device row, fingerprints set at 20 px mono, with a thin accent rule under them when equal and a thin error rule when different.
-- A wrong-namespace attempt draws a short error-coloured spur leaving the chip toward the asked-for label and stopping before the node, with the error code beside it.
-
-The rail carries the argument: one origin on the left, many outputs on the right, no second prompt anywhere on it.
+- **Primary button**: `--ink` fill, `--canvas` text, full radius, `10px 20px`, 14px weight 600. Hover fills with the accent. Pressed `scale(0.97)`. Secondary: transparent with a hairline. Danger: red outline that fills on hover. Accent button for the one place a green action is wanted.
+- **Card**: `--surface`, 1px hairline, 12px radius, 24px padding, the top edge highlight. No drop shadow. The home stage alone carries a deep soft shadow.
+- **Envelope tile**: 66px tall, a 46 by 34 CSS-built envelope on the left, the fact or its ciphertext in the middle with a one line note beneath it, the epoch on the right. States: own (neutral), locked, open (green wash), revoked (red wash).
+- **Code block**: `--code` fill, hairline border, a header row with the file name and a copy button, strings in `--accent-soft`, keywords weight 600 in `--ink`.
+- **Inline code**: raised fill, 1px hairline, 4px radius, Geist Mono 13 weight 500.
+- **Property row, table**: soft hairlines, header row on `--surface`, row hover on `--surface`, code cells never wrap.
+- **Sidebar item**: steel text, a 2px accent rule and a `--surface` fill on the current page. Section headers are 11px mono caps at 0.08em.
+- **Top nav**: pill links, the current one on `--surface-raised`.
+- **Input**: 44px, `--code` fill, 8px radius, 1px hairline; focus is a 1px accent border and ring.
+- **Key rail** (Pip, Fern and Proof): unchanged geometry, recoloured. The passkey node is the seal green, chips sit on `--surface-raised`.
 
 ## Routes
 
-Docs (static pages): `/` quickstart, `/concepts/*`, `/guides/*`, `/reference/api`, `/reference/errors`. Demo: `/pip` (vault), `/pip/share` (grants), `/fern` (the reading app). Evidence: `/proof`.
+`/` the product (hero, the stage with its four steps, the registry ledger). `/pip`, `/pip/share`, `/fern` the two apps. `/docs`, `/concepts/*`, `/guides/*`, `/reference/*` the docs in the same dark theme. `/proof` the evidence.
 
 ## Anti-slop list for this product
 
-- No multi-colour or any gradient text, no gradients anywhere.
-- No floating tag pills above cards. Epoch and namespace sit inside chips on the rail, in the line they describe.
-- No ghost corner numbers. Counted steps are a table with real step labels.
-- No generic icons as avatars. Apps are named text and an open circle on the rail.
-- No giant wrapping hero. The docs landing is the quickstart at a 36 px heading; the demo has no hero.
-- No "No data" or "No items" empty states. Every empty state says what to do next and shows a real example.
-- No unreadable green text: the accent is never a text colour.
-- No `transition: all`, no `ease-in`, no `scale(0)`, no `h-screen`.
+- No colour gradients and no gradient text. The only texture is a 3.5% blueprint grid inside the stage.
+- No floating tag pills above cards. Epoch and namespace sit in the line they describe.
+- No ghost corner numbers. The step numbers are mono labels in the row they number.
+- No icon avatars. Apps are a name in the display face and a dot: filled for the app that holds the key, ringed for the one that reads through a grant.
+- No stat grid. The only numbers on the home page are the block, grant id and epoch of a recorded transaction.
+- No three equal feature cards. The home page is a headline, a four step list beside one diagram, and a ledger.
+- No `transition: all`, no `ease-in` on UI, no `scale(0)`, no `h-screen`.
 - No em or en dashes in any source or copy.
 - Every number on a page is read from the SDK, the chain or the browser.
-- A check that can fail: the storage scan flags a value that is not ciphertext or a public id, and `NAMESPACE_MISMATCH` comes from a real wrong-namespace call.
 
 ## Gate
 
-`uicraft read` is recorded in `apps/web/.uicraft-read.json`; `uicraft gate --cwd apps/web` exits 0 on this tree and exits 1 when one banned pattern is added (results in `apps/web/results/`).
+`uicraft read` is recorded in `apps/web/.uicraft-read.json`; `uicraft gate --cwd apps/web` exits 0 on this tree. `bun run build` in `apps/web` runs `check-built.mjs` after the export.
