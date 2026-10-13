@@ -41,7 +41,7 @@ def box(c):
     lab = c.get('label', '')
     if lab:
         f = font('instrument600.ttf', 24); tw = d.textlength(lab, font=f); px, py = 16*S, 8*S; bh = 24*S*1.2 + 2*py
-        lx = max(12*S, r[0]); above = y > 90
+        lx = max(12*S, r[0]); above = y > 90 and c.get('pos', 'above') != 'below'
         ly = r[1] - 12*S - bh if above else r[3] + 12*S
         lx = min(lx, 1920*S - tw - 2*px - 12*S)
         d.rounded_rectangle([lx, ly, lx+tw+2*px, ly+bh], 10*S, fill=col)

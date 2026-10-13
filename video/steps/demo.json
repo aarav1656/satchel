@@ -15,7 +15,7 @@
  {
   "boxText": "Create my vault",
   "name": "vault-btn",
-  "hold": 2.6,
+  "hold": 1.5,
   "soft": true
  },
  {
@@ -360,7 +360,7 @@
   "wait": 800
  },
  {
-  "boxSel": "[data-testid=\"grant-row\"]",
+  "boxText": "revoked",
   "name": "revoked",
   "hold": 3.5,
   "soft": true

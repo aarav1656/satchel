@@ -35,10 +35,10 @@ function env(open,tone){ // tone: n neutral, a accent, e error
 }
 const hex=(seed)=>{let s=seed*9301+49297,o="";for(let i=0;i<4;i++){s=(s*233280+11)%2147483647;o+=(s%256).toString(16).padStart(2,"0")}return "0x53415431…"+o};
 function setTile(el,{a,open,tone,main,sub,ep,epErr,mono}){el.style.opacity=a;el.style.transform=`translateY(${(1-a)*12}px)`;el.style.borderColor=tone==="a"?"var(--accent-line)":tone==="e"?"oklch(71% .19 22 / .5)":"var(--hair)";el.style.background=tone==="a"?"var(--accent-wash)":tone==="e"?"var(--err-wash)":"var(--soft)";
- el.innerHTML=env(open,tone)+`<div class="tx"><div class="t1" style="${tone==="e"?"color:var(--err);font-family:GMono;font-size:27px":mono?"font-family:GMono;font-size:25px;font-weight:500;letter-spacing:0":""}">${main}</div><div class="t2">${sub}</div></div><div class="ep" style="${epErr?"text-decoration:line-through;color:var(--err);border-color:oklch(71% .19 22 / .4)":""}">${ep}</div>`}
+ el.innerHTML=env(open,tone)+`<div class="tx"><div class="t1" style="${tone==="e"?"color:var(--err)":mono?"font-family:GMono;font-size:25px;font-weight:500;letter-spacing:0":""}">${main}</div><div class="t2">${sub}</div></div>${ep?`<div class="ep">${ep}</div>`:""}`}
 const path=(x1,y1,x2,y2)=>`M${x1} ${y1} C ${x1+140} ${y1}, ${x2-140} ${y2}, ${x2} ${y2}`;
 const X1=796,Y1=300,X2=1124,Y2=300;
-$("#rg").textContent="grant "+RUN.gid+" · lock version 1";$("#r1").textContent="block "+RUN.gblock;$("#r3").textContent="block "+RUN.rblock;
+$("#rg").textContent="lock version 1";$("#r1").textContent="";$("#r3").textContent="";
 window.render=(t)=>{t+=FROM;
  $("#pip").style.opacity=eo(seg(t,0,.4));$("#fern").style.opacity=eo(seg(t,.15,.55));
  const rev=seg(t,T9+3.2,T9+4.4), epoch=t>T9+1.8?2:1; // roll, then reseal
@@ -57,10 +57,10 @@ window.render=(t)=>{t+=FROM;
  FACTS.forEach((f,i)=>{
   const a=eo(seg(t,.7+i*.3,1.1+i*.3));
   let open=g*(1-cut), tone=cut>0.5?"e":(g>0.5?"a":"n");
-  let main=cut>0.5?"GRANT_REVOKED":(g>0.5?f:"locked, no grant"), sub=cut>0.5?"read 0 of 2 memories":(g>0.5?"opened with its own key":"Fern holds nothing yet");
-  setTile($("#f"+i),{a,open,tone,main,sub,ep:cut>0.5?"slip v1":(g>0.5?"slip v1":"&mdash;"),epErr:cut>0.5});
+  let main=cut>0.5?"Locked again":(g>0.5?f:"locked, no grant"), sub=cut>0.5?"Fern read 0 of 2":(g>0.5?"opened with its own key":"Fern holds nothing yet");
+  setTile($("#f"+i),{a,open,tone,main,sub,ep:"",epErr:false});
  });
- $("#fgs").style.color=cut>0.5?"var(--err)":"var(--accent)";$("#fgs").textContent=cut>0.5?"grant revoked":(g>0.5?"allowed":"no grant");
+ $("#fgs").style.color=cut>0.5?"var(--err)":"var(--accent)";$("#fgs").textContent=cut>0.5?"permission cancelled":(g>0.5?"allowed":"no grant");
  // wire
  const drawn=eo(seg(t,T8+2.4,T8+3.4)), pathD=path(X1,Y1,X2,Y2);
  let w=`<g fill="none" stroke-linecap="round">`;

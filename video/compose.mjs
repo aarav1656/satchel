@@ -105,7 +105,7 @@ spec.beats.forEach((b, bi) => {
     inputs.push("-loop", "1", "-t", String(d), "-i", png); const k = n++;
     chain += `[${k}:v]format=rgba,fade=t=in:st=${a.toFixed(2)}:d=${fade}:alpha=1,fade=t=out:st=${Math.max(a, bb - fade).toFixed(2)}:d=${fade}:alpha=1[l${k}];[${cur}][l${k}]overlay=0:0:format=auto:enable='between(t,${a.toFixed(2)},${bb.toFixed(2)})'[v${k}];`; cur = `v${k}`;
   };
-  for (const bx of boxes) { const label = (spec.labels ?? {})[bx.name]; if (label === false) continue; add(still("box", { box: bx.rect, label: label ?? "", err: (spec.errBoxes ?? []).includes(bx.name) }), bx.a, Math.min(d - 0.05, bx.b), 0.2); }
+  for (const bx of boxes) { const label = (spec.labels ?? {})[bx.name]; if (label === false) continue; add(still("box", { box: bx.rect, label: label ?? "", err: (spec.errBoxes ?? []).includes(bx.name), pos: (spec.labelPos ?? {})[bx.name] ?? "above" }), bx.a, Math.min(d - 0.05, bx.b), 0.2); }
   for (const o of b.overlays ?? []) add(still(o.scene, o.cues ?? {}), o.a, Math.min(d - 0.05, o.b), o.fade ?? 0.25);
   if (b.caption !== false && spec.captions !== false) {
     const lines = b.ids.map((id) => byId[id]);

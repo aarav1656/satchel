@@ -6,16 +6,16 @@
  "lead": 0.12,
  "bg": "080c15",
  "labels": {
-  "vault-btn": "Passkey: one touch",
+  "vault-btn": "Create the vault with my passkey",
   "owner": "Vault open",
   "sealed": "Stored scrambled",
   "allow": "Fern asks. I decide.",
-  "balance0": "A tiny network fee",
-  "balance1": "Fee added",
+  "balance0": false,
+  "balance1": false,
   "grant-tx": "The grant, on Monad",
   "fern-open": "Opened with Fern's own key",
   "fern-read": "Fern used both facts",
-  "revoked": "One tap: revoke",
+  "revoked": "Revoked: lock version 2",
   "fern-locked": "Locked again",
   "fern-read0": "Fern can't open them",
   "qs-out": "The quickstart, run for real"
@@ -25,6 +25,11 @@
   "fern-locked",
   "fern-read0"
  ],
+ "labelPos": {
+  "fern-read": "below",
+  "fern-read0": "below",
+  "grant-tx": "below"
+ },
  "beats": [
   {
    "name": "title",
@@ -48,7 +53,7 @@
    ],
    "pieces": [
     {
-     "still": "work/final3/c1-vault.mp4",
+     "still": "work/final4/c1-vault.mp4",
      "at": 1,
      "fit": true,
      "push": {
@@ -66,10 +71,10 @@
    ],
    "pieces": [
     {
-     "clip": "work/final3/c1-vault.mp4",
-     "marks": "work/final3/c1-vault/marks.json",
+     "clip": "work/final4/c1-vault.mp4",
+     "marks": "work/final4/c1-vault/marks.json",
      "ss": 1.94,
-     "se": 6.62,
+     "se": 7,
      "fit": true
     }
    ]
@@ -81,10 +86,10 @@
    ],
    "pieces": [
     {
-     "clip": "work/final3/c2-tell.mp4",
-     "marks": "work/final3/c2-tell/marks.json",
-     "ss": 0.79,
-     "se": 12.16,
+     "clip": "work/final4/c2-tell.mp4",
+     "marks": "work/final4/c2-tell/marks.json",
+     "ss": 0.78,
+     "se": 12.56,
      "fit": true
     }
    ]
@@ -96,10 +101,10 @@
    ],
    "pieces": [
     {
-     "clip": "work/final3/c2-tell.mp4",
-     "marks": "work/final3/c2-tell/marks.json",
-     "ss": 11.87,
-     "se": 22.38,
+     "clip": "work/final4/c2-tell.mp4",
+     "marks": "work/final4/c2-tell/marks.json",
+     "ss": 12.26,
+     "se": 21.72,
      "fit": true
     }
    ]
@@ -111,10 +116,10 @@
    ],
    "pieces": [
     {
-     "clip": "work/final3/c2-tell.mp4",
-     "marks": "work/final3/c2-tell/marks.json",
-     "ss": 22.38,
-     "se": 28.24,
+     "clip": "work/final4/c2-tell.mp4",
+     "marks": "work/final4/c2-tell/marks.json",
+     "ss": 21.72,
+     "se": 27.59,
      "fit": true
     }
    ]
@@ -126,8 +131,8 @@
    ],
    "pieces": [
     {
-     "clip": "work/final3/c3-fern.mp4",
-     "marks": "work/final3/c3-fern/marks.json",
+     "clip": "work/final4/c3-fern.mp4",
+     "marks": "work/final4/c3-fern/marks.json",
      "ss": 1.1,
      "se": 6,
      "fit": true
@@ -141,17 +146,17 @@
    ],
    "pieces": [
     {
-     "clip": "work/final3/c3-fern.mp4",
-     "marks": "work/final3/c3-fern/marks.json",
+     "clip": "work/final4/c3-fern.mp4",
+     "marks": "work/final4/c3-fern/marks.json",
      "ss": 6,
-     "se": 8.33,
+     "se": 8.93,
      "speed": 1.2
     },
     {
-     "clip": "work/final3/c4-fund.mp4",
-     "marks": "work/final3/c4-fund/marks.json",
+     "clip": "work/final4/c4-fund.mp4",
+     "marks": "work/final4/c4-fund/marks.json",
      "ss": 0.5,
-     "se": 7.8,
+     "se": 8.69,
      "fit": true
     }
    ]
@@ -163,10 +168,10 @@
    ],
    "pieces": [
     {
-     "clip": "work/final3/c5-grant.mp4",
-     "marks": "work/final3/c5-grant/marks.json",
+     "clip": "work/final4/c5-grant.mp4",
+     "marks": "work/final4/c5-grant/marks.json",
      "ss": 0,
-     "se": 6.87,
+     "se": 7.32,
      "fit": true
     }
    ]
@@ -193,10 +198,10 @@
    ],
    "pieces": [
     {
-     "clip": "work/final3/c5-grant.mp4",
-     "marks": "work/final3/c5-grant/marks.json",
-     "ss": 8.43,
-     "se": 14.49,
+     "clip": "work/final4/c5-grant.mp4",
+     "marks": "work/final4/c5-grant/marks.json",
+     "ss": 9.48,
+     "se": 15.38,
      "fit": true
     }
    ]
@@ -208,24 +213,24 @@
    ],
    "pieces": [
     {
-     "clip": "work/final3/c5-grant.mp4",
-     "marks": "work/final3/c5-grant/marks.json",
-     "ss": 14.49,
-     "se": 23.19,
+     "clip": "work/final4/c5-grant.mp4",
+     "marks": "work/final4/c5-grant/marks.json",
+     "ss": 15.38,
+     "se": 24.13,
      "speed": 9
     },
     {
-     "clip": "work/final3/c5-grant.mp4",
-     "marks": "work/final3/c5-grant/marks.json",
-     "ss": 23.19,
-     "se": 29.84,
+     "clip": "work/final4/c5-grant.mp4",
+     "marks": "work/final4/c5-grant/marks.json",
+     "ss": 24.13,
+     "se": 29.95,
      "speed": 9
     },
     {
-     "clip": "work/final3/c5-grant.mp4",
-     "marks": "work/final3/c5-grant/marks.json",
-     "ss": 29.84,
-     "se": 34.81,
+     "clip": "work/final4/c5-grant.mp4",
+     "marks": "work/final4/c5-grant/marks.json",
+     "ss": 29.95,
+     "se": 34.91,
      "fit": true
     }
    ]
@@ -238,15 +243,27 @@
    ],
    "pieces": [
     {
-     "clip": "work/final3/c6-revoke.mp4",
-     "marks": "work/final3/c6-revoke/marks.json",
-     "ss": 4.18,
-     "se": 12.76,
+     "clip": "work/final4/c6-revoke.mp4",
+     "marks": "work/final4/c6-revoke/marks.json",
+     "ss": 3.63,
+     "se": 5.53,
+     "speed": 1,
+     "zoom": {
+      "z": 2.5,
+      "fx": 0.07,
+      "fy": 0.55
+     }
+    },
+    {
+     "clip": "work/final4/c6-revoke.mp4",
+     "marks": "work/final4/c6-revoke/marks.json",
+     "ss": 8.42,
+     "se": 12.47,
      "fit": true,
      "zoom": {
-      "z": 1.5,
-      "fx": 0,
-      "fy": 0.5
+      "z": 2.5,
+      "fx": 0.07,
+      "fy": 0.55
      }
     }
    ]
@@ -258,10 +275,10 @@
    ],
    "pieces": [
     {
-     "clip": "work/final3/c6-revoke.mp4",
-     "marks": "work/final3/c6-revoke/marks.json",
-     "ss": 20.02,
-     "se": 28.61,
+     "clip": "work/final4/c6-revoke.mp4",
+     "marks": "work/final4/c6-revoke/marks.json",
+     "ss": 19.12,
+     "se": 26.78,
      "fit": true
     }
    ]
@@ -273,24 +290,24 @@
    ],
    "pieces": [
     {
-     "clip": "work/final3/c6-revoke.mp4",
-     "marks": "work/final3/c6-revoke/marks.json",
-     "ss": 28.61,
-     "se": 35.99,
+     "clip": "work/final4/c6-revoke.mp4",
+     "marks": "work/final4/c6-revoke/marks.json",
+     "ss": 26.78,
+     "se": 35.36,
      "speed": 14
     },
     {
-     "clip": "work/final3/c6-revoke.mp4",
-     "marks": "work/final3/c6-revoke/marks.json",
-     "ss": 35.99,
-     "se": 41.44,
+     "clip": "work/final4/c6-revoke.mp4",
+     "marks": "work/final4/c6-revoke/marks.json",
+     "ss": 35.36,
+     "se": 39.22,
      "speed": 12
     },
     {
-     "clip": "work/final3/c6-revoke.mp4",
-     "marks": "work/final3/c6-revoke/marks.json",
-     "ss": 41.44,
-     "se": 46.8,
+     "clip": "work/final4/c6-revoke.mp4",
+     "marks": "work/final4/c6-revoke/marks.json",
+     "ss": 39.22,
+     "se": 44.59,
      "fit": true
     }
    ]
@@ -307,15 +324,15 @@
       "lines": [
        [
         0.2,
-        "<span class=\"c\">grant 45</span>    block <span class=\"k\">70720310</span>   <span class=\"ok\">confirmed</span>"
+        "<span class=\"c\">grant 46</span>    block <span class=\"k\">70726249</span>   <span class=\"ok\">confirmed</span>"
        ],
        [
         0.8,
-        "<span class=\"c\">revoke</span>      block <span class=\"k\">70720456</span>   <span class=\"ok\">confirmed</span>"
+        "<span class=\"c\">revoke</span>      block <span class=\"k\">70726387</span>   <span class=\"ok\">confirmed</span>"
        ],
        [
         1.8,
-        "<span class=\"c\">Fern's permission (grant 45)</span>   <span class=\"k\">cancelled</span>"
+        "<span class=\"c\">Fern's permission (grant 46)</span>   <span class=\"k\">cancelled</span>"
        ],
        [
         2.8,
@@ -323,7 +340,7 @@
        ],
        [
         4,
-        "<span class=\"h\">read back from the public Monad network at block 70720947</span>"
+        "<span class=\"h\">read back from the public Monad network at block 70726726</span>"
        ]
       ],
       "roll": 3.4
@@ -339,15 +356,15 @@
    ],
    "pieces": [
     {
-     "clip": "work/final3/c7-sdk.mp4",
-     "marks": "work/final3/c7-sdk/marks.json",
-     "ss": 4.01,
-     "se": 11.02,
+     "clip": "work/final4/c7-sdk.mp4",
+     "marks": "work/final4/c7-sdk/marks.json",
+     "ss": 3.96,
+     "se": 11.29,
      "fit": true,
      "zoom": {
-      "z": 2,
-      "fx": 0.52,
-      "fy": 0.06
+      "z": 2.3,
+      "fx": 0.43,
+      "fy": 0.51
      }
     }
    ]
