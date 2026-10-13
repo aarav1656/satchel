@@ -34,3 +34,17 @@ test("mutation: treating revoked epoch as allowed would pick a stale grant", () 
   expect(grantForRecord(mine, recordEpoch)).toBeUndefined();
   expect(broken.epoch).not.toBe(recordEpoch);
 });
+
+test("a Fern with no grant reads NO_GRANT, not GRANT_REVOKED: nothing was revoked yet", async () => {
+  const { fromPrfOutput, ns } = await import("satchel-sdk");
+  const { toHex } = await import("viem");
+  const { readMemories } = await import("./fern");
+  const s = await fromPrfOutput(crypto.getRandomValues(new Uint8Array(32)), { rpId: "localhost" });
+  const sealed = await s.seal(ns("memory/trading-desk"), { text: "vegetarian" });
+  const stored = [{ id: "m1", at: 1, hex: toHex(sealed.toBytes()) }];
+  const neverUsed = {} as Parameters<typeof readMemories>[0];
+  const none = await readMemories(neverUsed, [], stored);
+  expect(none[0]).toMatchObject({ state: "locked", code: "NO_GRANT" });
+  const stale = await readMemories(neverUsed, [g(0)], stored);
+  expect(stale[0]).toMatchObject({ state: "locked", code: "GRANT_REVOKED" });
+});
