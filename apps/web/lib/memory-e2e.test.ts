@@ -11,7 +11,7 @@ import { resealAll, sealFact } from "./memory";
 
 setDefaultTimeout(120_000);
 
-const trading = () => ns(MEMORY_NS);
+const folder = () => ns(MEMORY_NS);
 let stopAnvil: () => void;
 let registry: Registry;
 let busUrl: string;
@@ -56,17 +56,17 @@ async function owner(seed: string) {
 }
 
 describe("cross-origin memory (ciphertext bus + grant reader)", () => {
-  test("App B unseals App A trading note from the bus after one grant", async () => {
+  test("App B unseals App A assistant note from the bus after one grant", async () => {
     const pip = await owner("pip-1");
     const fern = await createGrantee();
-    const note = "Long BTC perp above 94.2k only if funding stays negative";
-    const sealed = await pip.seal(trading(), { text: note, at: 1 });
+    const note = "Vegetarian, flies out of BLR";
+    const sealed = await pip.seal(folder(), { text: note, at: 1 });
     const row = { id: "n1", at: 1, hex: toHex(sealed.toBytes()) as `0x${string}` };
     await publishNotes([row], busUrl);
     expect((await fetchNotes(busUrl))[0]?.hex).toBe(row.hex);
 
-    const grant = await pip.grant(trading(), fern.publicKey, { label: "Fern" });
-    const fetched = await fetchGrant({ txHash: grant.txHash, registry, ns: trading() });
+    const grant = await pip.grant(folder(), fern.publicKey, { label: "Fern" });
+    const fetched = await fetchGrant({ txHash: grant.txHash, registry, ns: folder() });
     const rows = await readMemories(fern, [fetched], await fetchNotes(busUrl));
     expect(rows).toHaveLength(1);
     expect(rows[0]?.state).toBe("open");
@@ -77,7 +77,7 @@ describe("cross-origin memory (ciphertext bus + grant reader)", () => {
   test("after revoke, App B gets no plaintext for epoch-2 note", async () => {
     const pip = await owner("pip-revoke");
     const fern = await createGrantee();
-    const n = trading();
+    const n = folder();
     const grant = await pip.grant(n, fern.publicKey, { label: "Fern" });
     const fetched = await fetchGrant({ txHash: grant.txHash, registry, ns: n });
     const before = await pip.seal(n, { text: "visible before revoke", at: 1 });
@@ -105,7 +105,7 @@ describe("cross-origin memory (ciphertext bus + grant reader)", () => {
   test("revoke then reseal: Fern's grant opens nothing in the store, and a fresh grant reads it all again", async () => {
     const pip = await owner("pip-reseal");
     const fern = await createGrantee();
-    const n = trading();
+    const n = folder();
     let rows: { id: string; at: number; hex: `0x${string}` }[] = [];
     const store = { list: () => rows, add: (m: (typeof rows)[number]) => void (rows = [...rows, m]), replace: (all: typeof rows) => void (rows = all) };
     await sealFact(pip, "Vegetarian", store, 1);
@@ -135,13 +135,13 @@ describe("cross-origin memory (ciphertext bus + grant reader)", () => {
   test("second client same PRF decrypts owner note from bus without grant or Pip localStorage", async () => {
     const prf = prfOf("second-client");
     const pip = await fromPrfOutput(prf, { rpId: "localhost", registry });
-    const note = "Half size above 94.2k; exit 93.8k 4h close";
-    const sealed = await pip.seal(trading(), { text: note, at: 1 });
+    const note = "Prefers window seats on morning flights";
+    const sealed = await pip.seal(folder(), { text: note, at: 1 });
     await publishNotes([{ id: "x", at: 1, hex: toHex(sealed.toBytes()) as `0x${string}` }], busUrl);
 
     const second = await fromPrfOutput(prf, { rpId: "localhost", registry });
     const hex = (await fetchNotes(busUrl))[0]!.hex;
-    const back = await second.unsealJson<{ text: string }>(trading(), toBytes(hex));
+    const back = await second.unsealJson<{ text: string }>(folder(), toBytes(hex));
     expect(back.text).toBe(note);
     expect(parseSealed(toBytes(hex)).epoch).toBe(1);
   });

@@ -33,8 +33,8 @@ export default function Page() {
       <CodeBlock
         lang="text"
         file="console"
-        code={`sealed  ns=memory/trading-desk  epoch=1  97 B  fp=4cda9f4b  (1 prompt)
-unsealed  {"note":"Half size above 94.2k; exit 93.8k 4h close"}`}
+        code={`sealed  ns=memory/assistant  epoch=1  97 B  fp=4cda9f4b  (1 prompt)
+unsealed  {"likes":"metric units"}`}
       />
       <p>
         97 bytes is 57 bytes of header, 24 bytes of JSON and a 16 byte authentication tag. The fingerprint is yours: it is the same eight characters on every device that holds your passkey, so it doubles as the cross-device check.

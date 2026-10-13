@@ -8,7 +8,7 @@ const PERSON: Partial<Record<ErrorCode, string>> = {
   CHOOSE_PASSKEY_MODE: "Choose first: create a passkey, or use one you already have.",
   RPID_MISMATCH: "This address does not hold your vault. Open it at the address you created it on.",
   WRONG_PASSKEY: "That passkey did not create this vault.",
-  NAMESPACE_MISMATCH: "That memory belongs to a different folder. Open it from memory/trading-desk.",
+  NAMESPACE_MISMATCH: "That memory belongs to a different folder. Open it from memory/assistant.",
   SEAL_CORRUPT: "This memory failed its integrity check and was not opened.",
   GRANT_REVOKED: "Fern was revoked. Pip sealed its memories again at the next epoch, so Fern's grant opens none of them.",
   GRANT_NOT_FOR_KEY: "This link was made for a different app.",

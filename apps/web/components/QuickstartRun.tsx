@@ -42,7 +42,7 @@ export function QuickstartRun() {
       const used = promptCount() - before;
       setOut({
         lines: [
-          { text: `sealed  ns=memory/trading-desk  epoch=${blob.epoch}  ${blob.toBytes().length} B  fp=${await s.fingerprint(values.memory as Parameters<Satchel["fingerprint"]>[0])}  (${used} prompt${used === 1 ? "" : "s"})` },
+          { text: `sealed  ns=memory/assistant  epoch=${blob.epoch}  ${blob.toBytes().length} B  fp=${await s.fingerprint(values.memory as Parameters<Satchel["fingerprint"]>[0])}  (${used} prompt${used === 1 ? "" : "s"})` },
           { text: `unsealed  ${JSON.stringify(values.back)}`, tone: "dim" },
           { text: `ran the code above verbatim, sha256 ${sha256.slice(0, 12)}`, tone: "dim" },
         ],

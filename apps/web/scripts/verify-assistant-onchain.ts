@@ -8,7 +8,7 @@ import { monadTestnet } from "viem/chains";
 const [owner, grantId, grantTx, revokeTx, fernKey, regrantTx] = process.argv.slice(2) as [Address, string, Hex, Hex, Hex, Hex];
 if (!owner || !grantId || !grantTx || !revokeTx || !fernKey || !regrantTx) throw new Error("usage: bun scripts/verify-assistant-onchain.ts <owner> <grantId> <grantTx> <revokeTx> <fernPublicKey> <regrantTx>");
 const dep = JSON.parse(fs.readFileSync(new URL("../../../deployments/testnet.json", import.meta.url), "utf8"));
-const nsHash = keccak256(toBytes("satchel/ns/memory/trading-desk"));
+const nsHash = keccak256(toBytes("satchel/ns/memory/assistant"));
 const abi = parseAbi([
   "function epochOf(address owner, bytes32 nsHash) view returns (uint64)",
   "function grantOf(uint256 grantId) view returns (address owner, bytes32 nsHash, uint64 epoch, bytes32 granteeKeyHash, bool active)",
@@ -37,10 +37,10 @@ const g2 = regrantId === undefined ? undefined : await read("grantOf", [regrantI
 const checks: [string, boolean][] = [
   ["grant tx receipt status success, sent to the registry by the passkey-derived owner", gr.status === "success" && gr.to?.toLowerCase() === dep.address.toLowerCase() && gr.from.toLowerCase() === owner.toLowerCase()],
   ["revoke tx receipt status success, sent to the registry by the owner", rr.status === "success" && rr.to?.toLowerCase() === dep.address.toLowerCase() && rr.from.toLowerCase() === owner.toLowerCase()],
-  ["grantOf.owner is the owner and grantOf.nsHash is keccak256(satchel/ns/memory/trading-desk)", g[0].toLowerCase() === owner.toLowerCase() && g[1] === nsHash],
+  ["grantOf.owner is the owner and grantOf.nsHash is keccak256(satchel/ns/memory/assistant)", g[0].toLowerCase() === owner.toLowerCase() && g[1] === nsHash],
   ["grantOf.epoch is 1 and granteeKeyHash is keccak256 of Fern's public key", Number(g[2]) === 1 && g[3] === keccak256(fernKey)],
   ["grantOf.active is false after the revoke", g[4] === false],
-  ["epochOf(owner, memory/trading-desk) is at least 2 after the revoke", Number(epoch) >= 2],
+  ["epochOf(owner, memory/assistant) is at least 2 after the revoke", Number(epoch) >= 2],
   ["revoke mined after grant", rr.blockNumber >= gr.blockNumber],
   ["regrant tx receipt status success, sent to the registry by the owner", gr2.status === "success" && gr2.to?.toLowerCase() === dep.address.toLowerCase() && gr2.from.toLowerCase() === owner.toLowerCase()],
   ["regrant mined after the revoke", gr2.blockNumber >= rr.blockNumber],

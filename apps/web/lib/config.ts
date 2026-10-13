@@ -3,8 +3,8 @@ import type { Registry } from "satchel-sdk";
 /** The deployed epoch registry (deployments/testnet.json). Chain 10143, Monad testnet. */
 export const REGISTRY_ADDRESS = "0xd6c895f5c9254dc6eaafc335fff0930fd7012e6d" as const;
 export const REGISTRY: Registry = { address: REGISTRY_ADDRESS };
-/** Cross-app AI memory for trading context (Track 04 idea 04). */
-export const MEMORY_NS = "memory/trading-desk";
+/** The folder an assistant keeps what it learns about its person in. */
+export const MEMORY_NS = "memory/assistant";
 export const NOTES_NS = "memory/notes";
 export const PIP_SUGGESTIONS = ["I'm vegetarian and I fly out of BLR.", "What should I pack for a weekend away?"];
 export const FERN_SUGGESTIONS = ["Plan my weekend.", "Where should I eat on Saturday?"];

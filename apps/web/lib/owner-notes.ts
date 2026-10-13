@@ -3,7 +3,7 @@ import { toBytes } from "viem";
 import { MEMORY_NS, NOTE_BUS_URL } from "./config";
 import { fetchNotes } from "./note-bus";
 
-/** Owner path: decrypt trading notes published to the bus (no grant). Used by a second client with the same passkey. */
+/** Owner path: decrypt assistant notes published to the bus (no grant). Used by a second client with the same passkey. */
 export async function unsealTradingNotesFromBus(session: Satchel): Promise<{ id: string; text: string; epoch: number }[]> {
   if (!NOTE_BUS_URL) return [];
   const n = ns(MEMORY_NS);
