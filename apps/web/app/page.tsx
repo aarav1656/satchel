@@ -91,7 +91,7 @@ const LOG: Record<Step, { who: string; text: string; bad?: boolean }[]> = {
   ],
   2: [
     { who: "pip", text: "allow fern, read only" },
-    { who: "chain", text: "one transaction on Monad records the grant" },
+    { who: "monad", text: "one transaction on Monad records the grant" },
   ],
   3: [
     { who: "fern", text: "opened 2 of 2 memories with its own key" },
@@ -173,6 +173,9 @@ export default function Page() {
             <span>sample memories, step {step} of 4</span>
             <span>{auto ? "playing" : "paused"}</span>
           </p>
+          <p className="stage-title" aria-hidden="true">
+            {step}. {STEPS[step - 1]?.title}
+          </p>
           <div className="stage-grid">
             <article className="app-panel" data-testid="home-pip">
               <header>
@@ -235,7 +238,7 @@ export default function Page() {
                         <span className="tile-cipher">{revoked ? f.resealed : f.cipher}</span>
                       </span>
                       <span className="tile-stack">
-                        <span className="tile-note tile-note-lock">{view === "none" ? "sealed, no key" : "sealed, grant not used yet"}</span>
+                        <span className="tile-note tile-note-lock">{view === "none" ? "sealed, no key" : "sealed, not read yet"}</span>
                         <span className="tile-note tile-note-open">opened with its key</span>
                         <span className="tile-note tile-note-bad">GRANT_REVOKED</span>
                       </span>
