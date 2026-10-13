@@ -6,11 +6,11 @@ Binding for every UI change in `apps/web` and every file in `brand/`. System: **
 
 Sealed against open, the grant as a visible line between two apps, and the revoke as a moment you can see.
 
-- **Sealed** is a closed envelope with a green wax seal and the first and last bytes of its ciphertext in Geist Mono (`0x53415431…14e125`, `SAT1` is the header every sealed record starts with).
-- **Open** is the same envelope with the flap folded back and a letter rising out of it, the plaintext in the display face, the tile washed in the seal green.
+- **Sealed** is a shut envelope, full width of its card, with a round seal on the flap that carries the epoch (`e1`) and the first and last bytes of the ciphertext printed on its front in Geist Mono (`0x53415431…14e125`, `SAT1` is the header every sealed record starts with).
+- **Open** is the same envelope with the flap folded back and a paper letter standing out of it, the plaintext on the letter in the display face, the envelope washed in the seal green. Pip's envelopes are always open, because Pip holds the key. Fern's are shut until its grant reads them.
 - **The grant** is a line from Pip's passkey port to Fern's port. Dashed grey while there is no grant, solid green once Pip allows it, with small pulses running toward Fern while it reads.
-- **The revoke** is three things at once: the line is cut at both ends and capped in red, the folder epoch on Pip rolls from 1 to 2 and every envelope re-seals under new bytes, and Fern's tiles turn red and read `GRANT_REVOKED`, its own grant epoch struck through.
-- The home stage is a four step explainer: the steps on the left drive the stage on the right, and a device with no grant plays the loop on its own. A device that holds a real grant rests on the step that matches it. The status lines under each app and the `data-state` of the line come from this browser's own storage; the memories in the stage are labelled as samples.
+- **The revoke** is three things at once: the line is cut at both ends and capped in red, the folder epoch on Pip rolls from 1 to 2 and every envelope carries new ciphertext bytes, and Fern's envelopes shut with a red seal and read `GRANT_REVOKED`, its own grant epoch struck through.
+- The home stage is a four step explainer: the steps on the left drive the stage on the right, and a device with no grant plays the loop on its own. A device that holds a real grant rests on the step that matches it. The memories in the stage are labelled as samples. A strip under the stage, `read from this browser`, carries the real status of Pip and Fern from this browser's own storage, and the `data-state` of the line comes from the same storage.
 - Below it, the registry's recorded grant, revoke and regrant for the same two apps, as a vertical ledger: a green dot per grant, a red one for the revoke, block and transaction link on every row.
 
 ## Tokens
@@ -44,7 +44,7 @@ Motion: 120 ms ease-out for state, 160 ms linear for the rail fill, 280 ms ease-
 
 - **Primary button**: `--ink` fill, `--canvas` text, full radius, `10px 20px`, 14px weight 600. Hover fills with the accent. Pressed `scale(0.97)`. Secondary: transparent with a hairline. Danger: red outline that fills on hover. Accent button for the one place a green action is wanted.
 - **Card**: `--surface`, 1px hairline, 12px radius, 24px padding, the top edge highlight. No drop shadow. The home stage alone carries a deep soft shadow.
-- **Envelope tile**: 66px tall, a 46 by 34 CSS-built envelope on the left, the fact or its ciphertext in the middle with a one line note beneath it, the epoch on the right. States: own (neutral), locked, open (green wash), revoked (red wash).
+- **Envelope**: CSS-built, 80px tall and the full width of its card, five parts (back, letter, front with a V cut, flap, seal). The ciphertext sits bottom left and a state slot bottom right (`e1`, `no key`, `not read yet`, `GRANT_REVOKED`). States: open (green wash, flap folded back, letter risen 34px), shut (flap closed, seal showing), revoked (red wash, red seal). Only transform and opacity move.
 - **Code block**: `--code` fill, hairline border, a header row with the file name and a copy button, strings in `--accent-soft`, keywords weight 600 in `--ink`.
 - **Inline code**: raised fill, 1px hairline, 4px radius, Geist Mono 13 weight 500.
 - **Property row, table**: soft hairlines, header row on `--surface`, row hover on `--surface`, code cells never wrap.
@@ -62,7 +62,7 @@ Motion: 120 ms ease-out for state, 160 ms linear for the rail fill, 280 ms ease-
 - No colour gradients and no gradient text. The only texture is a 3.5% blueprint grid inside the stage.
 - No floating tag pills above cards. Epoch and namespace sit in the line they describe.
 - No ghost corner numbers. The step numbers are mono labels in the row they number.
-- No icon avatars. Apps are a name in the display face and a dot: filled for the app that holds the key, ringed for the one that reads through a grant.
+- No icon avatars, and no small envelope icons: the envelope is the object, drawn at card width. Apps are a name in the display face and a dot: filled for the app that holds the key, ringed for the one that reads through a grant.
 - No stat grid. The only numbers on the home page are the block, grant id and epoch of a recorded transaction.
 - No three equal feature cards. The home page is a headline, a four step list beside one diagram, and a ledger.
 - No `transition: all`, no `ease-in` on UI, no `scale(0)`, no `h-screen`.
