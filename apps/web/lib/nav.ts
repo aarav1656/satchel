@@ -23,6 +23,8 @@ export const DOCS_NAV: NavGroup[] = [
     items: [
       { href: "/guides/two-apps/", label: "Two apps" },
       { href: "/guides/migrate-from-per-note-vaults/", label: "Migrate from per-note vaults" },
+      { href: "/guides/pip-on-qwen/", label: "Pip on Qwen 3.8 Max" },
+      { href: "/guides/fern-on-kimi/", label: "Fern on Kimi" },
     ],
   },
   {
