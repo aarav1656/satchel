@@ -45,7 +45,7 @@ export async function POST(request: Request): Promise<Response> {
   try {
     const result = await generateText({
       model: openrouter(MODELS[input.app === "pip" ? "pip" : "fern"][0]),
-      providerOptions: { openrouter: { models: [...MODELS[input.app === "pip" ? "pip" : "fern"]] } },
+      providerOptions: { openrouter: { models: [...MODELS[input.app === "pip" ? "pip" : "fern"]], ...(input.app === "fern" ? { reasoning: { enabled: false } } : {}) } },
       system: withMemories(input.app === "pip" ? PIP_SYSTEM : FERN_SYSTEM, input.memories),
       messages: input.messages,
       maxOutputTokens: 2000,
